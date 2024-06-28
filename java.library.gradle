@@ -1,7 +1,7 @@
 apply plugin: 'java-library'
 
 dependencies {
-    implementation platform(project(':sunday-base:sunday-base-platform'))
+    implementation platform(project(':sunday-dependencies'))
     compileOnly(libs.lombok)
     testCompileOnly(libs.lombok)
     annotationProcessor(libs.lombok)
