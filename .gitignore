@@ -1,0 +1,32 @@
+# Gradle temporary files
+.gradle/
+build/
+classes/
+target/
+
+# IDE
+*.iml
+*.ipr
+*.iws
+*.ids
+.project
+.classpath
+.settings/
+.idea/
+bin/
+out/
+
+# log
+logs/
+.log
+
+# vi
+*.swp
+
+# mac
+.DS_Store
+# Ignore Gradle project-specific cache directory
+.gradle
+
+# Ignore Gradle build output directory
+build

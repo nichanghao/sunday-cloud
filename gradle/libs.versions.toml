@@ -1,0 +1,19 @@
+# https://docs.gradle.org/current/userguide/platforms.html#sub::toml-dependencies-format
+[versions]
+java = '21'
+spring-boot = '3.2.6'
+spring-cloud = '2023.0.1'
+spring-cloud-alibaba = '2023.0.1.0'
+hutool = '5.8.27'
+lombok = '1.18.32'
+dubbo = '3.2.5'
+
+[libraries]
+lombok = { module = 'org.projectlombok:lombok', version.ref = 'lombok' }
+dubbo-bom = { module = 'org.apache.dubbo:dubbo-bom', version.ref = 'dubbo' }
+hutool-bom = { module = 'cn.hutool:hutool-bom', version.ref = 'hutool' }
+spring-cloud-dependencies = { module = 'org.springframework.cloud:spring-cloud-dependencies', version.ref = 'spring-cloud' }
+spring-cloud-alibaba-dependencies = { module = 'com.alibaba.cloud:spring-cloud-alibaba-dependencies', version.ref = 'spring-cloud-alibaba' }
+
+[plugins]
+springframework-boot = { id = 'org.springframework.boot', version.ref = 'spring-boot' }

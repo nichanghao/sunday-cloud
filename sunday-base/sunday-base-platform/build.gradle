@@ -1,0 +1,23 @@
+import org.springframework.boot.gradle.plugin.SpringBootPlugin
+plugins {
+    alias(libs.plugins.springframework.boot) apply false
+}
+
+apply from: "$rootDir/platform.gradle"
+
+
+javaPlatform {
+    allowDependencies()
+}
+
+
+dependencies {
+    api platform(libs.spring.cloud.alibaba.dependencies)
+    api platform(SpringBootPlugin.BOM_COORDINATES)
+    api platform(libs.spring.cloud.dependencies)
+    api platform(libs.dubbo.bom)
+    api platform(libs.hutool.bom)
+
+    constraints {
+    }
+}

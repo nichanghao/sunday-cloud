@@ -1,0 +1,15 @@
+apply plugin: 'java-library'
+
+dependencies {
+    implementation platform(project(':sunday-base:sunday-base-platform'))
+    compileOnly(libs.lombok)
+    testCompileOnly(libs.lombok)
+    annotationProcessor(libs.lombok)
+}
+
+java {
+    withSourcesJar()
+    toolchain {
+        languageVersion.set(JavaLanguageVersion.of(libs.versions.java.get().toInteger()))
+    }
+}
