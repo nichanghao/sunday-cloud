@@ -1,0 +1,10 @@
+spring:
+  cloud:
+    gateway:
+      routes:
+        - id: system
+          uri: lb://sunday-cloud-system
+          predicates:
+            - Path=/system/**
+          filters:
+            - StripPrefix=1

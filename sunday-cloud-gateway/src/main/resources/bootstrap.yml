@@ -1,0 +1,14 @@
+spring:
+  cloud:
+    nacos:
+      discovery:
+        server-addr: localhost:8848
+      config:
+        server-addr: localhost:8848
+  application:
+    name: sunday-cloud-gateway
+  profiles:
+    active: dev
+
+server:
+  port: 80

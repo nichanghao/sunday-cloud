@@ -1,0 +1,48 @@
+version: "5.0"
+name: docker-sunday-cloud
+services:
+  nacos:
+    image: nacos/nacos-server:v2.3.2-slim
+    container_name: nacos-standalone
+    environment:
+      - PREFER_HOST_MODE=hostname
+      - MODE=standalone
+      - NACOS_AUTH_IDENTITY_KEY=serverIdentity
+      - NACOS_AUTH_IDENTITY_VALUE=security
+      - NACOS_AUTH_TOKEN=SecretKey012345678901234567890123456789012345678901234567890123456789
+    ports:
+      - "8848:8848"
+      - "9848:9848" # gRPC port
+    volumes:
+      - nacos_data:/home/nacos/data
+
+  mysql:
+    image: mysql:8.2.0
+    ports:
+      - "3306:3306"
+    container_name: mysql
+    volumes:
+      - mysql_data:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      TZ: Asia/Shanghai
+    command:
+      --character-set-server=utf8mb4
+      --collation-server=utf8mb4_unicode_ci
+
+  redis:
+    image: redis:7.2.4
+    ports:
+      - "6379:6379"
+    container_name: redis
+    volumes:
+      - redis_data:/data
+    command: redis-server
+
+volumes:
+  nacos_data:
+    driver: local
+  mysql_data:
+    driver: local
+  redis_data:
+    driver: local

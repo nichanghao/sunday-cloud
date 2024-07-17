@@ -2,4 +2,5 @@ apply from: "$rootDir/java.library.gradle"
 
 
 dependencies {
+    api platform(project(":sunday-dependencies"))
 }
