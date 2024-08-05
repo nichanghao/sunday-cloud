@@ -1,6 +1,8 @@
-apply from: "$rootDir/java.library.gradle"
-
-
 dependencies {
     api platform(project(":sunday-dependencies"))
+    implementation("com.fasterxml.jackson.core:jackson-databind")
+    implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310")
+    api("cn.hutool:hutool-core")
+    api("cn.hutool:hutool-json")
+    compileOnlyApi("org.slf4j:slf4j-api")
 }

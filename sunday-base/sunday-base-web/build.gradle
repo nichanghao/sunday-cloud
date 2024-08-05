@@ -1,0 +1,10 @@
+dependencies {
+    implementation project(":sunday-base:sunday-base-common")
+    implementation("org.springframework:spring-webmvc")
+    implementation("org.springframework.boot:spring-boot-autoconfigure")
+    implementation("org.springframework.boot:spring-boot-configuration-processor")
+
+    compileOnly("ch.qos.logback:logback-classic")
+    compileOnlyApi("jakarta.servlet:jakarta.servlet-api")
+
+}

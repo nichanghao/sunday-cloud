@@ -1,5 +1,3 @@
-//apply from: "$rootDir/platform.gradle"
-
 subprojects {
-
+    apply from: "$rootDir/java.library.gradle"
 }

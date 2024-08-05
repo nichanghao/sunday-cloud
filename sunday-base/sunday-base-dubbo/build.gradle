@@ -1,5 +1,6 @@
-apply from: "$rootDir/java.library.gradle"
-
 dependencies {
     implementation project(":sunday-base:sunday-base-common")
+
+    implementation("org.apache.dubbo:dubbo")
+
 }
