@@ -1,4 +1,4 @@
-package net.sunday.cloud.base.common.util;
+package net.sunday.cloud.base.common.util.json;
 
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.StrUtil;
@@ -9,7 +9,7 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.fasterxml.jackson.databind.json.JsonMapper;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 
@@ -20,31 +20,19 @@ import java.util.List;
 
 /**
  * JSON 工具类
- *
- * @author 芋道源码
  */
 @Slf4j
 public class JsonUtils {
 
-    private static ObjectMapper objectMapper = new ObjectMapper();
+    private static final ObjectMapper objectMapper = JsonMapper.builder()
+            // 忽略未知属性
+            .disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
+            // 序列化时，遇到空对象不报错
+            .disable(SerializationFeature.FAIL_ON_EMPTY_BEANS)
+            // 序列化时，null 值不输出
+            .serializationInclusion(JsonInclude.Include.NON_NULL)
+            .build();
 
-    static {
-        objectMapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
-        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-        objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
-        objectMapper.registerModules(new JavaTimeModule());
-    }
-
-    /**
-     * 初始化 objectMapper 属性
-     * <p>
-     * 通过这样的方式，使用 Spring 创建的 ObjectMapper Bean
-     *
-     * @param objectMapper ObjectMapper 对象
-     */
-    public static void init(ObjectMapper objectMapper) {
-        JsonUtils.objectMapper = objectMapper;
-    }
 
     @SneakyThrows
     public static String toJsonString(Object object) {

@@ -3,8 +3,9 @@ package net.sunday.cloud.base.web.interceptor;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import net.sunday.cloud.base.common.util.JsonUtils;
+import net.sunday.cloud.base.common.util.json.JsonUtils;
 import org.springframework.web.servlet.HandlerInterceptor;
 
 
@@ -12,6 +13,7 @@ import org.springframework.web.servlet.HandlerInterceptor;
  * 接口执行时间记录
  */
 @Slf4j
+@NoArgsConstructor
 @AllArgsConstructor
 public class ExecuteTimeInterceptor implements HandlerInterceptor {
 
@@ -23,6 +25,7 @@ public class ExecuteTimeInterceptor implements HandlerInterceptor {
 
 
     @Override
+    @SuppressWarnings("NullableProblems")
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
         request.setAttribute(SHOW_LOG_KEY, System.currentTimeMillis());
         return true;
@@ -30,6 +33,7 @@ public class ExecuteTimeInterceptor implements HandlerInterceptor {
 
 
     @Override
+    @SuppressWarnings("NullableProblems")
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
         Long start = (Long) request.getAttribute(SHOW_LOG_KEY);
         long responseTime = System.currentTimeMillis() - start;

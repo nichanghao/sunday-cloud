@@ -5,36 +5,6 @@ allprojects {
 
 subprojects {
 
-
-//    if (project.name.endsWith('-platform') || !project.subprojects.isEmpty()) {
-//        apply plugin: 'java-platform'
-//    }
-//    apply {
-//        plugin("java-library")
-//    }
-//
-//    test {
-//        useJUnitPlatform()
-//    }
-//
-//    dependencies {
-////        implementation platform(project(":base-platform"))
-//        compileOnly(libs.lombok)
-//        testCompileOnly(libs.lombok)
-//        annotationProcessor(libs.lombok)
-//
-////        testImplementation('org.springframework.boot:spring-boot-starter-test')
-//    }
-//
-
-//
-//    java {
-////        withSourcesJar()
-////        toolchain {
-////            languageVersion.set(JavaLanguageVersion.of(21))
-////        }
-////    }
-
     tasks.withType(JavaCompile).configureEach {
         options.encoding = "UTF-8"
     }

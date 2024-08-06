@@ -2,7 +2,7 @@ package net.sunday.cloud.base.web.advice;
 
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
-import net.sunday.cloud.base.common.util.JsonUtils;
+import net.sunday.cloud.base.common.util.json.JsonUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.MethodParameter;
@@ -26,14 +26,17 @@ public class RequestBodyLogAdvice extends RequestBodyAdviceAdapter {
 
     private static final Logger logger = LoggerFactory.getLogger(RequestBodyLogAdvice.class);
 
+    private static final String SUPPORT_CLASS_SUFFIX_NAME = "Controller";
 
     @Override
+    @SuppressWarnings("NullableProblems")
     public boolean supports(MethodParameter parameter, Type targetType, Class<? extends HttpMessageConverter<?>> converterType) {
 
-        return parameter.getDeclaringClass().getName().endsWith("Controller");
+        return parameter.getDeclaringClass().getName().endsWith(SUPPORT_CLASS_SUFFIX_NAME);
     }
 
     @Override
+    @SuppressWarnings("NullableProblems")
     public Object afterBodyRead(Object body, HttpInputMessage inputMessage, MethodParameter parameter,
                                 Type targetType, Class<? extends HttpMessageConverter<?>> converterType) {
         try {

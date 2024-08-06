@@ -1,7 +1,7 @@
 package net.sunday.cloud.base.web.advice;
 
 import lombok.AllArgsConstructor;
-import net.sunday.cloud.base.common.util.JsonUtils;
+import net.sunday.cloud.base.common.util.json.JsonUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.MethodParameter;
@@ -26,11 +26,13 @@ public class ResponseLogAdvice implements ResponseBodyAdvice<Object> {
     private static final Logger logger = LoggerFactory.getLogger(ResponseLogAdvice.class);
 
     @Override
+    @SuppressWarnings("NullableProblems")
     public boolean supports(MethodParameter returnType, Class<? extends HttpMessageConverter<?>> converterType) {
         return true;
     }
 
     @Override
+    @SuppressWarnings("NullableProblems")
     public Object beforeBodyWrite(Object body, MethodParameter returnType, MediaType selectedContentType,
                                   Class<? extends HttpMessageConverter<?>> selectedConverterType,
                                   ServerHttpRequest request, ServerHttpResponse response) {

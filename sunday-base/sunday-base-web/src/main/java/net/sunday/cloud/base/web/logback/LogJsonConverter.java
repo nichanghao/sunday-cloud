@@ -3,7 +3,7 @@ package net.sunday.cloud.base.web.logback;
 
 import ch.qos.logback.classic.pattern.MessageConverter;
 import ch.qos.logback.classic.spi.ILoggingEvent;
-import net.sunday.cloud.base.common.util.JsonUtils;
+import net.sunday.cloud.base.common.util.json.JsonUtils;
 import org.slf4j.helpers.MessageFormatter;
 
 import java.util.Objects;

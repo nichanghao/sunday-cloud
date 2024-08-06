@@ -3,6 +3,7 @@ dependencies {
     implementation("org.springframework:spring-webmvc")
     implementation("org.springframework.boot:spring-boot-autoconfigure")
     implementation("org.springframework.boot:spring-boot-configuration-processor")
+    implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310")
 
     compileOnly("ch.qos.logback:logback-classic")
     compileOnlyApi("jakarta.servlet:jakarta.servlet-api")

@@ -1,1 +1,1 @@
-net.sunday.cloud.base.web.WebMvcConfiguration
+net.sunday.cloud.base.web.WebAutoConfiguration
