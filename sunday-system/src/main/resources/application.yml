@@ -1,7 +1,11 @@
 spring:
   application:
     name: sunday-cloud-system
-
+  data:
+    redis:
+      database: 0
+      host: localhost
+      port: 6379
 dubbo:
   registry:
     address: nacos://localhost:8848

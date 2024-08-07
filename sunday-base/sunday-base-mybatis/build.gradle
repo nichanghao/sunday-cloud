@@ -1,0 +1,3 @@
+dependencies {
+    api(libs.mybatis.plus.boot3.starter)
+}

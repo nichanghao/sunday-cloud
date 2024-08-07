@@ -30,4 +30,8 @@ include 'sunday-gateway'
 include 'sunday-system'
 include 'sunday-base:sunday-base-web'
 findProject(':sunday-base:sunday-base-web')?.name = 'sunday-base-web'
+include 'sunday-base:sunday-base-redis'
+findProject(':sunday-base:sunday-base-redis')?.name = 'sunday-base-redis'
+include 'sunday-base:sunday-base-mybatis'
+findProject(':sunday-base:sunday-base-mybatis')?.name = 'sunday-base-mybatis'
 

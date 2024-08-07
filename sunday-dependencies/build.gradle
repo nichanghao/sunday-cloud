@@ -1,6 +1,6 @@
 import org.springframework.boot.gradle.plugin.SpringBootPlugin
 plugins {
-    alias(libs.plugins.springframework.boot) apply false
+    alias(libs.plugins.spring.boot) apply false
 }
 
 apply from: "$rootDir/platform.gradle"

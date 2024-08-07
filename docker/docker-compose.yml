@@ -3,7 +3,7 @@ name: docker-sunday-cloud
 services:
   nacos:
     image: nacos/nacos-server:v2.3.2-slim
-    container_name: nacos-standalone
+    hostname: nacos-server
     environment:
       - PREFER_HOST_MODE=hostname
       - MODE=standalone
@@ -18,9 +18,9 @@ services:
 
   mysql:
     image: mysql:8.2.0
+    hostname: mysql
     ports:
       - "3306:3306"
-    container_name: mysql
     volumes:
       - mysql_data:/var/lib/mysql
     environment:
@@ -32,9 +32,9 @@ services:
 
   redis:
     image: redis:7.2.4
+    hostname: redis
     ports:
       - "6379:6379"
-    container_name: redis
     volumes:
       - redis_data:/data
     command: redis-server

@@ -1,0 +1,7 @@
+dependencies {
+    implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310")
+
+    api(project(":sunday-base:sunday-base-common"))
+    api("org.springframework.boot:spring-boot-starter-cache")
+    api(libs.redisson.spring.boot.starter)
+}
