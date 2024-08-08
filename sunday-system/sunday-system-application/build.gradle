@@ -10,4 +10,5 @@ dependencies {
     implementation(project(":sunday-base:sunday-base-web"))
     implementation(project(":sunday-base:sunday-base-redis"))
     implementation(project(":sunday-base:sunday-base-dubbo"))
+    implementation(project(":sunday-base:sunday-base-security"))
 }

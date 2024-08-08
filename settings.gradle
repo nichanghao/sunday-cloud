@@ -38,4 +38,6 @@ include 'sunday-system:sunday-system-api'
 findProject(':sunday-system:sunday-system-api')?.name = 'sunday-system-api'
 include 'sunday-system:sunday-system-application'
 findProject(':sunday-system:sunday-system-application')?.name = 'sunday-system-application'
+include 'sunday-base:sunday-base-security'
+findProject(':sunday-base:sunday-base-security')?.name = 'sunday-base-security'
 
