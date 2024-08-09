@@ -1,3 +1,10 @@
 dependencies {
+    implementation(project(":sunday-base:sunday-base-common"))
+    implementation("cn.hutool:hutool-extra")
+
     api("org.springframework.boot:spring-boot-starter-security")
+
+    compileOnly("org.springframework:spring-webmvc")
+    compileOnly("jakarta.servlet:jakarta.servlet-api")
+
 }

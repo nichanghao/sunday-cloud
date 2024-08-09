@@ -1,0 +1,8 @@
+### 用户登录
+POST {{host}}/auth/login
+Content-Type: application/json
+
+{
+  "username": "admin",
+  "password": "123456"
+}

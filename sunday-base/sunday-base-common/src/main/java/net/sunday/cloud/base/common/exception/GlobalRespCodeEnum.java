@@ -16,9 +16,11 @@ public enum GlobalRespCodeEnum implements ErrorEnum {
 
     FAIL(-1, "失败"),
 
-    UNAUTHORIZED(401, "未授权"),
+    UNAUTHORIZED(401, "未认证"),
 
-    SERVER_INTERNAL_ERROR(500, "服务器内部错误"),
+    ACCESS_DENIED(403, "权限不足"),
+
+    SERVER_INTERNAL_ERROR(500, "Internal Server Error"),
     ;
 
 

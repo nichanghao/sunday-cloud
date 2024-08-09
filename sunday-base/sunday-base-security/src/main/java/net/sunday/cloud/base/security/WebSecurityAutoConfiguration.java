@@ -2,14 +2,20 @@ package net.sunday.cloud.base.security;
 
 import net.sunday.cloud.base.security.config.WebSecurityConfiguration;
 import net.sunday.cloud.base.security.config.WebSecurityProperties;
+import net.sunday.cloud.base.security.handler.CustomAccessDeniedHandler;
+import net.sunday.cloud.base.security.handler.CustomAuthenticationEntryPoint;
 import net.sunday.cloud.base.security.service.UserDetailsServiceImpl;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.AuthenticationEntryPoint;
+import org.springframework.security.web.access.AccessDeniedHandler;
 
 /**
  * web security 自动装配
@@ -26,8 +32,24 @@ public class WebSecurityAutoConfiguration {
      * 加载用户信息服务
      */
     @Bean
-    public UserDetailsServiceImpl userDetailsService() {
-        return new UserDetailsServiceImpl();
+    public UserDetailsServiceImpl userDetailsService(PasswordEncoder passwordEncoder) {
+        return new UserDetailsServiceImpl(passwordEncoder);
+    }
+
+    /**
+     * 自定义权限拒绝处理器
+     */
+    @Bean
+    public AccessDeniedHandler accessDeniedHandler() {
+        return new CustomAccessDeniedHandler();
+    }
+
+    /**
+     * 自定义认证 端点
+     */
+    @Bean
+    public AuthenticationEntryPoint authenticationEntryPoint() {
+        return new CustomAuthenticationEntryPoint();
     }
 
     /**
@@ -38,5 +60,13 @@ public class WebSecurityAutoConfiguration {
     @Bean
     public PasswordEncoder passwordEncoder(WebSecurityProperties securityProperties) {
         return new BCryptPasswordEncoder(securityProperties.getPasswordEncoderLength());
+    }
+
+    /**
+     * 注入 认证管理器
+     */
+    @Bean
+    public AuthenticationManager authenticationManagerBean(AuthenticationConfiguration authenticationConfiguration) throws Exception {
+        return authenticationConfiguration.getAuthenticationManager();
     }
 }
