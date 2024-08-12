@@ -1,7 +1,7 @@
 dependencies {
     api platform(project(":sunday-dependencies"))
     api("cn.hutool:hutool-core")
-    api(libs.google.guava)
+    api('com.google.guava:guava')
 
     implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310")
     implementation("cn.hutool:hutool-json")

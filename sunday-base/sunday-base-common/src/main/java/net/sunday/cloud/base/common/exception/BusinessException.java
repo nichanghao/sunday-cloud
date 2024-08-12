@@ -23,6 +23,11 @@ public class BusinessException extends RuntimeException implements ErrorEnum {
 		this.code = code;
 	}
 
+	public BusinessException(ErrorEnum errorEnum) {
+		super(errorEnum.getMessage());
+		this.code = errorEnum.getCode();
+	}
+
 	public BusinessException(String message) {
 		super(message);
 	}

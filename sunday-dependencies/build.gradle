@@ -18,6 +18,11 @@ dependencies {
     api platform(libs.dubbo.bom)
     api platform(libs.hutool.bom)
 
+    api(libs.google.guava)
+    api(libs.jsonwebtoken.jjwt)
+    api(libs.mybatis.plus.boot3.starter)
+    api(libs.redisson.spring.boot.starter)
+
     constraints {
     }
 }

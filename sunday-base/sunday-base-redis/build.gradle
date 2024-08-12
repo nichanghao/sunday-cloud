@@ -3,5 +3,5 @@ dependencies {
 
     api(project(":sunday-base:sunday-base-common"))
     api("org.springframework.boot:spring-boot-starter-cache")
-    api(libs.redisson.spring.boot.starter)
+    api("org.redisson:redisson-spring-boot-starter")
 }

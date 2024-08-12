@@ -15,7 +15,7 @@ import java.io.IOException;
 import static net.sunday.cloud.base.common.exception.GlobalRespCodeEnum.UNAUTHORIZED;
 
 /**
- * 自定义认证端点, 处理认证失败的请求, 当用户尝试访问一个需要认证的资源但未通过认证时，返回给前端错误码重定向至登录页认证
+ * 自定义认证端点, 当用户尝试访问一个需要认证的资源但未通过认证时，返回给前端错误码重定向至登录页认证
  */
 
 public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint {

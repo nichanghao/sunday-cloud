@@ -1,6 +1,6 @@
 dependencies {
     api(project(":sunday-base:sunday-base-common"))
 
-    implementation("org.apache.dubbo:dubbo")
+    api("org.apache.dubbo:dubbo")
 
 }

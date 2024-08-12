@@ -1,9 +1,10 @@
 dependencies {
     implementation(project(":sunday-base:sunday-base-common"))
+    implementation(project(":sunday-system:sunday-system-api"))
     implementation("cn.hutool:hutool-extra")
-
     api("org.springframework.boot:spring-boot-starter-security")
 
+    compileOnly("org.apache.dubbo:dubbo-spring-boot-autoconfigure")
     compileOnly("org.springframework:spring-webmvc")
     compileOnly("jakarta.servlet:jakarta.servlet-api")
 

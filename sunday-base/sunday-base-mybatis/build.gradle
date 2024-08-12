@@ -1,4 +1,4 @@
 dependencies {
-    api(libs.mybatis.plus.boot3.starter)
+    api("com.baomidou:mybatis-plus-spring-boot3-starter")
     api("com.mysql:mysql-connector-j")
 }

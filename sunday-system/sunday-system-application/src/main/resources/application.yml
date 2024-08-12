@@ -27,3 +27,9 @@ logging:
   level:
     org.springframework.security: trace
 
+jwt:
+  secret: MzgAt0hUdFrc7UHvpvFr
+
+mybatis-plus:
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl

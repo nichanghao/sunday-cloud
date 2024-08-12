@@ -18,6 +18,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.AccessDeniedHandler;
+import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.mvc.method.RequestMappingInfo;
@@ -45,6 +46,9 @@ public class WebSecurityConfiguration {
     @Resource
     private AuthenticationEntryPoint authenticationEntryPoint;
 
+    @Resource
+    private AuthenticationFailureHandler authenticationFailureHandler;
+
     @Bean
     protected SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
 
@@ -63,7 +67,7 @@ public class WebSecurityConfiguration {
                         .accessDeniedHandler(accessDeniedHandler)
                         // 自定义认证失败处理器
                         .authenticationEntryPoint(authenticationEntryPoint)
-                )
+                ).formLogin(f -> f.failureHandler(authenticationFailureHandler))
                 .authorizeHttpRequests(c -> c
                         // 自定义配置不需要认证的请求
                         .requestMatchers(webSecurityProperties.getPermitUrls().toArray(new String[0])).permitAll()
