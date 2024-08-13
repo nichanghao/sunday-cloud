@@ -23,7 +23,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
             throw new UsernameNotFoundException("User Not Found");
         }
 
-        return new AuthUser(user.getId(), user.getUsername(), user.getPassword(), user.getStatus(), Collections.emptyList());
+        return new AuthUser(user.getId(), user.getUsername(), user.getPassword(), user.getStatus(), Collections.emptySet());
 
     }
 }

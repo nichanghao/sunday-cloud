@@ -4,7 +4,6 @@ import net.sunday.cloud.base.security.config.WebSecurityConfiguration;
 import net.sunday.cloud.base.security.config.WebSecurityProperties;
 import net.sunday.cloud.base.security.handler.CustomAccessDeniedHandler;
 import net.sunday.cloud.base.security.handler.CustomAuthenticationEntryPoint;
-import net.sunday.cloud.base.security.handler.CustomAuthenticationFailureHandler;
 import net.sunday.cloud.base.security.service.UserDetailsServiceImpl;
 import net.sunday.cloud.system.api.user.SysUserApi;
 import org.apache.dubbo.config.spring.ReferenceBean;
@@ -22,7 +21,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.access.AccessDeniedHandler;
-import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 
 /**
  * web security 自动装配
@@ -68,11 +66,6 @@ public class WebSecurityAutoConfiguration {
     @Bean
     public AuthenticationEntryPoint authenticationEntryPoint() {
         return new CustomAuthenticationEntryPoint();
-    }
-
-    @Bean
-    public AuthenticationFailureHandler authenticationFailureHandler() {
-        return new CustomAuthenticationFailureHandler();
     }
 
     /**

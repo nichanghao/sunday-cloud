@@ -13,6 +13,7 @@ public enum SystemRespCodeEnum implements ErrorEnum {
 
     TOKEN_EXPIRED(10001, "token已过期，请重新登录"),
 
+    TOKEN_INVALID(10002, "Invalid Token")
     ;
 
 

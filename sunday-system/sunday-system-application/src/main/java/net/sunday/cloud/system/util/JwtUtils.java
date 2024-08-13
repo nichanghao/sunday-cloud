@@ -6,6 +6,7 @@ import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
+import lombok.Getter;
 import net.sunday.cloud.base.common.exception.BusinessException;
 import net.sunday.cloud.system.exception.SystemRespCodeEnum;
 import org.springframework.beans.factory.annotation.Value;
@@ -30,6 +31,7 @@ public class JwtUtils {
     /**
      * JWT 过期时间，单位：小时
      */
+    @Getter
     @Value("${jwt.expiration:24}")
     private Integer expiration;
 
@@ -83,6 +85,8 @@ public class JwtUtils {
                     .parseSignedClaims(token);
         } catch (ExpiredJwtException e) {
             throw new BusinessException(SystemRespCodeEnum.TOKEN_EXPIRED);
+        } catch (Exception e) {
+            throw new BusinessException(SystemRespCodeEnum.TOKEN_INVALID);
         }
     }
 

@@ -6,3 +6,8 @@ Content-Type: application/json
   "username": "admin",
   "password": "123456"
 }
+
+### check token
+GET {{host}}/auth/token/check?accessToken={{token}}
+Content-Type: application/json
+

@@ -1,4 +1,4 @@
-package net.sunday.cloud.system.mapper;
+package net.sunday.cloud.system.repository.mapper;
 
 import net.sunday.cloud.system.model.SysRoleDO;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;

@@ -1,7 +1,7 @@
 package net.sunday.cloud.system.service.impl;
 
 import net.sunday.cloud.system.model.SysRoleDO;
-import net.sunday.cloud.system.mapper.SysRoleMapper;
+import net.sunday.cloud.system.repository.mapper.SysRoleMapper;
 import net.sunday.cloud.system.service.ISysRoleService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;

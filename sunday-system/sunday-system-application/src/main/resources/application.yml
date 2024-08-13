@@ -28,7 +28,7 @@ logging:
     org.springframework.security: trace
 
 jwt:
-  secret: MzgAt0hUdFrc7UHvpvFr
+  secret: cfTcyKTcBpN32uyrG6NKeAsqoXXxbKmR
 
 mybatis-plus:
   configuration:
