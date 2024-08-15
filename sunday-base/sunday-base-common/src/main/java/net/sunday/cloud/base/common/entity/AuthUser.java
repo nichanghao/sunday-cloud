@@ -1,4 +1,4 @@
-package net.sunday.cloud.base.security.entity;
+package net.sunday.cloud.base.common.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
@@ -27,6 +27,11 @@ public class AuthUser implements UserDetails, CredentialsContainer {
     private Set<GrantedAuthority> authorities;
 
     private boolean enabled;
+
+    /**
+     * 过期时间戳
+     */
+    private Long expireTime;
 
 
     public AuthUser(Long id, String username, String password, boolean enabled, Set<GrantedAuthority> authorities) {

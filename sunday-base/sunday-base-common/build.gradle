@@ -1,10 +1,10 @@
 dependencies {
-    api platform(project(":sunday-dependencies"))
     api("cn.hutool:hutool-core")
     api('com.google.guava:guava')
+    api("com.fasterxml.jackson.datatype:jackson-datatype-jsr310")
 
-    implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310")
     implementation("cn.hutool:hutool-json")
 
     compileOnlyApi("org.slf4j:slf4j-api")
+    compileOnly("org.springframework.security:spring-security-core")
 }

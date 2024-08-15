@@ -1,7 +1,7 @@
 package net.sunday.cloud.base.security.service;
 
 import lombok.AllArgsConstructor;
-import net.sunday.cloud.base.security.entity.AuthUser;
+import net.sunday.cloud.base.common.entity.AuthUser;
 import net.sunday.cloud.system.api.user.SysUserApi;
 import net.sunday.cloud.system.api.user.dto.SysUserRespDTO;
 import org.springframework.security.core.userdetails.UserDetails;

@@ -7,5 +7,6 @@ dependencies {
     compileOnly("org.apache.dubbo:dubbo-spring-boot-autoconfigure")
     compileOnly("org.springframework:spring-webmvc")
     compileOnly("jakarta.servlet:jakarta.servlet-api")
+    compileOnly("com.fasterxml.jackson.core:jackson-annotations")
 
 }

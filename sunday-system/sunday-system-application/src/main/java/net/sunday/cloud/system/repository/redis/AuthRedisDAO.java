@@ -1,9 +1,9 @@
 package net.sunday.cloud.system.repository.redis;
 
 import jakarta.annotation.Resource;
+import net.sunday.cloud.base.common.entity.AuthUser;
 import net.sunday.cloud.base.common.exception.BusinessException;
 import net.sunday.cloud.base.common.util.json.JsonUtils;
-import net.sunday.cloud.base.security.entity.AuthUser;
 import net.sunday.cloud.system.exception.SystemRespCodeEnum;
 import net.sunday.cloud.system.util.JwtUtils;
 import org.springframework.data.redis.core.StringRedisTemplate;

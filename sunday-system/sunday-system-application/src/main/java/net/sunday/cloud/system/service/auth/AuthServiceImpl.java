@@ -2,8 +2,8 @@ package net.sunday.cloud.system.service.auth;
 
 import cn.hutool.core.util.IdUtil;
 import jakarta.annotation.Resource;
+import net.sunday.cloud.base.common.entity.AuthUser;
 import net.sunday.cloud.base.common.exception.BusinessException;
-import net.sunday.cloud.base.security.entity.AuthUser;
 import net.sunday.cloud.system.controller.auth.vo.AuthLoginReqVO;
 import net.sunday.cloud.system.controller.auth.vo.AuthLoginRespVO;
 import net.sunday.cloud.system.repository.redis.AuthRedisDAO;
@@ -44,6 +44,7 @@ public class AuthServiceImpl implements AuthService {
         long expiresTime = System.currentTimeMillis() + jwtUtils.getExpiration() * 3600000;
 
         // 保存用户信息到redis
+        authUser.setExpireTime(expiresTime);
         authRedisDAO.setAuthUser(uuid, authUser);
 
         return AuthLoginRespVO.builder()

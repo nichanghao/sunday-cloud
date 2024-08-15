@@ -2,9 +2,11 @@ package net.sunday.cloud.base.security;
 
 import net.sunday.cloud.base.security.config.WebSecurityConfiguration;
 import net.sunday.cloud.base.security.config.WebSecurityProperties;
+import net.sunday.cloud.base.security.filter.TokenAuthenticationFilter;
 import net.sunday.cloud.base.security.handler.CustomAccessDeniedHandler;
 import net.sunday.cloud.base.security.handler.CustomAuthenticationEntryPoint;
 import net.sunday.cloud.base.security.service.UserDetailsServiceImpl;
+import net.sunday.cloud.system.api.auth.AuthApi;
 import net.sunday.cloud.system.api.user.SysUserApi;
 import org.apache.dubbo.config.spring.ReferenceBean;
 import org.apache.dubbo.config.spring.reference.ReferenceBeanBuilder;
@@ -35,7 +37,7 @@ import org.springframework.security.web.access.AccessDeniedHandler;
 public class WebSecurityAutoConfiguration {
 
     /**
-     * 注入 dubbo 远程服务
+     * 注入 dubbo sysUser 远程服务
      */
     @Bean
     @ConditionalOnClass(ReferenceBean.class)
@@ -51,6 +53,25 @@ public class WebSecurityAutoConfiguration {
     public UserDetailsServiceImpl userDetailsService(SysUserApi sysUserApi) {
         return new UserDetailsServiceImpl(sysUserApi);
     }
+
+    /**
+     * 注入 dubbo auth 远程服务
+     */
+    @Bean
+    @ConditionalOnClass(ReferenceBean.class)
+    @ConditionalOnMissingBean(AuthApi.class)
+    public ReferenceBean<AuthApi> authApiReferenceBean() {
+        return new ReferenceBeanBuilder().setInterface(AuthApi.class).build();
+    }
+
+    /**
+     * Token 认证过滤器 Bean
+     */
+    @Bean
+    public TokenAuthenticationFilter authenticationTokenFilter(AuthApi authApi) {
+        return new TokenAuthenticationFilter(authApi);
+    }
+
 
     /**
      * 自定义权限拒绝处理器

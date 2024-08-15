@@ -6,11 +6,15 @@ apply from: "$rootDir/java.library.gradle"
 
 dependencies {
 
+    implementation(project(":sunday-base:sunday-base-common"))
+
     implementation('org.springframework.cloud:spring-cloud-starter-gateway')
     implementation('org.springframework.cloud:spring-cloud-starter-bootstrap')
     implementation('com.alibaba.cloud:spring-cloud-starter-alibaba-nacos-config')
     implementation('com.alibaba.cloud:spring-cloud-starter-alibaba-nacos-discovery')
     implementation('org.springframework.cloud:spring-cloud-starter-loadbalancer')
+    implementation('com.github.ben-manes.caffeine:caffeine')
+    implementation('org.springframework.security:spring-security-core')
 
 }
 

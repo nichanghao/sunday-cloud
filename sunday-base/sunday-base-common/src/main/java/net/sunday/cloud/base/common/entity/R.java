@@ -57,7 +57,7 @@ public class R<T> implements Serializable {
 
     public static <T> R<T> failed(ErrorEnum errorEnum) {
         return restResult(null,
-                errorEnum.getCode() == null? GlobalRespCodeEnum.FAIL.getCode() : errorEnum.getCode(), errorEnum.getMessage());
+                errorEnum.getCode() == null ? GlobalRespCodeEnum.FAIL.getCode() : errorEnum.getCode(), errorEnum.getMessage());
     }
 
     public static <T> R<T> restResult(T data, int code, String msg) {
@@ -66,6 +66,10 @@ public class R<T> implements Serializable {
         apiResult.setData(data);
         apiResult.setMsg(msg);
         return apiResult;
+    }
+
+    public boolean isSuccess() {
+        return GlobalRespCodeEnum.SUCCESS.getCode() == this.code;
     }
 
 }
