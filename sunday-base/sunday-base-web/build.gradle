@@ -1,11 +1,15 @@
 dependencies {
     api(project(":sunday-base:sunday-base-common"))
+    // swagger knife4j
+    api("com.github.xiaoymin:knife4j-openapi3-jakarta-spring-boot-starter")
+
     implementation("org.springframework:spring-webmvc")
     implementation("org.springframework.boot:spring-boot-autoconfigure")
     implementation("org.springframework.boot:spring-boot-configuration-processor")
     implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310")
-    implementation("org.springframework.security:spring-security-core")
 
+    // 在GlobalExceptionAdvice#globalExceptionHandler方法中，需要用到
+    compileOnly("org.springframework.security:spring-security-core")
     compileOnly("ch.qos.logback:logback-classic")
     compileOnly("jakarta.servlet:jakarta.servlet-api")
     compileOnly("jakarta.validation:jakarta.validation-api")

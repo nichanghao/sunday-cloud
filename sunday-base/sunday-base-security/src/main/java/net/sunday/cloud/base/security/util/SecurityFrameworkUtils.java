@@ -3,7 +3,10 @@ package net.sunday.cloud.base.security.util;
 import cn.hutool.core.util.StrUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import net.sunday.cloud.base.common.entity.AuthUser;
+import org.springframework.lang.Nullable;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.util.StringUtils;
@@ -30,6 +33,47 @@ public class SecurityFrameworkUtils {
                 new UsernamePasswordAuthenticationToken(authUser, null, Collections.emptyList());
         authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
         SecurityContextHolder.getContext().setAuthentication(authentication);
+    }
+
+    /**
+     * 获取当前用户Id
+     *
+     * @return 当前用户Id
+     */
+    @Nullable
+    public static Long getAuthUserId() {
+        AuthUser authUser = getAuthUser();
+        if (authUser == null) {
+            return null;
+        }
+        return authUser.getId();
+    }
+
+    /**
+     * 获取当前用户
+     *
+     * @return 当前用户
+     */
+    @Nullable
+    public static AuthUser getAuthUser() {
+        Authentication authentication = getAuthentication();
+        if (authentication == null) {
+            return null;
+        }
+        return authentication.getPrincipal() instanceof AuthUser ? (AuthUser) authentication.getPrincipal() : null;
+    }
+
+    /**
+     * 获得当前认证信息
+     *
+     * @return 认证信息
+     */
+    public static Authentication getAuthentication() {
+        SecurityContext context = SecurityContextHolder.getContext();
+        if (context == null) {
+            return null;
+        }
+        return context.getAuthentication();
     }
 
     /**

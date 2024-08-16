@@ -12,6 +12,7 @@ redisson = '3.30.0'
 mybatis-plus = '3.5.6'
 guava = '33.2.1-jre'
 jwt = '0.12.5'
+knife4j-openapi3 = '4.5.0'
 
 [libraries]
 lombok = { module = 'org.projectlombok:lombok', version.ref = 'lombok' }
@@ -19,11 +20,12 @@ dubbo-bom = { module = 'org.apache.dubbo:dubbo-bom', version.ref = 'dubbo' }
 hutool-bom = { module = 'cn.hutool:hutool-bom', version.ref = 'hutool' }
 spring-cloud-dependencies = { module = 'org.springframework.cloud:spring-cloud-dependencies', version.ref = 'spring-cloud' }
 spring-cloud-alibaba-dependencies = { module = 'com.alibaba.cloud:spring-cloud-alibaba-dependencies', version.ref = 'spring-cloud-alibaba' }
-redisson-spring-boot-starter = { module = 'org.redisson:redisson-spring-boot-starter', version.ref ='redisson' }
-mybatis-plus-boot3-starter = { module = 'com.baomidou:mybatis-plus-spring-boot3-starter', version.ref ='mybatis-plus' }
-mybatis-plus-generator = { module = 'com.baomidou:mybatis-plus-generator', version.ref ='mybatis-plus' }
+redisson-spring-boot-starter = { module = 'org.redisson:redisson-spring-boot-starter', version.ref = 'redisson' }
+mybatis-plus-boot3-starter = { module = 'com.baomidou:mybatis-plus-spring-boot3-starter', version.ref = 'mybatis-plus' }
+mybatis-plus-generator = { module = 'com.baomidou:mybatis-plus-generator', version.ref = 'mybatis-plus' }
 google-guava = { module = 'com.google.guava:guava', version.ref = 'guava' }
 jsonwebtoken-jjwt = { module = 'io.jsonwebtoken:jjwt', version.ref = 'jwt' }
+knife4j-openapi3-jakarta-spring-boot-starter = { module = 'com.github.xiaoymin:knife4j-openapi3-jakarta-spring-boot-starter', version.ref = 'knife4j-openapi3' }
 
 [plugins]
 spring-boot = { id = 'org.springframework.boot', version.ref = 'spring-boot' }

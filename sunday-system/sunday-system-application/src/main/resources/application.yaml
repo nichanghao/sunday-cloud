@@ -1,0 +1,38 @@
+server:
+  port: 9000
+
+spring:
+  profiles:
+    active: dev
+  application:
+    name: sunday-cloud-system
+  config:
+    import:
+      - optional:classpath:application-${spring.profiles.active}.yaml
+      - optional:nacos:${spring.application.name}-${spring.profiles.active}.yaml
+
+
+# dubbo 配置
+dubbo:
+  registry:
+    register-mode: instance
+    # dubbo 和 spring cloud 使用同一组时报错：https://github.com/apache/dubbo/issues/12145
+    group: DUBBO_GROUP
+  application:
+    qos-enable: false
+  consumer:
+    check: false
+    timeout: 6000
+
+# swagger 配置
+springdoc:
+  api-docs:
+    enabled: true # 开启 Swagger 接文档的元数据
+    path: /v3/api-docs
+  swagger-ui:
+    enabled: true # 开启 Swagger 文档的官方 UI 界面
+    path: /swagger-ui
+knife4j:
+  enable: true # 开启 Swagger 文档的 Knife4j UI 界面：http://ip:port/doc.html
+  setting:
+    language: zh_cn

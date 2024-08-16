@@ -9,5 +9,6 @@ dependencies {
     compileOnly("org.springframework:spring-webmvc")
     compileOnly("jakarta.servlet:jakarta.servlet-api")
     compileOnly("com.fasterxml.jackson.core:jackson-annotations")
+    compileOnly("com.github.xiaoymin:knife4j-openapi3-jakarta-spring-boot-starter")
 
 }

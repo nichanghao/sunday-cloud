@@ -5,13 +5,19 @@ import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import jakarta.annotation.Resource;
 import jakarta.annotation.security.PermitAll;
+import net.sunday.cloud.base.security.entity.AuthorizeRequestsCustomizer;
+import net.sunday.cloud.base.security.entity.SwaggerAuthorizeRequestsCustomizer;
 import net.sunday.cloud.base.security.filter.TokenAuthenticationFilter;
 import net.sunday.cloud.base.web.rest.RestWebProperties;
+import org.springframework.beans.BeansException;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpMethod;
+import org.springframework.lang.NonNull;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -34,16 +40,16 @@ import java.util.Set;
 @Configuration
 @EnableMethodSecurity // 开启方法级别的安全控制，注解 @PreAuthorize
 @ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.SERVLET)
-public class WebSecurityConfiguration {
+@Import({SwaggerAuthorizeRequestsCustomizer.class})
+public class WebSecurityConfiguration implements ApplicationContextAware {
+
+    private ApplicationContext applicationContext;
 
     @Resource
     private WebSecurityProperties webSecurityProperties;
 
     @Resource
     private RestWebProperties restWebProperties;
-
-    @Resource
-    private ApplicationContext applicationContext;
 
     @Resource
     private AccessDeniedHandler accessDeniedHandler;
@@ -53,7 +59,6 @@ public class WebSecurityConfiguration {
 
     @Resource
     private TokenAuthenticationFilter authenticationTokenFilter;
-
 
     @Bean
     protected SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
@@ -75,6 +80,8 @@ public class WebSecurityConfiguration {
                         .authenticationEntryPoint(authenticationEntryPoint)
                 )
                 .authorizeHttpRequests(c -> c
+                        // 静态资源，可匿名访问
+                        .requestMatchers(HttpMethod.GET, "/favicon.ico", "/*.html", "/*.css", "/*.js").permitAll()
                         // 自定义配置不需要认证的请求
                         .requestMatchers(webSecurityProperties.getPermitUrls().toArray(new String[0])).permitAll()
                         // 设置 @PermitAll 无需认证
@@ -87,10 +94,12 @@ public class WebSecurityConfiguration {
                         // 设置 APP API 无需认证
                         .requestMatchers(buildAppApi()).permitAll()
                 )
+                // 项目自定义配置
+                .authorizeHttpRequests(c -> applicationContext
+                        .getBeansOfType(AuthorizeRequestsCustomizer.class).values().forEach(customizer -> customizer.customize(c)))
                 // 剩余所有请求都需要认证
                 .authorizeHttpRequests(c -> c.anyRequest().authenticated())
         ;
-
         // 添加 Token Filter
         httpSecurity.addFilterBefore(authenticationTokenFilter, UsernamePasswordAuthenticationFilter.class);
         return httpSecurity.build();
@@ -158,8 +167,14 @@ public class WebSecurityConfiguration {
         return result;
     }
 
+    @Override
+    public void setApplicationContext(@NonNull ApplicationContext applicationContext) throws BeansException {
+        this.applicationContext = applicationContext;
+    }
+
     private String buildAppApi() {
         return restWebProperties.getAppApi().getPrefix() + "/**";
     }
+
 
 }

@@ -47,12 +47,8 @@ public class R<T> implements Serializable {
         return restResult(null, GlobalRespCodeEnum.FAIL.getCode(), msg);
     }
 
-    public static <T> R<T> failed(T data) {
-        return restResult(data, GlobalRespCodeEnum.FAIL.getCode(), null);
-    }
-
-    public static <T> R<T> failed(T data, String msg) {
-        return restResult(data, GlobalRespCodeEnum.FAIL.getCode(), msg);
+    public static <T> R<T> failed(int code, String msg) {
+        return restResult(null, code, msg);
     }
 
     public static <T> R<T> failed(ErrorEnum errorEnum) {

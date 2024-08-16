@@ -24,5 +24,6 @@ dependencies {
         api(libs.jsonwebtoken.jjwt)
         api(libs.mybatis.plus.boot3.starter)
         api(libs.redisson.spring.boot.starter)
+        api(libs.knife4j.openapi3.jakarta.spring.boot.starter)
     }
 }
