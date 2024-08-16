@@ -1,5 +1,5 @@
 ### 用户登录
-POST {{host}}/auth/login
+POST {{gateway}}/auth/login
 Content-Type: application/json
 
 {
@@ -8,6 +8,6 @@ Content-Type: application/json
 }
 
 ### check token
-GET {{host}}/auth/token/check?accessToken={{token}}
+GET {{system}}/auth/token/check?accessToken={{token}}
 Content-Type: application/json
 

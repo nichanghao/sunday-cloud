@@ -6,6 +6,7 @@ import com.google.common.collect.Multimap;
 import jakarta.annotation.Resource;
 import jakarta.annotation.security.PermitAll;
 import net.sunday.cloud.base.security.filter.TokenAuthenticationFilter;
+import net.sunday.cloud.base.web.rest.RestWebProperties;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
@@ -37,6 +38,9 @@ public class WebSecurityConfiguration {
 
     @Resource
     private WebSecurityProperties webSecurityProperties;
+
+    @Resource
+    private RestWebProperties restWebProperties;
 
     @Resource
     private ApplicationContext applicationContext;
@@ -80,6 +84,8 @@ public class WebSecurityConfiguration {
                         .requestMatchers(HttpMethod.DELETE, permitAllUrls.get(HttpMethod.DELETE).toArray(new String[0])).permitAll()
                         .requestMatchers(HttpMethod.HEAD, permitAllUrls.get(HttpMethod.HEAD).toArray(new String[0])).permitAll()
                         .requestMatchers(HttpMethod.PATCH, permitAllUrls.get(HttpMethod.PATCH).toArray(new String[0])).permitAll()
+                        // 设置 APP API 无需认证
+                        .requestMatchers(buildAppApi()).permitAll()
                 )
                 // 剩余所有请求都需要认证
                 .authorizeHttpRequests(c -> c.anyRequest().authenticated())
@@ -150,6 +156,10 @@ public class WebSecurityConfiguration {
             });
         }
         return result;
+    }
+
+    private String buildAppApi() {
+        return restWebProperties.getAppApi().getPrefix() + "/**";
     }
 
 }

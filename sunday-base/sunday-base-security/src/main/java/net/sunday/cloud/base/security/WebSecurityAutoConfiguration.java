@@ -6,6 +6,7 @@ import net.sunday.cloud.base.security.filter.TokenAuthenticationFilter;
 import net.sunday.cloud.base.security.handler.CustomAccessDeniedHandler;
 import net.sunday.cloud.base.security.handler.CustomAuthenticationEntryPoint;
 import net.sunday.cloud.base.security.service.UserDetailsServiceImpl;
+import net.sunday.cloud.base.web.rest.RestWebProperties;
 import net.sunday.cloud.system.api.auth.AuthApi;
 import net.sunday.cloud.system.api.user.SysUserApi;
 import org.apache.dubbo.config.spring.ReferenceBean;
@@ -32,7 +33,7 @@ import org.springframework.security.web.access.AccessDeniedHandler;
 
 @AutoConfiguration()
 @AutoConfigureOrder(-1)
-@EnableConfigurationProperties(WebSecurityProperties.class)
+@EnableConfigurationProperties({WebSecurityProperties.class, RestWebProperties.class})
 @Import({WebSecurityConfiguration.class})
 public class WebSecurityAutoConfiguration {
 
