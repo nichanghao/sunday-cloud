@@ -9,8 +9,8 @@ dependencies {
     implementation('jakarta.validation:jakarta.validation-api')
     implementation('org.hibernate.validator:hibernate-validator')
     implementation('io.jsonwebtoken:jjwt')
-    implementation(project(":sunday-system:sunday-system-api"))
 
+    implementation(project(":sunday-system:sunday-system-api"))
     implementation(project(":sunday-base:sunday-base-web"))
     implementation(project(":sunday-base:sunday-base-redis"))
     implementation(project(":sunday-base:sunday-base-dubbo"))

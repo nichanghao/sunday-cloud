@@ -5,7 +5,7 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import jakarta.annotation.Resource;
 import net.sunday.cloud.system.api.user.dto.SysUserRespDTO;
 import net.sunday.cloud.system.model.SysUserDO;
-import net.sunday.cloud.system.service.ISysUserService;
+import net.sunday.cloud.system.service.user.ISysUserService;
 import org.apache.dubbo.config.annotation.DubboService;
 import org.springframework.context.annotation.Primary;
 

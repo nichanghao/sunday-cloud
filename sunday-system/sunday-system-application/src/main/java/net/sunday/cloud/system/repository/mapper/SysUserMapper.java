@@ -1,7 +1,8 @@
 package net.sunday.cloud.system.repository.mapper;
 
-import net.sunday.cloud.system.model.SysUserDO;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import net.sunday.cloud.system.model.SysUserDO;
 
 /**
  * <p>
@@ -13,4 +14,15 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  */
 public interface SysUserMapper extends BaseMapper<SysUserDO> {
 
+    default SysUserDO selectByUsername(String username) {
+        return selectOne(Wrappers.<SysUserDO>lambdaQuery().eq(SysUserDO::getUsername, username));
+    }
+
+    default SysUserDO selectByEmail(String email) {
+        return selectOne(Wrappers.<SysUserDO>lambdaQuery().eq(SysUserDO::getEmail, email));
+    }
+
+    default SysUserDO selectByPhone(String phone) {
+        return selectOne(Wrappers.<SysUserDO>lambdaQuery().eq(SysUserDO::getPhone, phone));
+    }
 }

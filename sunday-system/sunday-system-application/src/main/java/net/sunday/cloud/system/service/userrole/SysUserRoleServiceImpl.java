@@ -1,9 +1,9 @@
-package net.sunday.cloud.system.service.impl;
+package net.sunday.cloud.system.service.userrole;
 
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import net.sunday.cloud.system.model.SysUserRoleDO;
 import net.sunday.cloud.system.repository.mapper.SysUserRoleMapper;
-import net.sunday.cloud.system.service.ISysUserRoleService;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
 
 /**
@@ -17,4 +17,8 @@ import org.springframework.stereotype.Service;
 @Service
 public class SysUserRoleServiceImpl extends ServiceImpl<SysUserRoleMapper, SysUserRoleDO> implements ISysUserRoleService {
 
+    @Override
+    public void removeByUserId(Long userId) {
+        baseMapper.delete(Wrappers.<SysUserRoleDO>lambdaQuery().eq(SysUserRoleDO::getSysUserId, userId));
+    }
 }

@@ -68,6 +68,15 @@ public class GlobalExceptionAdvice {
     }
 
     /**
+     * 处理 IllegalArgumentException 的异常
+     */
+    @ExceptionHandler(IllegalArgumentException.class)
+    public R<?> illegalArgumentExceptionExceptionHandler(IllegalArgumentException ex) {
+        log.info("[illegalArgumentExceptionExceptionHandler] [{}]", ex.getMessage());
+        return R.failed(String.format("请求参数不正确: %s", ex.getMessage()));
+    }
+
+    /**
      * 处理 SpringMVC 请求方法不正确
      * eg: A 接口的方法为 GET 方式，结果请求方法为 POST 方式，导致不匹配
      */

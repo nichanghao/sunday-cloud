@@ -7,4 +7,7 @@ dependencies {
 
     compileOnlyApi("org.slf4j:slf4j-api")
     compileOnly("org.springframework.security:spring-security-core")
+    compileOnly("jakarta.validation:jakarta.validation-api")
+    compileOnly("com.github.xiaoymin:knife4j-openapi3-jakarta-spring-boot-starter")
+
 }

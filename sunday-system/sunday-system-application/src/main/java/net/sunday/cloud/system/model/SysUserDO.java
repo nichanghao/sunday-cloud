@@ -3,8 +3,7 @@ package net.sunday.cloud.system.model;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import net.sunday.cloud.base.mybatis.entity.BaseDO;
 
 import java.io.Serial;
@@ -17,9 +16,12 @@ import java.io.Serial;
  * @author mybatis-plus-generator
  * @since 2024-08-09
  */
-@Getter
-@Setter
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @TableName("sys_user")
+@EqualsAndHashCode(callSuper = true)
 public class SysUserDO extends BaseDO {
 
     @Serial
@@ -48,6 +50,8 @@ public class SysUserDO extends BaseDO {
 
     /**
      * 性别(1:男,2:女)
+     *
+     * @see net.sunday.cloud.system.enums.user.GenderEnum
      */
     private Integer gender;
 
@@ -62,7 +66,9 @@ public class SysUserDO extends BaseDO {
     private String email;
 
     /**
-     * 用户状态(1:正常,0:停用)
+     * 用户状态(1:启用,0:停用)
+     *
+     * @see net.sunday.cloud.system.enums.user.UserStatusEnum
      */
-    private Boolean status;
+    private Integer status;
 }

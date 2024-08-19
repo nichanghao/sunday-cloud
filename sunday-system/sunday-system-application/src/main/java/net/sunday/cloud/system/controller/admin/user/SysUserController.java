@@ -1,0 +1,74 @@
+package net.sunday.cloud.system.controller.admin.user;
+
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.annotation.Resource;
+import jakarta.validation.Valid;
+import net.sunday.cloud.base.common.entity.PageResult;
+import net.sunday.cloud.base.common.entity.R;
+import net.sunday.cloud.system.controller.admin.user.vo.*;
+import net.sunday.cloud.system.service.user.ISysUserService;
+import org.springframework.web.bind.annotation.*;
+
+
+/**
+ * <p>
+ * 用户表 前端控制器
+ * </p>
+ *
+ * @author mybatis-plus-generator
+ * @since 2024-08-09
+ */
+@RestController
+@RequestMapping("/system/user")
+@Tag(name = "用户管理")
+public class SysUserController {
+
+    @Resource
+    private ISysUserService userService;
+
+    @PostMapping("/add")
+    @Operation(summary = "新增用户")
+    public R<Long> addUser(@Valid @RequestBody UserUpsertReqVO upsertVO) {
+        Long id = userService.addUser(upsertVO);
+        return R.ok(id);
+    }
+
+    @PutMapping("update")
+    @Operation(summary = "修改用户")
+    public R<Boolean> updateUser(@Valid @RequestBody UserUpsertReqVO upsertVO) {
+        userService.updateUser(upsertVO);
+        return R.ok(true);
+    }
+
+    @DeleteMapping("/delete")
+    @Operation(summary = "删除用户")
+    @Parameter(name = "id", description = "编号", required = true, example = "1")
+    public R<Boolean> deleteUser(@RequestParam Long id) {
+        userService.deleteUser(id);
+        return R.ok(true);
+    }
+
+    @PutMapping("/reset-password")
+    @Operation(summary = "重置用户密码")
+    public R<Boolean> resetUserPassword(@Valid @RequestBody UserResetPasswordReqVO reqVO) {
+        userService.resetUserPassword(reqVO.getId(), reqVO.getPassword());
+        return R.ok(true);
+    }
+
+    @PutMapping("/update-status")
+    @Operation(summary = "修改用户状态")
+    public R<Boolean> updateUserStatus(@Valid @RequestBody UserUpdateStatusReqVO reqVO) {
+        userService.updateUserStatus(reqVO.getId(), reqVO.getStatus());
+        return R.ok(true);
+    }
+
+    @GetMapping("/page")
+    @Operation(summary = "获得用户分页列表")
+    public R<PageResult<UserRespVO>> getUserPage(@Valid UserPageReqVO pageReqVO) {
+        // 获得用户分页列表
+        return R.ok(PageResult.empty());
+    }
+
+}
