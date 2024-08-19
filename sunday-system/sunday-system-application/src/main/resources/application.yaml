@@ -36,3 +36,7 @@ knife4j:
   enable: true # 开启 Swagger 文档的 Knife4j UI 界面：http://ip:port/doc.html
   setting:
     language: zh_cn
+swagger:
+  info:
+    title: System模块相关API
+    description: 提供System模块相关API功能

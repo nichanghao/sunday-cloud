@@ -1,1 +1,2 @@
 net.sunday.cloud.base.web.WebAutoConfiguration
+net.sunday.cloud.base.web.SwaggerAutoConfiguration

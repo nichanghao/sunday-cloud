@@ -92,7 +92,7 @@ public class SecurityFrameworkUtils {
             return null;
         }
         // 2. 去除 Token 中带的 Bearer
-        int index = token.indexOf(AUTHORIZATION_BEARER);
+        int index = token.indexOf(AUTHORIZATION_BEARER + " ");
         return index >= 0 ? token.substring(index + 7).trim() : token;
     }
 

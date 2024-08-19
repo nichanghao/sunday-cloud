@@ -97,7 +97,7 @@ public class TokenAuthenticationFilter implements WebFilter {
         if (!StringUtils.hasText(authorization)) {
             return null;
         }
-        int index = authorization.indexOf(AUTHORIZATION_BEARER);
+        int index = authorization.indexOf(AUTHORIZATION_BEARER + " ");
         if (index == -1) { // 未找到
             return null;
         }

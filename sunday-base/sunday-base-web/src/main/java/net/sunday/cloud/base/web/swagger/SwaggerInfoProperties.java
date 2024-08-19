@@ -26,6 +26,11 @@ public class SwaggerInfoProperties {
      */
     private Contact contact = new Contact();
 
+    /**
+     * 许可证信息
+     */
+    private License license = new License();
+
 
     @Data
     public static class Contact {
@@ -41,6 +46,18 @@ public class SwaggerInfoProperties {
          * email
          */
         private String email;
+    }
+
+    @Data
+    public static class License {
+        /**
+         * 作者
+         */
+        private String name;
+        /**
+         * url
+         */
+        private String url;
     }
 
 }
