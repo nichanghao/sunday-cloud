@@ -9,6 +9,7 @@ import net.sunday.cloud.base.common.entity.page.PageResult;
 import net.sunday.cloud.base.common.entity.result.R;
 import net.sunday.cloud.system.controller.admin.user.vo.*;
 import net.sunday.cloud.system.service.user.ISysUserService;
+import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -26,6 +27,7 @@ public class SysUserController {
     @PostMapping("/add")
     @Operation(summary = "新增用户")
     public R<Long> addUser(@Valid @RequestBody UserUpsertReqVO upsertVO) {
+        Assert.notNull(upsertVO.getPassword(), () -> "密码不能为空");
         Long id = userService.addUser(upsertVO);
         return R.ok(id);
     }
@@ -33,6 +35,7 @@ public class SysUserController {
     @PutMapping("update")
     @Operation(summary = "修改用户")
     public R<Boolean> updateUser(@Valid @RequestBody UserUpsertReqVO upsertVO) {
+        Assert.notNull(upsertVO.getId(), () -> "ID不能为空");
         userService.updateUser(upsertVO);
         return R.ok(true);
     }

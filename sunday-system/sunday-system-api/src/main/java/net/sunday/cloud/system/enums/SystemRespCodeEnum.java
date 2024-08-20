@@ -30,7 +30,22 @@ public enum SystemRespCodeEnum implements ErrorEnum {
 
     ROLE_NOT_EXISTS(100_002_003, "角色不存在"),
 
-    ROLE_BE_USED_BY_USER(100_002_004, "角色已被用户使用")
+    ROLE_BE_USED_BY_USER(100_002_004, "角色已被用户使用"),
+
+
+    /* 菜单相关 100_003_000 */
+    MENU_PARENT_NOT_SELF(100_003_001, "不能设置自己为父菜单"),
+
+    MENU_PARENT_NOT_EXISTS(100_003_002, "父菜单不存在"),
+
+    MENU_PARENT_NOT_DIR_OR_MENU(100_003_003, "父菜单的类型必须是目录或者菜单"),
+
+    MENU_NAME_EXISTS(100_003_004, "已经存在该名字的菜单"),
+
+    MENU_NOT_EXISTS(100_003_005, "菜单不存在"),
+
+    MENU_EXISTS_CHILDREN(100_003_006, "存在子菜单，无法操作"),
+
     ;
 
 

@@ -15,4 +15,11 @@ public interface ISysRoleMenuService extends IService<SysRoleMenuDO> {
      */
     void removeByRoleId(Long roleId);
 
+    /**
+     * 删除菜单关联的角色关系
+     *
+     * @param menuId 菜单ID
+     */
+    void removeByMenuId(Long menuId);
+
 }

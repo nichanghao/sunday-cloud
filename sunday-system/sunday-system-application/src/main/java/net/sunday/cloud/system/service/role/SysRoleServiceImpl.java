@@ -141,7 +141,7 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRoleDO> im
             return;
         }
 
-        if (id != null && !Objects.equals(role.getId(), id)) {
+        if (!Objects.equals(role.getId(), id)) {
             throw new BusinessException(ROLE_NAME_EXISTS);
         }
     }
@@ -157,7 +157,7 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRoleDO> im
             return;
         }
 
-        if (id != null && !Objects.equals(role.getId(), id)) {
+        if (!Objects.equals(role.getId(), id)) {
             throw new BusinessException(ROLE_CODE_EXISTS);
         }
     }

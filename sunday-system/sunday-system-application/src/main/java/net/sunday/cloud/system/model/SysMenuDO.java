@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Getter;
 import lombok.Setter;
 import net.sunday.cloud.base.mybatis.entity.BaseDO;
+import net.sunday.cloud.system.enums.menu.MenuTypeEnum;
 
 import java.io.Serial;
 
@@ -26,6 +27,11 @@ public class SysMenuDO extends BaseDO {
     private static final long serialVersionUID = 1L;
 
     /**
+     * 菜单编号 - 根节点
+     */
+    public static final Long ID_ROOT = 0L;
+
+    /**
      * 菜单ID
      */
     @TableId(value = "id", type = IdType.AUTO)
@@ -43,6 +49,8 @@ public class SysMenuDO extends BaseDO {
 
     /**
      * 菜单类型(1:目录,2:菜单,3:按钮)
+     *
+     * @see MenuTypeEnum
      */
     private Integer type;
 

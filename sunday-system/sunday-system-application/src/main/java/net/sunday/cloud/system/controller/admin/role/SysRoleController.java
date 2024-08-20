@@ -12,6 +12,7 @@ import net.sunday.cloud.system.controller.admin.role.vo.RolePageReqVO;
 import net.sunday.cloud.system.controller.admin.role.vo.RoleRespVO;
 import net.sunday.cloud.system.controller.admin.role.vo.RoleUpsertReqVO;
 import net.sunday.cloud.system.service.role.ISysRoleService;
+import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -36,6 +37,7 @@ public class SysRoleController {
     @PutMapping("/update")
     @Operation(summary = "修改角色")
     public R<Boolean> updateRole(@Valid @RequestBody RoleUpsertReqVO updateReqVO) {
+        Assert.notNull(updateReqVO.getId(), () -> "ID不能为空");
         roleService.updateRole(updateReqVO);
         return R.ok(true);
     }

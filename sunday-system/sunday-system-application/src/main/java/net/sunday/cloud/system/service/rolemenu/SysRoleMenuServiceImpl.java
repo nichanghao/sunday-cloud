@@ -15,4 +15,9 @@ public class SysRoleMenuServiceImpl extends ServiceImpl<SysRoleMenuMapper, SysRo
     public void removeByRoleId(Long roleId) {
         baseMapper.delete(SysRoleMenuDO::getRoleId, roleId);
     }
+
+    @Override
+    public void removeByMenuId(Long menuId) {
+        baseMapper.delete(SysRoleMenuDO::getMenuId, menuId);
+    }
 }

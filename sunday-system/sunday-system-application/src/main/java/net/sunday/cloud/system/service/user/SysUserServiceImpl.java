@@ -18,7 +18,6 @@ import net.sunday.cloud.system.service.userrole.ISysUserRoleService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.Assert;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
@@ -39,8 +38,6 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUserDO> im
     @Override
     @Transactional(rollbackFor = Exception.class)
     public Long addUser(UserUpsertReqVO upsertVO) {
-        Assert.notNull(upsertVO.getPassword(), () -> "密码不能为空");
-
         // 校验用户信息是否存在
         validateUserForUpsert(null, upsertVO.getUsername(), upsertVO.getPhone(), upsertVO.getEmail());
 
@@ -55,8 +52,6 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUserDO> im
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void updateUser(UserUpsertReqVO upsertVO) {
-        Assert.notNull(upsertVO.getId(), () -> "用户ID不能为空");
-
         // 校验用户信息是否存在
         validateUserForUpsert(upsertVO.getId(), upsertVO.getUsername(), upsertVO.getPhone(), upsertVO.getEmail());
 
@@ -158,7 +153,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUserDO> im
             return;
         }
 
-        if (id != null && !Objects.equals(user.getId(), id)) {
+        if (!Objects.equals(user.getId(), id)) {
             throw new BusinessException(USER_USERNAME_EXISTS);
         }
     }
@@ -172,7 +167,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUserDO> im
         if (user == null) {
             return;
         }
-        if (id != null && !Objects.equals(user.getId(), id)) {
+        if (!Objects.equals(user.getId(), id)) {
             throw new BusinessException(USER_MOBILE_EXISTS);
         }
     }
@@ -187,7 +182,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUserDO> im
         if (user == null) {
             return;
         }
-        if (id != null && !Objects.equals(user.getId(), id)) {
+        if (!Objects.equals(user.getId(), id)) {
             throw new BusinessException(USER_EMAIL_EXISTS);
         }
 
