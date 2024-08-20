@@ -2,7 +2,7 @@ package net.sunday.cloud.system.service.auth;
 
 import cn.hutool.core.util.IdUtil;
 import jakarta.annotation.Resource;
-import net.sunday.cloud.base.common.entity.AuthUser;
+import net.sunday.cloud.base.common.entity.auth.AuthUser;
 import net.sunday.cloud.base.common.exception.BusinessException;
 import net.sunday.cloud.system.controller.auth.vo.AuthLoginReqVO;
 import net.sunday.cloud.system.controller.auth.vo.AuthLoginRespVO;

@@ -2,7 +2,7 @@ package net.sunday.cloud.gateway.caffeine;
 
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
-import net.sunday.cloud.base.common.entity.AuthUser;
+import net.sunday.cloud.base.common.entity.auth.AuthUser;
 
 import java.time.Duration;
 

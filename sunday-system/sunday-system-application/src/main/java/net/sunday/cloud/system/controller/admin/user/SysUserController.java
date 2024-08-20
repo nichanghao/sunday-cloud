@@ -5,20 +5,15 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Resource;
 import jakarta.validation.Valid;
-import net.sunday.cloud.base.common.entity.PageResult;
-import net.sunday.cloud.base.common.entity.R;
+import net.sunday.cloud.base.common.entity.page.PageResult;
+import net.sunday.cloud.base.common.entity.result.R;
 import net.sunday.cloud.system.controller.admin.user.vo.*;
 import net.sunday.cloud.system.service.user.ISysUserService;
 import org.springframework.web.bind.annotation.*;
 
 
 /**
- * <p>
- * 用户表 前端控制器
- * </p>
- *
- * @author mybatis-plus-generator
- * @since 2024-08-09
+ * 系统用户 前端控制器
  */
 @RestController
 @RequestMapping("/system/user")
@@ -67,8 +62,8 @@ public class SysUserController {
     @GetMapping("/page")
     @Operation(summary = "获得用户分页列表")
     public R<PageResult<UserRespVO>> getUserPage(@Valid UserPageReqVO pageReqVO) {
-        // 获得用户分页列表
-        return R.ok(PageResult.empty());
+
+        return R.ok(userService.getUserPage(pageReqVO));
     }
 
 }

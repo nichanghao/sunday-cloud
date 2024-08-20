@@ -2,8 +2,8 @@
 package net.sunday.cloud.gateway.filter;
 
 import jakarta.annotation.Resource;
-import net.sunday.cloud.base.common.entity.AuthUser;
-import net.sunday.cloud.base.common.entity.R;
+import net.sunday.cloud.base.common.entity.auth.AuthUser;
+import net.sunday.cloud.base.common.entity.result.R;
 import net.sunday.cloud.base.common.util.json.JsonUtils;
 import net.sunday.cloud.gateway.caffeine.TokenAuthenticationCache;
 import org.springframework.core.ParameterizedTypeReference;

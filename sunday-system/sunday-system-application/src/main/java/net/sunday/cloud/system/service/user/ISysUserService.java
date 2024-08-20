@@ -1,16 +1,14 @@
 package net.sunday.cloud.system.service.user;
 
+import net.sunday.cloud.base.common.entity.page.PageResult;
+import net.sunday.cloud.system.controller.admin.user.vo.UserPageReqVO;
+import net.sunday.cloud.system.controller.admin.user.vo.UserRespVO;
 import net.sunday.cloud.system.controller.admin.user.vo.UserUpsertReqVO;
 import net.sunday.cloud.system.model.SysUserDO;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 /**
- * <p>
- * 用户表 服务类
- * </p>
- *
- * @author mybatis-plus-generator
- * @since 2024-08-09
+ * 系统用户 服务接口层
  */
 public interface ISysUserService extends IService<SysUserDO> {
 
@@ -51,4 +49,12 @@ public interface ISysUserService extends IService<SysUserDO> {
      * @param status 状态
      */
     void updateUserStatus(Long id, Integer status);
+
+    /**
+     * 获得用户分页列表
+     *
+     * @param reqVO 分页条件
+     * @return 分页列表
+     */
+    PageResult<UserRespVO> getUserPage(UserPageReqVO reqVO);
 }

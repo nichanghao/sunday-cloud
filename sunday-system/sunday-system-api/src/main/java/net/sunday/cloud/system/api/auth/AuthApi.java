@@ -1,6 +1,6 @@
 package net.sunday.cloud.system.api.auth;
 
-import net.sunday.cloud.base.common.entity.AuthUser;
+import net.sunday.cloud.base.common.entity.auth.AuthUser;
 
 public interface AuthApi {
 

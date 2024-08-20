@@ -1,4 +1,4 @@
-package net.sunday.cloud.base.common.entity;
+package net.sunday.cloud.base.common.entity.result;
 
 
 import lombok.AllArgsConstructor;

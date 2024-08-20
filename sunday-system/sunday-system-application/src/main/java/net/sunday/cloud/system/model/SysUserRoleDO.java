@@ -26,10 +26,10 @@ public class SysUserRoleDO implements Serializable {
     /**
      * 角色ID
      */
-    private Long sysRoleId;
+    private Long roleId;
 
     /**
      * 用户ID
      */
-    private Long sysUserId;
+    private Long userId;
 }

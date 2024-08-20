@@ -1,7 +1,7 @@
 package net.sunday.cloud.system.service.auth;
 
 import jakarta.validation.Valid;
-import net.sunday.cloud.base.common.entity.AuthUser;
+import net.sunday.cloud.base.common.entity.auth.AuthUser;
 import net.sunday.cloud.system.controller.auth.vo.AuthLoginReqVO;
 import net.sunday.cloud.system.controller.auth.vo.AuthLoginRespVO;
 

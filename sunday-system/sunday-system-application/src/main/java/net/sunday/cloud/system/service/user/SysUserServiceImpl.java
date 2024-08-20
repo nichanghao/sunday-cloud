@@ -1,10 +1,16 @@
 package net.sunday.cloud.system.service.user;
 
 import cn.hutool.core.util.StrUtil;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import jakarta.annotation.Resource;
+import net.sunday.cloud.base.common.entity.page.PageResult;
 import net.sunday.cloud.base.common.exception.BusinessException;
+import net.sunday.cloud.base.common.util.collection.ArrayUtils;
+import net.sunday.cloud.base.common.util.collection.CollectionUtils;
 import net.sunday.cloud.base.common.util.object.BeanUtils;
+import net.sunday.cloud.system.controller.admin.user.vo.UserPageReqVO;
+import net.sunday.cloud.system.controller.admin.user.vo.UserRespVO;
 import net.sunday.cloud.system.controller.admin.user.vo.UserUpsertReqVO;
 import net.sunday.cloud.system.model.SysUserDO;
 import net.sunday.cloud.system.repository.mapper.SysUserMapper;
@@ -14,15 +20,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 /**
- * <p>
- * 用户表 服务实现类
- * </p>
- *
- * @author mybatis-plus-generator
- * @since 2024-08-09
+ * 系统用户 服务实现层
  */
 @Service
 public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUserDO> implements ISysUserService {
@@ -99,6 +101,27 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUserDO> im
                 .build());
     }
 
+    @Override
+    public PageResult<UserRespVO> getUserPage(UserPageReqVO reqVO) {
+        LocalDateTime[] updateTimes = reqVO.getUpdateTimes();
+
+        PageResult<SysUserDO> pageResult = baseMapper.selectPage(reqVO, Wrappers.<SysUserDO>lambdaQuery()
+                .like(reqVO.getUsername() != null, SysUserDO::getUsername, reqVO.getUsername())
+                .like(reqVO.getPhone() != null, SysUserDO::getPhone, reqVO.getPhone())
+                .eq(reqVO.getStatus() != null, SysUserDO::getStatus, reqVO.getStatus())
+                .ge(ArrayUtils.get(updateTimes, 0) != null, SysUserDO::getUpdateTime, updateTimes[0])
+                .le(ArrayUtils.get(updateTimes, 1) != null, SysUserDO::getUpdateTime, updateTimes[1])
+        );
+
+        if (org.springframework.util.CollectionUtils.isEmpty(pageResult.getList())) {
+            return PageResult.empty();
+        }
+        return PageResult.<UserRespVO>builder()
+                .list(CollectionUtils.convertList(pageResult.getList(), user -> BeanUtils.toBean(user, UserRespVO.class)))
+                .total(pageResult.getTotal())
+                .build();
+    }
+
     private void validateUserForUpsert(Long id, String username, String phone, String email) {
 
         // 校验用户存在
@@ -116,7 +139,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUserDO> im
         if (id == null) {
             return;
         }
-        SysUserDO user = super.baseMapper.selectById(id);
+        SysUserDO user = baseMapper.selectById(id);
         if (user == null) {
             throw new BusinessException("用户不存在");
         }
@@ -126,7 +149,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUserDO> im
         if (StrUtil.isBlank(username)) {
             return;
         }
-        SysUserDO user = baseMapper.selectByUsername(username);
+        SysUserDO user = baseMapper.selectOne(SysUserDO::getUsername, username);
         if (user == null) {
             return;
         }
@@ -140,7 +163,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUserDO> im
         if (StrUtil.isBlank(mobile)) {
             return;
         }
-        SysUserDO user = baseMapper.selectByPhone(mobile);
+        SysUserDO user = baseMapper.selectOne(SysUserDO::getPhone, mobile);
         if (user == null) {
             return;
         }
@@ -153,7 +176,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUserDO> im
         if (StrUtil.isBlank(email)) {
             return;
         }
-        SysUserDO user = baseMapper.selectByEmail(email);
+        SysUserDO user = baseMapper.selectOne(SysUserDO::getEmail, email);
         if (user == null) {
             return;
         }

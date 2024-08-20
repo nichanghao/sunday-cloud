@@ -1,4 +1,4 @@
-package net.sunday.cloud.base.common.entity;
+package net.sunday.cloud.base.common.entity.auth;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;

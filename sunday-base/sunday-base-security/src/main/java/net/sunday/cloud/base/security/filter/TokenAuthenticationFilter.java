@@ -6,7 +6,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
-import net.sunday.cloud.base.common.entity.AuthUser;
+import net.sunday.cloud.base.common.entity.auth.AuthUser;
 import net.sunday.cloud.base.common.util.json.JsonUtils;
 import net.sunday.cloud.base.security.util.SecurityFrameworkUtils;
 import net.sunday.cloud.system.api.auth.AuthApi;

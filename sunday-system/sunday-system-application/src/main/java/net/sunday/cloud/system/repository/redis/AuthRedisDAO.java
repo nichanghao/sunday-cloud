@@ -1,7 +1,7 @@
 package net.sunday.cloud.system.repository.redis;
 
 import jakarta.annotation.Resource;
-import net.sunday.cloud.base.common.entity.AuthUser;
+import net.sunday.cloud.base.common.entity.auth.AuthUser;
 import net.sunday.cloud.base.common.exception.BusinessException;
 import net.sunday.cloud.base.common.util.json.JsonUtils;
 import net.sunday.cloud.system.exception.SystemRespCodeEnum;

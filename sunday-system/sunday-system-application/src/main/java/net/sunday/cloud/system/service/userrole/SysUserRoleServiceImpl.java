@@ -7,18 +7,13 @@ import net.sunday.cloud.system.repository.mapper.SysUserRoleMapper;
 import org.springframework.stereotype.Service;
 
 /**
- * <p>
- *  服务实现类
- * </p>
- *
- * @author mybatis-plus-generator
- * @since 2024-08-09
+ * 用户角色关联 服务实现类
  */
 @Service
 public class SysUserRoleServiceImpl extends ServiceImpl<SysUserRoleMapper, SysUserRoleDO> implements ISysUserRoleService {
 
     @Override
     public void removeByUserId(Long userId) {
-        baseMapper.delete(Wrappers.<SysUserRoleDO>lambdaQuery().eq(SysUserRoleDO::getSysUserId, userId));
+        baseMapper.delete(Wrappers.<SysUserRoleDO>lambdaQuery().eq(SysUserRoleDO::getUserId, userId));
     }
 }

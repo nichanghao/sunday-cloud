@@ -4,7 +4,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
-import net.sunday.cloud.base.common.entity.R;
+import net.sunday.cloud.base.common.entity.result.R;
 import net.sunday.cloud.base.common.exception.BusinessException;
 import net.sunday.cloud.base.common.exception.GlobalRespCodeEnum;
 import org.springframework.security.access.AccessDeniedException;

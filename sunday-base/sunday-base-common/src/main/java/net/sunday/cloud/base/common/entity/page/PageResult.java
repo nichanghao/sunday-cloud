@@ -1,7 +1,10 @@
-package net.sunday.cloud.base.common.entity;
+package net.sunday.cloud.base.common.entity.page;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.util.Collections;
@@ -9,6 +12,9 @@ import java.util.List;
 
 @Schema(description = "分页结果")
 @Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public final class PageResult<T> implements Serializable {
 
     @Schema(description = "数据", requiredMode = Schema.RequiredMode.REQUIRED)
@@ -16,14 +22,6 @@ public final class PageResult<T> implements Serializable {
 
     @Schema(description = "总量", requiredMode = Schema.RequiredMode.REQUIRED)
     private Long total;
-
-    public PageResult() {
-    }
-
-    public PageResult(List<T> list, Long total) {
-        this.list = list;
-        this.total = total;
-    }
 
     public PageResult(Long total) {
         this.list = Collections.emptyList();

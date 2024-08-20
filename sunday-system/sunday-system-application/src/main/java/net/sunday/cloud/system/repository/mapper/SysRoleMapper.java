@@ -1,7 +1,7 @@
 package net.sunday.cloud.system.repository.mapper;
 
+import net.sunday.cloud.base.mybatis.mapper.BaseMapperX;
 import net.sunday.cloud.system.model.SysRoleDO;
-import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
 /**
  * <p>
@@ -11,6 +11,6 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  * @author mybatis-plus-generator
  * @since 2024-08-09
  */
-public interface SysRoleMapper extends BaseMapper<SysRoleDO> {
+public interface SysRoleMapper extends BaseMapperX<SysRoleDO> {
 
 }

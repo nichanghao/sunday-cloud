@@ -4,12 +4,7 @@ import net.sunday.cloud.system.model.SysUserRoleDO;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 /**
- * <p>
- *  服务类
- * </p>
- *
- * @author mybatis-plus-generator
- * @since 2024-08-09
+ * 用户角色关联 服务接口层
  */
 public interface ISysUserRoleService extends IService<SysUserRoleDO> {
 

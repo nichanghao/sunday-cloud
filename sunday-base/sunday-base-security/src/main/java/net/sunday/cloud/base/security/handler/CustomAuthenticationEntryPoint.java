@@ -4,7 +4,7 @@ import cn.hutool.extra.servlet.JakartaServletUtil;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import net.sunday.cloud.base.common.entity.R;
+import net.sunday.cloud.base.common.entity.result.R;
 import net.sunday.cloud.base.common.util.json.JsonUtils;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.AuthenticationException;

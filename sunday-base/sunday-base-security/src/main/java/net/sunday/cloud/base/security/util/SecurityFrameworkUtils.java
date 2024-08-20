@@ -2,7 +2,7 @@ package net.sunday.cloud.base.security.util;
 
 import cn.hutool.core.util.StrUtil;
 import jakarta.servlet.http.HttpServletRequest;
-import net.sunday.cloud.base.common.entity.AuthUser;
+import net.sunday.cloud.base.common.entity.auth.AuthUser;
 import org.springframework.lang.Nullable;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
