@@ -4,6 +4,7 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.ArrayUtil;
 import com.google.common.collect.ImmutableMap;
+import org.springframework.lang.Nullable;
 
 import java.util.*;
 import java.util.function.*;
@@ -17,6 +18,9 @@ import static java.util.Arrays.asList;
  */
 public class CollectionUtils {
 
+    public static boolean isEmpty(@Nullable Collection<?> collection) {
+        return collection == null || collection.isEmpty();
+    }
     public static boolean containsAny(Object source, Object... targets) {
         return asList(targets).contains(source);
     }

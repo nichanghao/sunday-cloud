@@ -10,12 +10,7 @@ import net.sunday.cloud.base.mybatis.entity.BaseDO;
 import java.io.Serial;
 
 /**
- * <p>
  * 角色表
- * </p>
- *
- * @author mybatis-plus-generator
- * @since 2024-08-09
  */
 @Getter
 @Setter
@@ -43,8 +38,10 @@ public class SysRoleDO extends BaseDO {
 
     /**
      * 状态(1:启用 0:禁用)
+     *
+     * @see net.sunday.cloud.base.common.enums.CommonStatusEnum
      */
-    private Boolean status;
+    private Integer status;
 
     /**
      * 备注

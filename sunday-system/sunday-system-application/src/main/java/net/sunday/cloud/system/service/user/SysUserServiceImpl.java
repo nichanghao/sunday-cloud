@@ -23,6 +23,8 @@ import org.springframework.util.Assert;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
+import static net.sunday.cloud.system.enums.SystemRespCodeEnum.*;
+
 /**
  * 系统用户 服务实现层
  */
@@ -113,7 +115,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUserDO> im
                 .le(ArrayUtils.get(updateTimes, 1) != null, SysUserDO::getUpdateTime, updateTimes[1])
         );
 
-        if (org.springframework.util.CollectionUtils.isEmpty(pageResult.getList())) {
+        if (CollectionUtils.isEmpty(pageResult.getList())) {
             return PageResult.empty();
         }
         return PageResult.<UserRespVO>builder()
@@ -141,24 +143,27 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUserDO> im
         }
         SysUserDO user = baseMapper.selectById(id);
         if (user == null) {
-            throw new BusinessException("用户不存在");
+            throw new BusinessException(USER_NOT_EXISTS);
         }
     }
 
+    @SuppressWarnings("Duplicates")
     private void validateUsernameUnique(Long id, String username) {
         if (StrUtil.isBlank(username)) {
             return;
         }
+
         SysUserDO user = baseMapper.selectOne(SysUserDO::getUsername, username);
         if (user == null) {
             return;
         }
 
-        if (id == null || !Objects.equals(user.getId(), id)) {
-            throw new BusinessException("用户名已存在");
+        if (id != null && !Objects.equals(user.getId(), id)) {
+            throw new BusinessException(USER_USERNAME_EXISTS);
         }
     }
 
+    @SuppressWarnings("Duplicates")
     private void validatePhoneUnique(Long id, String mobile) {
         if (StrUtil.isBlank(mobile)) {
             return;
@@ -167,11 +172,13 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUserDO> im
         if (user == null) {
             return;
         }
-        if (id == null || !Objects.equals(user.getId(), id)) {
-            throw new BusinessException("手机号已存在");
+        if (id != null && !Objects.equals(user.getId(), id)) {
+            throw new BusinessException(USER_MOBILE_EXISTS);
         }
     }
 
+
+    @SuppressWarnings("Duplicates")
     private void validateEmailUnique(Long id, String email) {
         if (StrUtil.isBlank(email)) {
             return;
@@ -180,9 +187,8 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUserDO> im
         if (user == null) {
             return;
         }
-        // 如果 id 为空，说明不用比较是否为相同 id 的用户
-        if (id == null || !Objects.equals(user.getId(), id)) {
-            throw new BusinessException("邮箱已存在");
+        if (id != null && !Objects.equals(user.getId(), id)) {
+            throw new BusinessException(USER_EMAIL_EXISTS);
         }
 
     }
