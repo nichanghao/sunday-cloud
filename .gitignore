@@ -3,6 +3,7 @@
 build/
 classes/
 target/
+!ui/build/
 
 # IDE
 *.iml
