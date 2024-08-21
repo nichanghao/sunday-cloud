@@ -62,7 +62,7 @@ public class GlobalExceptionAdvice {
      * 处理 Spring Security AuthenticationException 的异常
      */
     @ExceptionHandler(value = AuthenticationException.class)
-    public R<?> authenticationExceptionHandler(HttpServletRequest req, AccessDeniedException ex) {
+    public R<?> authenticationExceptionHandler(HttpServletRequest req, AuthenticationException ex) {
         log.warn("[authenticationExceptionHandler] [未认证 url({})]", req.getRequestURL(), ex);
         return R.failed(GlobalRespCodeEnum.UNAUTHORIZED);
     }
@@ -153,6 +153,31 @@ public class GlobalExceptionAdvice {
     public R<?> globalExceptionHandler(Throwable ex) {
         log.error("[globalExceptionHandler]", ex);
         return R.failed(GlobalRespCodeEnum.SERVER_INTERNAL_ERROR);
+    }
+
+    /**
+     * 处理所有异常，主要是提供给 Filter 使用
+     * 因为 Filter 中抛出的异常无法被 ExceptionHandler 捕获
+     *
+     * @param request 请求
+     * @param e       异常
+     * @return 通用返回
+     */
+    public R<?> filterExceptionHandler(HttpServletRequest request, Throwable e) {
+
+        if (e instanceof BusinessException ex) {
+            return businessExceptionHandler(ex);
+        }
+        if (e instanceof AccessDeniedException ex) {
+            return accessDeniedExceptionHandler(request, ex);
+        }
+        if (e instanceof AuthenticationException ex) {
+            return authenticationExceptionHandler(request, ex);
+        }
+        if (e instanceof IllegalArgumentException ex) {
+            return illegalArgumentExceptionExceptionHandler(ex);
+        }
+        return globalExceptionHandler(e);
     }
 
 

@@ -39,7 +39,7 @@ public class MenuRespVO {
     @Schema(description = "状态(1:启用 0:禁用)", example = "1")
     private Integer status;
 
-    @Schema(description = "更新时间", requiredMode = Schema.RequiredMode.REQUIRED, example = "时间戳格式")
+    @Schema(description = "更新时间", requiredMode = Schema.RequiredMode.REQUIRED, example = "毫秒时间戳格式")
     private LocalDateTime updateTime;
 
 }

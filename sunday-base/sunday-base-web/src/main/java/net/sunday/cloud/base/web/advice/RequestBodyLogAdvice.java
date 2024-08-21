@@ -49,8 +49,8 @@ public class RequestBodyLogAdvice extends RequestBodyAdviceAdapter {
                 requestMethod = clazz.getSimpleName() + "." + method.getName();
             }
             logger.info("收到请求 {} ({}), params: {}", requestUrl, requestMethod, JsonUtils.toJsonString(body));
-        } catch (Exception ignored) {
-
+        } catch (Exception e) {
+            logger.debug("[请求日志打印失败] [{}]", e.getMessage());
         }
 
         return body;

@@ -1,12 +1,11 @@
 package net.sunday.cloud.system.model;
 
-import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Getter;
 import lombok.Setter;
-import net.sunday.cloud.base.mybatis.entity.BaseDO;
 
 import java.io.Serial;
+import java.io.Serializable;
 
 /**
  * 角色菜单关联
@@ -14,7 +13,7 @@ import java.io.Serial;
 @Getter
 @Setter
 @TableName("sys_role_menu")
-public class SysRoleMenuDO extends BaseDO {
+public class SysRoleMenuDO implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 1L;

@@ -7,10 +7,13 @@ import com.fasterxml.jackson.datatype.jsr310.deser.LocalTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalTimeSerializer;
 import net.sunday.cloud.base.common.util.json.databind.NumberSerializer;
+import net.sunday.cloud.base.common.util.json.databind.TimestampLocalDateTimeDeserializer;
+import net.sunday.cloud.base.common.util.json.databind.TimestampLocalDateTimeSerializer;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 public class JacksonBeanPostProcessor implements BeanPostProcessor {
@@ -28,7 +31,10 @@ public class JacksonBeanPostProcessor implements BeanPostProcessor {
                     .addSerializer(LocalDate.class, LocalDateSerializer.INSTANCE)
                     .addDeserializer(LocalDate.class, LocalDateDeserializer.INSTANCE)
                     .addSerializer(LocalTime.class, LocalTimeSerializer.INSTANCE)
-                    .addDeserializer(LocalTime.class, LocalTimeDeserializer.INSTANCE);
+                    .addDeserializer(LocalTime.class, LocalTimeDeserializer.INSTANCE)
+                    // 新增 LocalDateTime 时间戳序列化、反序列化
+                    .addSerializer(LocalDateTime.class, TimestampLocalDateTimeSerializer.INSTANCE)
+                    .addDeserializer(LocalDateTime.class, TimestampLocalDateTimeDeserializer.INSTANCE);
             // 1.2 注册到 objectMapper
             objectMapper.registerModule(simpleModule);
         }

@@ -26,7 +26,7 @@ public class UserUpsertReqVO {
      * @see net.sunday.cloud.system.enums.user.GenderEnum
      */
     @Schema(description = "用户性别(0:保密,1:男,2:女)", example = "1")
-    @NotBlank(message = "用户性别不能为空")
+    @NotNull(message = "用户性别不能为空")
     @Min(value = 0, message = "用户性别参数不能小于0")
     @Max(value = 2, message = "用户性别参数不能大于2")
     private Integer gender;

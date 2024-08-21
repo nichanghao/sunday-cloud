@@ -1,0 +1,41 @@
+### 新增角色
+POST {{gateway}}/admin-api/system/role/add
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "name": "管理员",
+  "code": "admin",
+  "remark": "管理员角色"
+}
+
+### 修改角色
+PUT {{gateway}}/admin-api/system/role/update
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "id": 2,
+  "name": "管理员",
+  "code": "super_admin",
+  "remark": "管理员角色"
+}
+
+### 删除角色
+DELETE {{gateway}}/admin-api/system/role/delete?id=2
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+### 获得角色分页列表
+POST {{gateway}}/admin-api/system/role/page
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "updateTimes": [1692586098000, 1755744498000]
+}
+
+### 获取角色精简信息列表
+GET {{gateway}}/admin-api/system/role/list-all-simple
+Content-Type: application/json
+Authorization: Bearer {{token}}

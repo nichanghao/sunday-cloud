@@ -23,6 +23,6 @@ public class RoleUpsertReqVO {
     private String code;
 
     @Schema(description = "备注")
-    private String desc;
+    private String remark;
 
 }

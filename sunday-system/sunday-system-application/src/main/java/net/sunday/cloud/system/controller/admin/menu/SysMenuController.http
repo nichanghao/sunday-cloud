@@ -1,0 +1,46 @@
+### 新增菜单
+POST {{gateway}}/admin-api/system/menu/add
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "name": "菜单管理1",
+  "type": 1,
+  "sort": 0,
+  "parentId": 0,
+  "path": "/system/menu",
+  "component": "system/menu/index",
+  "componentName": "Menu"
+}
+
+### 修改菜单
+PUT {{gateway}}/admin-api/system/menu/update
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "id": 19,
+  "name": "菜单管理12",
+  "type": 1,
+  "sort": 1,
+  "parentId": 0,
+  "path": "/system/menu",
+  "component": "system/menu/index",
+  "componentName": "Menu"
+}
+
+### 删除菜单
+DELETE {{gateway}}/admin-api/system/menu/delete?id=19
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+### 获取菜单列表
+GET {{gateway}}/admin-api/system/menu/list
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+
+### 获取菜单精简信息列表
+GET {{gateway}}/admin-api/system/menu/list-all-simple
+Content-Type: application/json
+Authorization: Bearer {{token}}

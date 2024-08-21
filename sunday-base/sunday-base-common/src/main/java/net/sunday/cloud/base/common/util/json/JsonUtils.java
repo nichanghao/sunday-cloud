@@ -10,6 +10,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.json.JsonMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 
@@ -31,6 +32,8 @@ public class JsonUtils {
             .disable(SerializationFeature.FAIL_ON_EMPTY_BEANS)
             // 序列化时，null 值不输出
             .serializationInclusion(JsonInclude.Include.NON_NULL)
+            // 解决 LocalDateTime 的序列化问题
+            .addModule(new JavaTimeModule())
             .build();
 
 
@@ -92,7 +95,7 @@ public class JsonUtils {
      * 使用 {@link #parseObject(String, Class)} 时，在@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS) 的场景下，
      * 如果 text 没有 class 属性，则会报错。此时，使用这个方法，可以解决。
      *
-     * @param text 字符串
+     * @param text  字符串
      * @param clazz 类型
      * @return 对象
      */
@@ -127,7 +130,7 @@ public class JsonUtils {
     /**
      * 解析 JSON 字符串成指定类型的对象，如果解析失败，则返回 null
      *
-     * @param text 字符串
+     * @param text          字符串
      * @param typeReference 类型引用
      * @return 指定类型的对象
      */

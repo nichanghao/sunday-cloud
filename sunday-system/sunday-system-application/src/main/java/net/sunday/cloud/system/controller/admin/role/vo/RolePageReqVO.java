@@ -1,13 +1,11 @@
 package net.sunday.cloud.system.controller.admin.role.vo;
 
-import cn.hutool.core.date.DatePattern;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import net.sunday.cloud.base.common.entity.page.PageParam;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
 
@@ -28,8 +26,7 @@ public class RolePageReqVO extends PageParam {
     @Max(value = 1, message = "状态值必须小于等于1")
     private Integer status;
 
-    @Schema(description = "修改时间", example = "[2024-07-01 00:00:00, 2024-08-01 23:59:59]")
-    @DateTimeFormat(pattern = DatePattern.NORM_DATETIME_PATTERN)
+    @Schema(description = "修改时间，毫秒时间戳格式", example = "[1692586098000, 1755744498000]")
     private LocalDateTime[] updateTimes;
 
 }

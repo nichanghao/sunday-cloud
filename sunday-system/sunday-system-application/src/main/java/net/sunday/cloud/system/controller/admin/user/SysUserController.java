@@ -62,9 +62,9 @@ public class SysUserController {
         return R.ok(true);
     }
 
-    @GetMapping("/page")
+    @PostMapping("/page")
     @Operation(summary = "获得用户分页列表")
-    public R<PageResult<UserRespVO>> getUserPage(@Valid UserPageReqVO pageReqVO) {
+    public R<PageResult<UserRespVO>> getUserPage(@Valid @RequestBody UserPageReqVO pageReqVO) {
 
         return R.ok(userService.getUserPage(pageReqVO));
     }

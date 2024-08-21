@@ -46,5 +46,5 @@ public class SysRoleDO extends BaseDO {
     /**
      * 备注
      */
-    private String desc;
+    private String remark;
 }

@@ -1,5 +1,6 @@
 package net.sunday.cloud.system.controller.admin.role.vo;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
@@ -7,6 +8,7 @@ import java.time.LocalDateTime;
 
 @Schema(description = "角色管理 - 角色信息")
 @Data
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class RoleRespVO {
 
     @Schema(description = "角色编号", requiredMode = Schema.RequiredMode.REQUIRED, example = "1")
@@ -22,9 +24,9 @@ public class RoleRespVO {
     private Integer status;
 
     @Schema(description = "备注")
-    private String desc;
+    private String remark;
 
-    @Schema(description = "更新时间", requiredMode = Schema.RequiredMode.REQUIRED, example = "时间戳格式")
+    @Schema(description = "更新时间", requiredMode = Schema.RequiredMode.REQUIRED, example = "毫秒时间戳格式")
     private LocalDateTime updateTime;
 
 }

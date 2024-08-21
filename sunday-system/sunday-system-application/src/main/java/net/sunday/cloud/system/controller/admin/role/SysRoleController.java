@@ -50,9 +50,9 @@ public class SysRoleController {
         return R.ok(true);
     }
 
-    @GetMapping("/page")
-    @Operation(summary = "获得角色分页")
-    public R<PageResult<RoleRespVO>> getRolePage(RolePageReqVO pageReqVO) {
+    @PostMapping("/page")
+    @Operation(summary = "获得角色分页列表")
+    public R<PageResult<RoleRespVO>> getRolePage(@Valid @RequestBody RolePageReqVO pageReqVO) {
         return R.ok(roleService.getRolePage(pageReqVO));
     }
 

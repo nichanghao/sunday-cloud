@@ -30,7 +30,7 @@ public class UserRespVO {
     @Schema(description = "用户状态(1:启用,0:停用)", requiredMode = Schema.RequiredMode.REQUIRED)
     private Integer status;
 
-    @Schema(description = "更新时间", requiredMode = Schema.RequiredMode.REQUIRED, example = "时间戳格式")
+    @Schema(description = "更新时间", requiredMode = Schema.RequiredMode.REQUIRED, example = "毫秒时间戳格式")
     private LocalDateTime updateTime;
 
 }

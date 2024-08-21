@@ -1,0 +1,62 @@
+### 新增用户
+POST {{gateway}}/admin-api/system/user/add
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "username": "admin11",
+  "password": "123456",
+  "nickname": "管理员",
+  "email": "admin11@localhost",
+  "phone": "13800138001",
+  "gender": 1
+}
+
+### 修改用户
+PUT {{gateway}}/admin-api/system/user/update
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "id": 1,
+  "username": "sunday",
+  "nickname": "周末",
+  "email": "sunday@sunday.net",
+  "phone": "13800138000",
+  "gender": 1
+}
+
+### 删除用户
+DELETE {{gateway}}/admin-api/system/user/delete?id=3
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+### 重置用户密码
+PUT {{gateway}}/admin-api/system/user/reset-password
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "id": 3,
+  "password": "123456"
+}
+
+### 修改用户状态
+PUT {{gateway}}/admin-api/system/user/update-status
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "id": 3,
+  "status": 2
+}
+
+### 获得用户分页列表
+POST {{gateway}}/admin-api/system/user/page
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "username": "admin11",
+  "updateTimes": [1692586098000, 1755744498000]
+}

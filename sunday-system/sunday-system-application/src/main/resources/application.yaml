@@ -17,7 +17,7 @@ dubbo:
   registry:
     register-mode: instance
     # dubbo 和 spring cloud 使用同一组时报错：https://github.com/apache/dubbo/issues/12145
-    group: DUBBO_GROUP
+    group: dubbo
   application:
     qos-enable: false
   consumer:

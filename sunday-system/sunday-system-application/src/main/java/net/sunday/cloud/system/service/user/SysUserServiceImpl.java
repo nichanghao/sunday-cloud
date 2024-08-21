@@ -52,6 +52,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUserDO> im
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void updateUser(UserUpsertReqVO upsertVO) {
+        upsertVO.setPassword(null);
         // 校验用户信息是否存在
         validateUserForUpsert(upsertVO.getId(), upsertVO.getUsername(), upsertVO.getPhone(), upsertVO.getEmail());
 
