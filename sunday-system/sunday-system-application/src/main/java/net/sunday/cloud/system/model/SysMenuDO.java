@@ -29,6 +29,9 @@ public class SysMenuDO extends BaseDO {
     @Serial
     private static final long serialVersionUID = 1L;
 
+    public SysMenuDO(Long id) {
+        this.id = id;
+    }
     /**
      * 菜单编号 - 根节点
      */

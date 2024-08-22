@@ -21,6 +21,10 @@ public class CollectionUtils {
     public static boolean isEmpty(@Nullable Collection<?> collection) {
         return collection == null || collection.isEmpty();
     }
+
+    public static boolean isNotEmpty(@Nullable Collection<?> collection) {
+        return !isEmpty(collection);
+    }
     public static boolean containsAny(Object source, Object... targets) {
         return asList(targets).contains(source);
     }

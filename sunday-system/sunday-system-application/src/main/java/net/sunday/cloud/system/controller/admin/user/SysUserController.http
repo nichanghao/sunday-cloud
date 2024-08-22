@@ -57,8 +57,8 @@ Content-Type: application/json
 Authorization: Bearer {{token}}
 
 {
-  "username": "admin11",
-  "updateTimes": [1692586098000, 1755744498000]
+  "pageNo": 1,
+  "pageSize": 10
 }
 
 ### 获得当前登录的用户信息

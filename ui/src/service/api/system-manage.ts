@@ -1,9 +1,9 @@
-import {request} from '../request';
+import { request } from '../request';
 
 /** get role list */
 export function fetchGetRoleList(params?: Api.SystemManage.RoleSearchParams) {
   return request<Api.SystemManage.RoleList>({
-    url: '/sys/role/page',
+    url: '/admin-api/system/role/page',
     method: 'post',
     data: params
   });
@@ -14,7 +14,7 @@ export function addRole(data: any) {
   return request<any>({
     url: '/sys/role/add',
     method: 'post',
-    data: data
+    data
   });
 }
 
@@ -23,7 +23,7 @@ export function editRole(data: any) {
   return request<any>({
     url: '/sys/role/edit',
     method: 'put',
-    data: data
+    data
   });
 }
 
@@ -45,7 +45,7 @@ export function deleteRole(id: number) {
  */
 export function fetchGetAllRoles() {
   return request<Api.SystemManage.AllRole[]>({
-    url: '/sys/role/all-simple-roles',
+    url: '/admin-api/system/role/list-all-simple',
     method: 'get'
   });
 }
@@ -53,34 +53,34 @@ export function fetchGetAllRoles() {
 /** get user list */
 export function fetchGetUserList(data?: Api.SystemManage.UserSearchParams) {
   return request<Api.SystemManage.UserList>({
-    url: '/sys/user/page',
+    url: '/admin-api/system/user/page',
     method: 'post',
-    data: data
+    data
   });
 }
 
 /** add user */
 export function addUser(data: any) {
   return request<any>({
-    url: '/sys/user/add',
+    url: '/admin-api/system/user/add',
     method: 'post',
-    data: data
+    data
   });
 }
 
 /** edit user */
 export function editUser(data: any) {
   return request<any>({
-    url: '/sys/user/edit',
+    url: '/admin-api/system/user/update',
     method: 'put',
-    data: data
+    data
   });
 }
 
 /** delete user */
 export function deleteUser(id: number) {
   return request<any>({
-    url: '/sys/user/delete',
+    url: '/admin-api/system/user/delete',
     method: 'delete',
     params: {
       id
@@ -91,11 +91,11 @@ export function deleteUser(id: number) {
 /** assign roles to user */
 export function assignRoleToUser(roleIds: number[], id: number) {
   return request<any>({
-    url: '/sys/user/assign-roles',
+    url: '/admin-api/system/permission/assign-user-role',
     method: 'put',
     data: {
       roleIds,
-      id
+      userId: id
     }
   });
 }
@@ -103,7 +103,7 @@ export function assignRoleToUser(roleIds: number[], id: number) {
 /** set user password */
 export function resetUserPwd(password: string, id: number) {
   return request<any>({
-    url: '/sys/user/reset-password',
+    url: '/admin-api/system/user/reset-password',
     method: 'put',
     data: {
       password,
@@ -158,7 +158,6 @@ export function assignMenuToRole(menuIds: number[], roleId: number) {
     }
   });
 }
-
 
 /** add menu data */
 export function addMenu(menu: any) {

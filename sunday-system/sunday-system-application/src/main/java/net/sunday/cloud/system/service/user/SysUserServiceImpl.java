@@ -3,10 +3,10 @@ package net.sunday.cloud.system.service.user;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import jakarta.annotation.Resource;
+import lombok.AllArgsConstructor;
 import net.sunday.cloud.base.common.entity.page.PageResult;
+import net.sunday.cloud.base.common.enums.CommonStatusEnum;
 import net.sunday.cloud.base.common.exception.BusinessException;
-import net.sunday.cloud.base.common.util.collection.ArrayUtils;
 import net.sunday.cloud.base.common.util.collection.CollectionUtils;
 import net.sunday.cloud.base.common.util.object.BeanUtils;
 import net.sunday.cloud.base.security.util.SecurityFrameworkUtils;
@@ -24,9 +24,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import static net.sunday.cloud.system.enums.SystemRespCodeEnum.*;
 
@@ -34,14 +33,14 @@ import static net.sunday.cloud.system.enums.SystemRespCodeEnum.*;
  * 系统用户 服务实现层
  */
 @Service
+@AllArgsConstructor
 public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUserDO> implements ISysUserService {
 
-    @Resource
-    private PasswordEncoder passwordEncoder;
-    @Resource
-    private ISysUserRoleService userRoleService;
-    @Resource
-    private ISysRoleService roleService;
+    private final PasswordEncoder passwordEncoder;
+
+    private final ISysUserRoleService userRoleService;
+
+    private final ISysRoleService roleService;
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -76,8 +75,8 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUserDO> im
         // 1. 校验用户存在
         validateUserExists(id);
 
-        // 2. 删除用户
-        baseMapper.deleteById(id);
+        // 2. 删除用户，注意逻辑删除需要传 entity 才会自动填充 ：net.sunday.cloud.base.mybatis.handler.DefaultFillFieldHandler
+        baseMapper.deleteById(new SysUserDO(id));
 
         // 3. 删除用户角色关系
         userRoleService.removeByUserId(id);
@@ -109,47 +108,79 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUserDO> im
 
     @Override
     public PageResult<UserRespVO> getUserPage(UserPageReqVO reqVO) {
-        LocalDateTime[] updateTimes = reqVO.getUpdateTimes();
 
+        // 1.查询用户数据
         PageResult<SysUserDO> pageResult = baseMapper.selectPage(reqVO, Wrappers.<SysUserDO>lambdaQuery()
                 .like(reqVO.getUsername() != null, SysUserDO::getUsername, reqVO.getUsername())
                 .like(reqVO.getPhone() != null, SysUserDO::getPhone, reqVO.getPhone())
                 .eq(reqVO.getStatus() != null, SysUserDO::getStatus, reqVO.getStatus())
-                .ge(ArrayUtils.get(updateTimes, 0) != null, SysUserDO::getUpdateTime, updateTimes[0])
-                .le(ArrayUtils.get(updateTimes, 1) != null, SysUserDO::getUpdateTime, updateTimes[1])
         );
 
-        if (CollectionUtils.isEmpty(pageResult.getList())) {
+        if (CollectionUtils.isEmpty(pageResult.getRecords())) {
             return PageResult.empty();
         }
+
+        // 2.查询用户关联的角色信息
+        List<UserRespVO> records = new ArrayList<>(pageResult.getRecords().size());
+        List<Long> userIds = new ArrayList<>(pageResult.getRecords().size());
+        for (SysUserDO record : pageResult.getRecords()) {
+            userIds.add(record.getId());
+            records.add(BeanUtils.toBean(record, UserRespVO.class));
+        }
+        List<SysUserRoleDO> userRoleList = userRoleService.listByUserIds(userIds);
+        if (CollectionUtils.isEmpty(userRoleList)) {
+            return PageResult.<UserRespVO>builder()
+                    .records(records)
+                    .total(pageResult.getTotal())
+                    .build();
+        }
+
+        // 3.用户填充角色信息
+        Map<Long, List<SysUserRoleDO>> userRoleMap = userRoleList.stream().collect(Collectors.groupingBy(SysUserRoleDO::getUserId));
         return PageResult.<UserRespVO>builder()
-                .list(CollectionUtils.convertList(pageResult.getList(), user -> BeanUtils.toBean(user, UserRespVO.class)))
+                .records(records.stream().peek(record -> {
+                    if (userRoleMap.containsKey(record.getId())) {
+                        record.setRoles(userRoleMap.get(record.getId()).stream().map(v -> {
+                            RoleRespVO roleRespVO = new RoleRespVO();
+                            roleRespVO.setId(v.getRoleId());
+                            return roleRespVO;
+                        }).collect(Collectors.toList()));
+                    } else {
+                        record.setRoles(Collections.emptyList());
+                    }
+                }).toList())
                 .total(pageResult.getTotal())
                 .build();
     }
 
     @Override
     public UserRespVO getUserSelfInfo() {
-        // 1.获取当前用户ID
+        // 获取当前用户ID
         Long userId = SecurityFrameworkUtils.getAuthUserId();
         if (userId == null) {
             return null;
         }
 
-        // 2.查询用户信息
+        return this.getUserDetails(userId);
+    }
+
+    @Override
+    public UserRespVO getUserDetails(Long userId) {
+        // 1.查询用户信息
         SysUserDO user = baseMapper.selectById(userId);
         if (user == null) {
             return null;
         }
         UserRespVO userResp = BeanUtils.toBean(user, UserRespVO.class);
 
-        // 3.查询用户角色信息
-        List<SysUserRoleDO> userRoleList = userRoleService.listByUserId(userId);
+        // 2.查询用户角色信息
+        List<SysUserRoleDO> userRoleList = userRoleService.listByUserIds(Collections.singleton(userId));
         if (CollectionUtils.isEmpty(userRoleList)) {
             return userResp;
         }
         List<SysRoleDO> sysRoleDOS = roleService.listByIds(userRoleList.stream().map(SysUserRoleDO::getRoleId).toList());
-        userResp.setRoles(CollectionUtils.convertList(sysRoleDOS, role -> BeanUtils.toBean(role, RoleRespVO.class)));
+        List<SysRoleDO> list = sysRoleDOS.stream().filter(v -> v.getStatus() == CommonStatusEnum.ENABLE.ordinal()).toList();
+        userResp.setRoles(CollectionUtils.convertList(list, role -> BeanUtils.toBean(role, RoleRespVO.class)));
 
         return userResp;
     }

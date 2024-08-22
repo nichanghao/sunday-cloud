@@ -3,6 +3,7 @@ package net.sunday.cloud.system.service.userrole;
 import com.baomidou.mybatisplus.extension.service.IService;
 import net.sunday.cloud.system.model.SysUserRoleDO;
 
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -28,9 +29,9 @@ public interface ISysUserRoleService extends IService<SysUserRoleDO> {
     /**
      * 获取用户关联的角色关系列表
      *
-     * @param userId 用户ID
+     * @param userIds 用户ID集合
      * @return 用户关联的角色关系列表
      */
-    List<SysUserRoleDO> listByUserId(Long userId);
+    List<SysUserRoleDO> listByUserIds(Collection<Long> userIds);
 
 }

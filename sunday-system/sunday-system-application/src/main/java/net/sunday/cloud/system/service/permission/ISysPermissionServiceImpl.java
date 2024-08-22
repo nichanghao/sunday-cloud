@@ -1,5 +1,6 @@
 package net.sunday.cloud.system.service.permission;
 
+import cn.hutool.core.collection.CollUtil;
 import com.github.yulichang.wrapper.MPJLambdaWrapper;
 import lombok.AllArgsConstructor;
 import net.sunday.cloud.base.common.util.collection.CollectionUtils;
@@ -11,6 +12,7 @@ import net.sunday.cloud.system.model.SysMenuDO;
 import net.sunday.cloud.system.model.SysRoleMenuDO;
 import net.sunday.cloud.system.model.SysUserRoleDO;
 import net.sunday.cloud.system.repository.mapper.SysUserRoleMapper;
+import net.sunday.cloud.system.service.userrole.ISysUserRoleService;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -24,7 +26,9 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class ISysPermissionServiceImpl implements ISysPermissionService {
 
-    private final SysUserRoleMapper sysUserRoleMapper;
+    private final SysUserRoleMapper userRoleMapper;
+
+    private final ISysUserRoleService sysUserRoleService;
 
     @Override
     public PermissionRouteRespVO getPermissionRouteInfo() {
@@ -40,7 +44,7 @@ public class ISysPermissionServiceImpl implements ISysPermissionService {
                 .leftJoin(SysRoleMenuDO.class, SysRoleMenuDO::getRoleId, SysUserRoleDO::getRoleId)
                 .leftJoin(SysMenuDO.class, SysMenuDO::getId, SysRoleMenuDO::getMenuId)
                 .eq(SysUserRoleDO::getUserId, authUserId);
-        List<MenuRespVO> menuList = sysUserRoleMapper.selectJoinList(MenuRespVO.class, wrapper);
+        List<MenuRespVO> menuList = userRoleMapper.selectJoinList(MenuRespVO.class, wrapper);
         if (CollectionUtils.isEmpty(menuList)) {
             return PermissionRouteRespVO.EMPTY;
         }
@@ -55,6 +59,30 @@ public class ISysPermissionServiceImpl implements ISysPermissionService {
                 .permissions(permissions)
                 .home(PermissionRouteRespVO.HOME)
                 .build();
+    }
+
+    @Override
+    public void assignUserRole(Long userId, Set<Long> roleIds) {
+        // 获得角色拥有角色编号
+        Set<Long> dbRoleIds = CollectionUtils
+                .convertSet(sysUserRoleService.listByUserIds(Collections.singleton(userId)), SysUserRoleDO::getRoleId);
+
+        // 计算新增和删除的角色编号
+        Set<Long> roleIdList = CollUtil.emptyIfNull(roleIds);
+        Collection<Long> createRoleIds = CollUtil.subtract(roleIdList, dbRoleIds);
+        Collection<Long> deleteMenuIds = CollUtil.subtract(dbRoleIds, roleIdList);
+        // 执行新增和删除。对于已经授权的角色，不用做任何处理
+        if (CollectionUtils.isNotEmpty(createRoleIds)) {
+            userRoleMapper.insertBatch(CollectionUtils.convertList(createRoleIds, roleId -> {
+                SysUserRoleDO entity = new SysUserRoleDO();
+                entity.setUserId(userId);
+                entity.setRoleId(roleId);
+                return entity;
+            }));
+        }
+        if (CollectionUtils.isNotEmpty(deleteMenuIds)) {
+            userRoleMapper.deleteListByUserIdAndRoleIdIds(userId, deleteMenuIds);
+        }
     }
 
     private void buildPermissionRouteTree(List<MenuRespVO> routes, Set<String> permissions, List<MenuRespVO> menuList) {

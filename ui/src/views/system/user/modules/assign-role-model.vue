@@ -28,7 +28,7 @@ const roleIds = shallowRef<number[]>([]);
 
 
 /** the enabled role options */
-const roleOptions = ref<CommonType.Option<string>[]>([]);
+const roleOptions = ref<CommonType.Option<number>[]>([]);
 
 async function getRoleOptions() {
   const { error, data } = await fetchGetAllRoles();
@@ -64,7 +64,11 @@ async function handleSubmit() {
   emit('submitted');
 }
 function init() {
-  roleIds.value = props.roles.map(item => item.id);
+  if (props.roles && props.roles.length > 0) {
+    roleIds.value = props.roles.map(item => item.id);
+  } else {
+    roleIds.value = [];
+  }
   getRoleOptions();
 }
 

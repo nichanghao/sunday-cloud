@@ -64,7 +64,7 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenuDO> im
         // 2.校验删除的菜单是否存在
         validateMenuExists(id);
         // 3.标记删除
-        baseMapper.deleteById(id);
+        baseMapper.deleteById(new SysMenuDO(id));
         // 4.级联删除角色菜单关系
         roleMenuService.removeByMenuId(id);
     }

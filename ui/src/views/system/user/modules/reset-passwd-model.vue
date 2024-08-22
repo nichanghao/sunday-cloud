@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref, shallowRef, watch } from "vue";
+import { computed, shallowRef, watch } from "vue";
 import { $t } from '@/locales';
 import { resetUserPwd } from "@/service/api";
 

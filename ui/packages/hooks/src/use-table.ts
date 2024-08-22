@@ -18,8 +18,6 @@ export type TableDataWithIndex<T> = T & { index: number };
 
 export type TransformedData<T> = {
   data: TableDataWithIndex<T>[];
-  pageNum: number;
-  pageSize: number;
   total: number;
 };
 

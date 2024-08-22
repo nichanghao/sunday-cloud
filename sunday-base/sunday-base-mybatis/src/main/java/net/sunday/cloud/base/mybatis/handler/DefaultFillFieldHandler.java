@@ -2,6 +2,7 @@ package net.sunday.cloud.base.mybatis.handler;
 
 import com.baomidou.mybatisplus.core.handlers.MetaObjectHandler;
 import net.sunday.cloud.base.mybatis.entity.BaseDO;
+import net.sunday.cloud.base.security.util.SecurityFrameworkUtils;
 import org.apache.ibatis.reflection.MetaObject;
 
 import java.time.LocalDateTime;
@@ -24,9 +25,9 @@ public class DefaultFillFieldHandler implements MetaObjectHandler {
             }
 
             if (Objects.isNull(baseDO.getUpdater())) {
-                // todo 从上下文中获取当前登录用户
-                Long userId = 1L;
-                baseDO.setUpdater(userId.toString());
+                // 从上下文中获取当前登录用户
+                Long userId = SecurityFrameworkUtils.getAuthUserId();
+                baseDO.setUpdater(userId != null ? userId.toString() : null);
             }
         }
     }

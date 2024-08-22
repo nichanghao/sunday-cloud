@@ -3,3 +3,15 @@ GET {{gateway}}/admin-api/system/permission/route/info
 Content-Type: application/json
 Authorization: Bearer {{token}}
 
+### 赋予用户角色
+PUT {{gateway}}/admin-api/system/permission/assign-user-role
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "userId": 3,
+  "roleIds": [
+    1,
+    2
+  ]
+}

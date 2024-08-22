@@ -64,4 +64,12 @@ public interface ISysUserService extends IService<SysUserDO> {
      * @return 当前登录的用户信息
      */
     UserRespVO getUserSelfInfo();
+
+    /**
+     * 获取用户的详细信息
+     *
+     * @param id 用户ID
+     * @return 用户的详细信息
+     */
+    UserRespVO getUserDetails(Long id);
 }

@@ -1,17 +1,17 @@
 <script setup lang="tsx">
 import { NButton, NPopconfirm, NTag } from 'naive-ui';
-import { fetchGetUserList, deleteUser } from '@/service/api';
+import { ref } from 'vue';
+import { deleteUser, fetchGetUserList } from '@/service/api';
 import { $t } from '@/locales';
 import { useAppStore } from '@/store/modules/app';
 import { enableStatusRecord, userGenderRecord } from '@/constants/business';
 import { useTable, useTableOperate } from '@/hooks/common/table';
+import { useBoolean } from '~/packages/hooks';
+import { useAuth } from '@/hooks/business/auth';
 import UserOperateDrawer from './modules/user-operate-drawer.vue';
 import UserSearch from './modules/user-search.vue';
-import { ref } from "vue";
-import AssignRoleModel from "./modules/assign-role-model.vue";
-import ResetPasswdModel from "./modules/reset-passwd-model.vue";
-import { useBoolean } from "~/packages/hooks";
-import { useAuth } from '@/hooks/business/auth';
+import AssignRoleModel from './modules/assign-role-model.vue';
+import ResetPasswdModel from './modules/reset-passwd-model.vue';
 
 const { hasAuth } = useAuth();
 const appStore = useAppStore();
@@ -29,8 +29,8 @@ const {
   apiFn: fetchGetUserList,
   showTotal: true,
   apiParams: {
-    current: 1,
-    size: 10,
+    pageNo: 1,
+    pageSize: 10,
     // if you want to use the searchParams in Form, you need to define the following properties, and the value is null
     // the value can not be undefined, otherwise the property in Form will not be reactive
     status: null,
@@ -240,7 +240,12 @@ function handleResetPwd(id: number) {
         :row-data="editingData"
         @submitted="getDataByPage"
       />
-      <AssignRoleModel v-model:visible="roleAuthVisible" :user-id="roleAuthUserId" :roles="roleList" @submitted="getDataByPage"/>
+      <AssignRoleModel
+        v-model:visible="roleAuthVisible"
+        :user-id="roleAuthUserId"
+        :roles="roleList"
+        @submitted="getDataByPage"
+      />
       <ResetPasswdModel v-model:visible="resetPwdVisible" :user-id="roleAuthUserId" />
     </NCard>
   </div>

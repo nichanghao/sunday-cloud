@@ -32,7 +32,7 @@ Content-Type: application/json
 Authorization: Bearer {{token}}
 
 {
-  "updateTimes": [1692586098000, 1755744498000]
+
 }
 
 ### 获取角色精简信息列表

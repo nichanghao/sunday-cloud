@@ -6,6 +6,7 @@ import net.sunday.cloud.system.model.SysUserRoleDO;
 import net.sunday.cloud.system.repository.mapper.SysUserRoleMapper;
 import org.springframework.stereotype.Service;
 
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -26,7 +27,7 @@ public class SysUserRoleServiceImpl extends ServiceImpl<SysUserRoleMapper, SysUs
     }
 
     @Override
-    public List<SysUserRoleDO> listByUserId(Long userId) {
-        return baseMapper.selectList(SysUserRoleDO::getUserId, userId);
+    public List<SysUserRoleDO> listByUserIds(Collection<Long> userIds) {
+        return baseMapper.selectList(Wrappers.<SysUserRoleDO>lambdaQuery().in(SysUserRoleDO::getUserId, userIds));
     }
 }

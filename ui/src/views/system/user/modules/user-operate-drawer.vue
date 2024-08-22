@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, reactive, ref, watch } from 'vue';
+import { computed, reactive, watch } from 'vue';
 import { useFormRules, useNaiveForm } from '@/hooks/common/form';
 import { addUser, editUser } from '@/service/api';
 import { $t } from '@/locales';
@@ -70,9 +70,8 @@ function handleInitModel() {
   Object.assign(model, createDefaultModel());
 
   if (props.operateType === 'edit' && props.rowData) {
-    const { roles , ...rest } = props.rowData;
-    const roleCodes = roles.map(item => item.code);
-    Object.assign(model, rest, { roles: roleCodes });
+    const { ...rest } = props.rowData;
+    Object.assign(model, rest);
   }
 }
 
@@ -86,10 +85,10 @@ async function handleSubmit() {
   // request
   let error = null;
   if (props.operateType === 'add') {
-    const res = await addUser(model)
+    const res = await addUser(model);
     error = res.error;
   } else if (props.operateType === 'edit') {
-    const res = await editUser(model)
+    const res = await editUser(model);
     error = res.error;
   }
 
@@ -133,7 +132,7 @@ watch(visible, () => {
           <NInput v-model:value="model.email" :placeholder="$t('page.manage.user.form.userEmail')" />
         </NFormItem>
         <NFormItem :label="$t('page.manage.user.userStatus')" path="status">
-          <NRadioGroup v-model:value="model.status">
+          <NRadioGroup v-model:value="model.status" :disabled="props.operateType === 'edit'">
             <NRadio v-for="item in enableStatusOptions" :key="item.value" :value="item.value" :label="$t(item.label)" />
           </NRadioGroup>
         </NFormItem>

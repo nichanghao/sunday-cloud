@@ -6,7 +6,6 @@ import jakarta.annotation.Resource;
 import net.sunday.cloud.base.common.entity.page.PageResult;
 import net.sunday.cloud.base.common.enums.CommonStatusEnum;
 import net.sunday.cloud.base.common.exception.BusinessException;
-import net.sunday.cloud.base.common.util.collection.ArrayUtils;
 import net.sunday.cloud.base.common.util.collection.CollectionUtils;
 import net.sunday.cloud.base.common.util.object.BeanUtils;
 import net.sunday.cloud.system.controller.admin.role.vo.RolePageReqVO;
@@ -20,7 +19,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 
@@ -70,29 +68,26 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRoleDO> im
         // 2. 校验角色是否被用户使用
         validateRoleBeUsedByUser(id);
         // 3. 删除角色
-        baseMapper.deleteById(id);
+        baseMapper.deleteById(new SysRoleDO(id));
         // 4. 删除角色关联的菜单数据
         roleMenuService.removeByRoleId(id);
     }
 
     @Override
     public PageResult<RoleRespVO> getRolePage(RolePageReqVO reqVO) {
-        LocalDateTime[] updateTimes = reqVO.getUpdateTimes();
 
         PageResult<SysRoleDO> pageResult = baseMapper.selectPage(reqVO, Wrappers.<SysRoleDO>lambdaQuery()
                 .like(reqVO.getName() != null, SysRoleDO::getName, reqVO.getName())
                 .like(reqVO.getCode() != null, SysRoleDO::getCode, reqVO.getCode())
                 .eq(reqVO.getStatus() != null, SysRoleDO::getStatus, reqVO.getStatus())
-                .ge(ArrayUtils.get(updateTimes, 0) != null, SysRoleDO::getUpdateTime, updateTimes[0])
-                .le(ArrayUtils.get(updateTimes, 1) != null, SysRoleDO::getUpdateTime, updateTimes[1])
         );
 
-        if (CollectionUtils.isEmpty(pageResult.getList())) {
+        if (CollectionUtils.isEmpty(pageResult.getRecords())) {
             return PageResult.empty();
         }
 
         return new PageResult<>(CollectionUtils
-                .convertList(pageResult.getList(), role -> BeanUtils.toBean(role, RoleRespVO.class)), pageResult.getTotal());
+                .convertList(pageResult.getRecords(), role -> BeanUtils.toBean(role, RoleRespVO.class)), pageResult.getTotal());
     }
 
     @Override

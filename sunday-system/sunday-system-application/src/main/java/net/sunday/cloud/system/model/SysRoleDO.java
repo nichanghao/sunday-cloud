@@ -20,6 +20,10 @@ public class SysRoleDO extends BaseDO {
     @Serial
     private static final long serialVersionUID = 1L;
 
+    public SysRoleDO(Long id) {
+        this.id = id;
+    }
+
     /**
      * 角色ID
      */

@@ -9,8 +9,6 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import net.sunday.cloud.base.common.entity.page.PageParam;
 
-import java.time.LocalDateTime;
-
 @Schema(description = "用户管理 - 用户分页查询条件")
 @Data
 @NoArgsConstructor
@@ -28,8 +26,5 @@ public class UserPageReqVO extends PageParam {
     @Min(value = 0, message = "状态值必须大于等于0")
     @Max(value = 1, message = "状态值必须小于等于1")
     private Integer status;
-
-    @Schema(description = "修改时间，毫秒时间戳格式", example = "[1692586098000, 1755744498000]")
-    private LocalDateTime[] updateTimes;
 
 }
