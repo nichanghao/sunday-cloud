@@ -20,9 +20,17 @@ public interface ISysUserRoleService extends IService<SysUserRoleDO> {
     /**
      * 获取角色关联的用户关系列表
      *
-     * @param roleId 用户ID
+     * @param roleId 角色ID
      * @return 角色关联的用户关系列表
      */
     List<SysUserRoleDO> listByRoleId(Long roleId);
+
+    /**
+     * 获取用户关联的角色关系列表
+     *
+     * @param userId 用户ID
+     * @return 用户关联的角色关系列表
+     */
+    List<SysUserRoleDO> listByUserId(Long userId);
 
 }

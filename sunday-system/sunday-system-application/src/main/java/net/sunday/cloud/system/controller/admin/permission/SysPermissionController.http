@@ -1,0 +1,5 @@
+### 获得当前登录用户的权限路由信息
+GET {{gateway}}/admin-api/system/permission/route/info
+Content-Type: application/json
+Authorization: Bearer {{token}}
+

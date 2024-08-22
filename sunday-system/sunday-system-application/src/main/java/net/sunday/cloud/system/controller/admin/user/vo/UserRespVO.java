@@ -1,12 +1,16 @@
 package net.sunday.cloud.system.controller.admin.user.vo;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
+import net.sunday.cloud.system.controller.admin.role.vo.RoleRespVO;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Schema(description = "用户管理 - 用户信息")
 @Data
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class UserRespVO {
 
     @Schema(description = "用户编号", requiredMode = Schema.RequiredMode.REQUIRED, example = "1")
@@ -32,5 +36,8 @@ public class UserRespVO {
 
     @Schema(description = "更新时间", requiredMode = Schema.RequiredMode.REQUIRED, example = "毫秒时间戳格式")
     private LocalDateTime updateTime;
+
+    @Schema(description = "角色信息", requiredMode = Schema.RequiredMode.REQUIRED)
+    private List<RoleRespVO> roles;
 
 }

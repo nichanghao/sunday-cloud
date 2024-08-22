@@ -1,4 +1,4 @@
-package net.sunday.cloud.system.service.impl;
+package net.sunday.cloud.system.service.menu;
 
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -13,12 +13,11 @@ import net.sunday.cloud.system.controller.admin.menu.vo.MenuUpsertReqVO;
 import net.sunday.cloud.system.enums.menu.MenuTypeEnum;
 import net.sunday.cloud.system.model.SysMenuDO;
 import net.sunday.cloud.system.repository.mapper.SysMenuMapper;
-import net.sunday.cloud.system.service.ISysMenuService;
 import net.sunday.cloud.system.service.rolemenu.ISysRoleMenuService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
+import java.util.*;
 
 import static net.sunday.cloud.system.enums.SystemRespCodeEnum.*;
 import static net.sunday.cloud.system.model.SysMenuDO.ID_ROOT;
@@ -72,11 +71,14 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenuDO> im
 
     @Override
     public List<MenuRespVO> getMenuList(MenuListReqVO reqVO) {
+        // 1.查询菜单列表
         List<SysMenuDO> menuList = baseMapper.selectList(Wrappers.<SysMenuDO>lambdaQuery()
                 .like(reqVO.getName() != null, SysMenuDO::getName, reqVO.getName())
                 .eq(reqVO.getStatus() != null, SysMenuDO::getStatus, reqVO.getStatus())
         );
-        return CollectionUtils.convertList(menuList, menu -> BeanUtils.toBean(menu, MenuRespVO.class));
+
+        // 2.构建菜单树
+        return this.buildMenuTree(menuList);
     }
 
     @Override
@@ -88,6 +90,31 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenuDO> im
         );
 
         return CollectionUtils.convertList(menuList, menu -> BeanUtils.toBean(menu, MenuSimpleRespVO.class));
+    }
+
+    private List<MenuRespVO> buildMenuTree(List<SysMenuDO> menuList) {
+        if (CollectionUtils.isEmpty(menuList))
+            return Collections.emptyList();
+
+        Map<Long, MenuRespVO> menuMap = new LinkedHashMap<>(menuList.size());
+        menuList.forEach(menu -> {
+            menuMap.put(menu.getId(), BeanUtils.toBean(menu, MenuRespVO.class));
+        });
+
+        List<MenuRespVO> menuTree = new ArrayList<>();
+        menuMap.values().forEach(menu -> {
+            if (Objects.equals(menu.getParentId(), ID_ROOT)) {
+                menuTree.add(menu);
+            } else {
+                MenuRespVO parent = menuMap.get(menu.getParentId());
+                if (parent.getChildren() == null) {
+                    parent.setChildren(new ArrayList<>());
+                }
+                parent.getChildren().add(menu);
+            }
+        });
+
+        return menuTree;
     }
 
     /**

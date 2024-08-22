@@ -9,17 +9,23 @@ import net.sunday.cloud.base.common.exception.BusinessException;
 import net.sunday.cloud.base.common.util.collection.ArrayUtils;
 import net.sunday.cloud.base.common.util.collection.CollectionUtils;
 import net.sunday.cloud.base.common.util.object.BeanUtils;
+import net.sunday.cloud.base.security.util.SecurityFrameworkUtils;
+import net.sunday.cloud.system.controller.admin.role.vo.RoleRespVO;
 import net.sunday.cloud.system.controller.admin.user.vo.UserPageReqVO;
 import net.sunday.cloud.system.controller.admin.user.vo.UserRespVO;
 import net.sunday.cloud.system.controller.admin.user.vo.UserUpsertReqVO;
+import net.sunday.cloud.system.model.SysRoleDO;
 import net.sunday.cloud.system.model.SysUserDO;
+import net.sunday.cloud.system.model.SysUserRoleDO;
 import net.sunday.cloud.system.repository.mapper.SysUserMapper;
+import net.sunday.cloud.system.service.role.ISysRoleService;
 import net.sunday.cloud.system.service.userrole.ISysUserRoleService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Objects;
 
 import static net.sunday.cloud.system.enums.SystemRespCodeEnum.*;
@@ -33,7 +39,9 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUserDO> im
     @Resource
     private PasswordEncoder passwordEncoder;
     @Resource
-    private ISysUserRoleService sysUserRoleService;
+    private ISysUserRoleService userRoleService;
+    @Resource
+    private ISysRoleService roleService;
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -72,7 +80,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUserDO> im
         baseMapper.deleteById(id);
 
         // 3. 删除用户角色关系
-        sysUserRoleService.removeByUserId(id);
+        userRoleService.removeByUserId(id);
     }
 
     @Override
@@ -118,6 +126,32 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUserDO> im
                 .list(CollectionUtils.convertList(pageResult.getList(), user -> BeanUtils.toBean(user, UserRespVO.class)))
                 .total(pageResult.getTotal())
                 .build();
+    }
+
+    @Override
+    public UserRespVO getUserSelfInfo() {
+        // 1.获取当前用户ID
+        Long userId = SecurityFrameworkUtils.getAuthUserId();
+        if (userId == null) {
+            return null;
+        }
+
+        // 2.查询用户信息
+        SysUserDO user = baseMapper.selectById(userId);
+        if (user == null) {
+            return null;
+        }
+        UserRespVO userResp = BeanUtils.toBean(user, UserRespVO.class);
+
+        // 3.查询用户角色信息
+        List<SysUserRoleDO> userRoleList = userRoleService.listByUserId(userId);
+        if (CollectionUtils.isEmpty(userRoleList)) {
+            return userResp;
+        }
+        List<SysRoleDO> sysRoleDOS = roleService.listByIds(userRoleList.stream().map(SysUserRoleDO::getRoleId).toList());
+        userResp.setRoles(CollectionUtils.convertList(sysRoleDOS, role -> BeanUtils.toBean(role, RoleRespVO.class)));
+
+        return userResp;
     }
 
     private void validateUserForUpsert(Long id, String username, String phone, String email) {

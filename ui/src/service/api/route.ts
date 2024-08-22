@@ -7,7 +7,7 @@ export function fetchGetConstantRoutes() {
 
 /** get user routes */
 export function fetchGetUserRoutes() {
-  return request<Api.Route.UserRoute>({ url: '/sys/menu/self/permission-routers' });
+  return request<Api.Route.UserRoute>({ url: '/admin-api/system/permission/route/info' });
 }
 
 /**

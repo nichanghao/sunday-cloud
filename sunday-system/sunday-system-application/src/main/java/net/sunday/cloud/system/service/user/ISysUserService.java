@@ -57,4 +57,11 @@ public interface ISysUserService extends IService<SysUserDO> {
      * @return 分页列表
      */
     PageResult<UserRespVO> getUserPage(UserPageReqVO reqVO);
+
+    /**
+     * 获得当前登录的用户信息
+     *
+     * @return 当前登录的用户信息
+     */
+    UserRespVO getUserSelfInfo();
 }

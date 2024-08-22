@@ -24,4 +24,9 @@ public class SysUserRoleServiceImpl extends ServiceImpl<SysUserRoleMapper, SysUs
     public List<SysUserRoleDO> listByRoleId(Long roleId) {
         return baseMapper.selectList(SysUserRoleDO::getRoleId, roleId);
     }
+
+    @Override
+    public List<SysUserRoleDO> listByUserId(Long userId) {
+        return baseMapper.selectList(SysUserRoleDO::getUserId, userId);
+    }
 }

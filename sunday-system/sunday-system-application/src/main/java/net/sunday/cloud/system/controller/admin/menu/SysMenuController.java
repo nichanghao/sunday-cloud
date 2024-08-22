@@ -11,7 +11,7 @@ import net.sunday.cloud.system.controller.admin.menu.vo.MenuListReqVO;
 import net.sunday.cloud.system.controller.admin.menu.vo.MenuRespVO;
 import net.sunday.cloud.system.controller.admin.menu.vo.MenuSimpleRespVO;
 import net.sunday.cloud.system.controller.admin.menu.vo.MenuUpsertReqVO;
-import net.sunday.cloud.system.service.ISysMenuService;
+import net.sunday.cloud.system.service.menu.ISysMenuService;
 import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.*;
 

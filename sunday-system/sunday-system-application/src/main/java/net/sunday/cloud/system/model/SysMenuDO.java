@@ -1,8 +1,11 @@
 package net.sunday.cloud.system.model;
 
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler;
+import com.fasterxml.jackson.databind.JsonNode;
 import lombok.Getter;
 import lombok.Setter;
 import net.sunday.cloud.base.mybatis.entity.BaseDO;
@@ -20,7 +23,7 @@ import java.io.Serial;
  */
 @Getter
 @Setter
-@TableName("sys_menu")
+@TableName(value = "sys_menu", autoResultMap = true)
 public class SysMenuDO extends BaseDO {
 
     @Serial
@@ -82,5 +85,6 @@ public class SysMenuDO extends BaseDO {
     /**
      * 路由元数据
      */
-    private String meta;
+    @TableField(typeHandler = JacksonTypeHandler.class)
+    private JsonNode meta;
 }

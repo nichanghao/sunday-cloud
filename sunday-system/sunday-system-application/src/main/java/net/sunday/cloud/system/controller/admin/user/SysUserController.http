@@ -60,3 +60,9 @@ Authorization: Bearer {{token}}
   "username": "admin11",
   "updateTimes": [1692586098000, 1755744498000]
 }
+
+### 获得当前登录的用户信息
+GET {{gateway}}/admin-api/system/user/self/info
+Content-Type: application/json
+Authorization: Bearer {{token}}
+

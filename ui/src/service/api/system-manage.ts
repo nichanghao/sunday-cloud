@@ -115,7 +115,7 @@ export function resetUserPwd(password: string, id: number) {
 /** get menu list */
 export function fetchGetMenuList() {
   return request<Api.SystemManage.MenuList>({
-    url: '/sys/menu/tree',
+    url: '/admin-api/system/menu/list',
     method: 'get'
   });
 }

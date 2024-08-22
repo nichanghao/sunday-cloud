@@ -19,7 +19,7 @@ export function fetchLogin(username: string, password: string) {
 
 /** Get user info */
 export function fetchGetUserInfo() {
-  return request<Api.Auth.UserInfo>({ url: '/sys/user/self/info' });
+  return request<Api.Auth.UserInfo>({ url: '/admin-api/system/user/self/info' });
 }
 
 /**

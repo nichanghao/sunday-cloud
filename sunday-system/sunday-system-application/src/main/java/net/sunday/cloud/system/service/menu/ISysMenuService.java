@@ -1,4 +1,4 @@
-package net.sunday.cloud.system.service;
+package net.sunday.cloud.system.service.menu;
 
 import net.sunday.cloud.system.controller.admin.menu.vo.MenuListReqVO;
 import net.sunday.cloud.system.controller.admin.menu.vo.MenuRespVO;

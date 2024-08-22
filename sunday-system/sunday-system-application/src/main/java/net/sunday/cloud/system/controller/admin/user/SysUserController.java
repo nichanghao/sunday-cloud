@@ -69,4 +69,11 @@ public class SysUserController {
         return R.ok(userService.getUserPage(pageReqVO));
     }
 
+    @GetMapping("/self/info")
+    @Operation(summary = "获得当前登录的用户信息")
+    public R<UserRespVO> getUserSelfInfo() {
+
+        return R.ok(userService.getUserSelfInfo());
+    }
+
 }
