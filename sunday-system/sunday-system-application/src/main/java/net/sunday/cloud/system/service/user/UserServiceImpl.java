@@ -14,12 +14,12 @@ import net.sunday.cloud.system.controller.admin.role.vo.RoleRespVO;
 import net.sunday.cloud.system.controller.admin.user.vo.UserPageReqVO;
 import net.sunday.cloud.system.controller.admin.user.vo.UserRespVO;
 import net.sunday.cloud.system.controller.admin.user.vo.UserUpsertReqVO;
-import net.sunday.cloud.system.model.SysRoleDO;
-import net.sunday.cloud.system.model.SysUserDO;
-import net.sunday.cloud.system.model.SysUserRoleDO;
-import net.sunday.cloud.system.repository.mapper.SysUserMapper;
-import net.sunday.cloud.system.service.role.ISysRoleService;
-import net.sunday.cloud.system.service.userrole.ISysUserRoleService;
+import net.sunday.cloud.system.model.RoleDO;
+import net.sunday.cloud.system.model.UserDO;
+import net.sunday.cloud.system.model.UserRoleDO;
+import net.sunday.cloud.system.repository.mapper.UserMapper;
+import net.sunday.cloud.system.service.role.IRoleService;
+import net.sunday.cloud.system.service.userrole.IUserRoleService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,13 +34,13 @@ import static net.sunday.cloud.system.enums.SystemRespCodeEnum.*;
  */
 @Service
 @AllArgsConstructor
-public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUserDO> implements ISysUserService {
+public class UserServiceImpl extends ServiceImpl<UserMapper, UserDO> implements IUserService {
 
     private final PasswordEncoder passwordEncoder;
 
-    private final ISysUserRoleService userRoleService;
+    private final IUserRoleService userRoleService;
 
-    private final ISysRoleService roleService;
+    private final IRoleService roleService;
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -49,7 +49,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUserDO> im
         validateUserForUpsert(null, upsertVO.getUsername(), upsertVO.getPhone(), upsertVO.getEmail());
 
         // 插入用户数据
-        SysUserDO user = BeanUtils.toBean(upsertVO, SysUserDO.class);
+        UserDO user = BeanUtils.toBean(upsertVO, UserDO.class);
         user.setPassword(passwordEncoder.encode(upsertVO.getPassword()));
         baseMapper.insert(user);
 
@@ -64,7 +64,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUserDO> im
         validateUserForUpsert(upsertVO.getId(), upsertVO.getUsername(), upsertVO.getPhone(), upsertVO.getEmail());
 
         // 更新用户
-        SysUserDO updateObj = BeanUtils.toBean(upsertVO, SysUserDO.class);
+        UserDO updateObj = BeanUtils.toBean(upsertVO, UserDO.class);
         baseMapper.updateById(updateObj);
 
     }
@@ -76,7 +76,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUserDO> im
         validateUserExists(id);
 
         // 2. 删除用户，注意逻辑删除需要传 entity 才会自动填充 ：net.sunday.cloud.base.mybatis.handler.DefaultFillFieldHandler
-        baseMapper.deleteById(new SysUserDO(id));
+        baseMapper.deleteById(new UserDO(id));
 
         // 3. 删除用户角色关系
         userRoleService.removeByUserId(id);
@@ -88,7 +88,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUserDO> im
         validateUserExists(id);
 
         // 2. 更新密码
-        baseMapper.updateById(SysUserDO.builder()
+        baseMapper.updateById(UserDO.builder()
                 .id(id)
                 .password(passwordEncoder.encode(password))
                 .build());
@@ -100,7 +100,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUserDO> im
         validateUserExists(id);
 
         // 2. 更新用户状态
-        baseMapper.updateById(SysUserDO.builder()
+        baseMapper.updateById(UserDO.builder()
                 .id(id)
                 .status(status)
                 .build());
@@ -110,10 +110,10 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUserDO> im
     public PageResult<UserRespVO> getUserPage(UserPageReqVO reqVO) {
 
         // 1.查询用户数据
-        PageResult<SysUserDO> pageResult = baseMapper.selectPage(reqVO, Wrappers.<SysUserDO>lambdaQuery()
-                .like(reqVO.getUsername() != null, SysUserDO::getUsername, reqVO.getUsername())
-                .like(reqVO.getPhone() != null, SysUserDO::getPhone, reqVO.getPhone())
-                .eq(reqVO.getStatus() != null, SysUserDO::getStatus, reqVO.getStatus())
+        PageResult<UserDO> pageResult = baseMapper.selectPage(reqVO, Wrappers.<UserDO>lambdaQuery()
+                .like(reqVO.getUsername() != null, UserDO::getUsername, reqVO.getUsername())
+                .like(reqVO.getPhone() != null, UserDO::getPhone, reqVO.getPhone())
+                .eq(reqVO.getStatus() != null, UserDO::getStatus, reqVO.getStatus())
         );
 
         if (CollectionUtils.isEmpty(pageResult.getRecords())) {
@@ -123,11 +123,11 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUserDO> im
         // 2.查询用户关联的角色信息
         List<UserRespVO> records = new ArrayList<>(pageResult.getRecords().size());
         List<Long> userIds = new ArrayList<>(pageResult.getRecords().size());
-        for (SysUserDO record : pageResult.getRecords()) {
+        for (UserDO record : pageResult.getRecords()) {
             userIds.add(record.getId());
             records.add(BeanUtils.toBean(record, UserRespVO.class));
         }
-        List<SysUserRoleDO> userRoleList = userRoleService.listByUserIds(userIds);
+        List<UserRoleDO> userRoleList = userRoleService.listByUserIds(userIds);
         if (CollectionUtils.isEmpty(userRoleList)) {
             return PageResult.<UserRespVO>builder()
                     .records(records)
@@ -136,7 +136,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUserDO> im
         }
 
         // 3.用户填充角色信息
-        Map<Long, List<SysUserRoleDO>> userRoleMap = userRoleList.stream().collect(Collectors.groupingBy(SysUserRoleDO::getUserId));
+        Map<Long, List<UserRoleDO>> userRoleMap = userRoleList.stream().collect(Collectors.groupingBy(UserRoleDO::getUserId));
         return PageResult.<UserRespVO>builder()
                 .records(records.stream().peek(record -> {
                     if (userRoleMap.containsKey(record.getId())) {
@@ -167,19 +167,19 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUserDO> im
     @Override
     public UserRespVO getUserDetails(Long userId) {
         // 1.查询用户信息
-        SysUserDO user = baseMapper.selectById(userId);
+        UserDO user = baseMapper.selectById(userId);
         if (user == null) {
             return null;
         }
         UserRespVO userResp = BeanUtils.toBean(user, UserRespVO.class);
 
         // 2.查询用户角色信息
-        List<SysUserRoleDO> userRoleList = userRoleService.listByUserIds(Collections.singleton(userId));
+        List<UserRoleDO> userRoleList = userRoleService.listByUserIds(Collections.singleton(userId));
         if (CollectionUtils.isEmpty(userRoleList)) {
             return userResp;
         }
-        List<SysRoleDO> sysRoleDOS = roleService.listByIds(userRoleList.stream().map(SysUserRoleDO::getRoleId).toList());
-        List<SysRoleDO> list = sysRoleDOS.stream().filter(v -> v.getStatus() == CommonStatusEnum.ENABLE.ordinal()).toList();
+        List<RoleDO> roleDOS = roleService.listByIds(userRoleList.stream().map(UserRoleDO::getRoleId).toList());
+        List<RoleDO> list = roleDOS.stream().filter(v -> v.getStatus() == CommonStatusEnum.ENABLE.ordinal()).toList();
         userResp.setRoles(CollectionUtils.convertList(list, role -> BeanUtils.toBean(role, RoleRespVO.class)));
 
         return userResp;
@@ -202,7 +202,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUserDO> im
         if (id == null) {
             return;
         }
-        SysUserDO user = baseMapper.selectById(id);
+        UserDO user = baseMapper.selectById(id);
         if (user == null) {
             throw new BusinessException(USER_NOT_EXISTS);
         }
@@ -214,7 +214,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUserDO> im
             return;
         }
 
-        SysUserDO user = baseMapper.selectOne(SysUserDO::getUsername, username);
+        UserDO user = baseMapper.selectOne(UserDO::getUsername, username);
         if (user == null) {
             return;
         }
@@ -229,7 +229,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUserDO> im
         if (StrUtil.isBlank(mobile)) {
             return;
         }
-        SysUserDO user = baseMapper.selectOne(SysUserDO::getPhone, mobile);
+        UserDO user = baseMapper.selectOne(UserDO::getPhone, mobile);
         if (user == null) {
             return;
         }
@@ -244,7 +244,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUserDO> im
         if (StrUtil.isBlank(email)) {
             return;
         }
-        SysUserDO user = baseMapper.selectOne(SysUserDO::getEmail, email);
+        UserDO user = baseMapper.selectOne(UserDO::getEmail, email);
         if (user == null) {
             return;
         }

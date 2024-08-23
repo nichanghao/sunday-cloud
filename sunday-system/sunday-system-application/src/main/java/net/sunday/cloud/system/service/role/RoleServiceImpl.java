@@ -11,10 +11,10 @@ import net.sunday.cloud.base.common.util.object.BeanUtils;
 import net.sunday.cloud.system.controller.admin.role.vo.RolePageReqVO;
 import net.sunday.cloud.system.controller.admin.role.vo.RoleRespVO;
 import net.sunday.cloud.system.controller.admin.role.vo.RoleUpsertReqVO;
-import net.sunday.cloud.system.model.SysRoleDO;
-import net.sunday.cloud.system.repository.mapper.SysRoleMapper;
-import net.sunday.cloud.system.service.rolemenu.ISysRoleMenuService;
-import net.sunday.cloud.system.service.userrole.ISysUserRoleService;
+import net.sunday.cloud.system.model.RoleDO;
+import net.sunday.cloud.system.repository.mapper.RoleMapper;
+import net.sunday.cloud.system.service.rolemenu.IRoleMenuService;
+import net.sunday.cloud.system.service.userrole.IUserRoleService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
@@ -28,12 +28,12 @@ import static net.sunday.cloud.system.enums.SystemRespCodeEnum.*;
  * 系统角色 服务实现层
  */
 @Service
-public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRoleDO> implements ISysRoleService {
+public class RoleServiceImpl extends ServiceImpl<RoleMapper, RoleDO> implements IRoleService {
 
     @Resource
-    private ISysUserRoleService userRoleService;
+    private IUserRoleService userRoleService;
     @Resource
-    private ISysRoleMenuService roleMenuService;
+    private IRoleMenuService roleMenuService;
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -43,7 +43,7 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRoleDO> im
         validateRoleForUpsert(reqVO.getName(), reqVO.getCode(), null);
 
         // 2. 插入到数据库
-        SysRoleDO role = BeanUtils.toBean(reqVO, SysRoleDO.class);
+        RoleDO role = BeanUtils.toBean(reqVO, RoleDO.class);
         role.setStatus(CommonStatusEnum.ENABLE.ordinal());
         baseMapper.insert(role);
         return role.getId();
@@ -56,7 +56,7 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRoleDO> im
         validateRoleForUpsert(reqVO.getName(), reqVO.getCode(), reqVO.getId());
 
         // 2. 更新到数据库
-        SysRoleDO updateObj = BeanUtils.toBean(reqVO, SysRoleDO.class);
+        RoleDO updateObj = BeanUtils.toBean(reqVO, RoleDO.class);
         baseMapper.updateById(updateObj);
     }
 
@@ -68,7 +68,7 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRoleDO> im
         // 2. 校验角色是否被用户使用
         validateRoleBeUsedByUser(id);
         // 3. 删除角色
-        baseMapper.deleteById(new SysRoleDO(id));
+        baseMapper.deleteById(new RoleDO(id));
         // 4. 删除角色关联的菜单数据
         roleMenuService.removeByRoleId(id);
     }
@@ -76,10 +76,10 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRoleDO> im
     @Override
     public PageResult<RoleRespVO> getRolePage(RolePageReqVO reqVO) {
 
-        PageResult<SysRoleDO> pageResult = baseMapper.selectPage(reqVO, Wrappers.<SysRoleDO>lambdaQuery()
-                .like(reqVO.getName() != null, SysRoleDO::getName, reqVO.getName())
-                .like(reqVO.getCode() != null, SysRoleDO::getCode, reqVO.getCode())
-                .eq(reqVO.getStatus() != null, SysRoleDO::getStatus, reqVO.getStatus())
+        PageResult<RoleDO> pageResult = baseMapper.selectPage(reqVO, Wrappers.<RoleDO>lambdaQuery()
+                .like(reqVO.getName() != null, RoleDO::getName, reqVO.getName())
+                .like(reqVO.getCode() != null, RoleDO::getCode, reqVO.getCode())
+                .eq(reqVO.getStatus() != null, RoleDO::getStatus, reqVO.getStatus())
         );
 
         if (CollectionUtils.isEmpty(pageResult.getRecords())) {
@@ -92,9 +92,9 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRoleDO> im
 
     @Override
     public List<RoleRespVO> listSimpleRoleByStatus(int status) {
-        List<SysRoleDO> roleList = baseMapper.selectList(Wrappers.<SysRoleDO>lambdaQuery()
-                .eq(SysRoleDO::getStatus, status)
-                .select(SysRoleDO::getId, SysRoleDO::getName, SysRoleDO::getCode));
+        List<RoleDO> roleList = baseMapper.selectList(Wrappers.<RoleDO>lambdaQuery()
+                .eq(RoleDO::getStatus, status)
+                .select(RoleDO::getId, RoleDO::getName, RoleDO::getCode));
 
         return CollectionUtils.convertList(roleList, role -> BeanUtils.toBean(role, RoleRespVO.class));
     }
@@ -120,7 +120,7 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRoleDO> im
         if (id == null) {
             return;
         }
-        if (baseMapper.selectCount(Wrappers.<SysRoleDO>lambdaQuery().eq(SysRoleDO::getId, id)) != 1) {
+        if (baseMapper.selectCount(Wrappers.<RoleDO>lambdaQuery().eq(RoleDO::getId, id)) != 1) {
             throw new BusinessException(ROLE_NOT_EXISTS);
         }
     }
@@ -131,7 +131,7 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRoleDO> im
             return;
         }
 
-        SysRoleDO role = baseMapper.selectOne(SysRoleDO::getName, name);
+        RoleDO role = baseMapper.selectOne(RoleDO::getName, name);
         if (role == null) {
             return;
         }
@@ -147,7 +147,7 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRoleDO> im
             return;
         }
 
-        SysRoleDO role = baseMapper.selectOne(SysRoleDO::getCode, code);
+        RoleDO role = baseMapper.selectOne(RoleDO::getCode, code);
         if (role == null) {
             return;
         }

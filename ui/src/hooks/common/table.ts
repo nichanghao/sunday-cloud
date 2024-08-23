@@ -44,7 +44,7 @@ export function useTable<A extends NaiveUI.TableApiFn>(config: NaiveUI.NaiveTabl
       const recordsWithIndex = records.map((item, index) => {
         return {
           ...item,
-          index
+          index: index + 1
         };
       });
 

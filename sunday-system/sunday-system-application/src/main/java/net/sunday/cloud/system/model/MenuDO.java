@@ -24,12 +24,12 @@ import java.io.Serial;
 @Getter
 @Setter
 @TableName(value = "sys_menu", autoResultMap = true)
-public class SysMenuDO extends BaseDO {
+public class MenuDO extends BaseDO {
 
     @Serial
     private static final long serialVersionUID = 1L;
 
-    public SysMenuDO(Long id) {
+    public MenuDO(Long id) {
         this.id = id;
     }
     /**

@@ -7,7 +7,7 @@ import java.util.Set;
 /**
  * 权限管理 服务接口层
  */
-public interface ISysPermissionService {
+public interface IPermissionService {
 
     /**
      * 获得当前登录用户的权限路由信息

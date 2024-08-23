@@ -11,7 +11,7 @@ import net.sunday.cloud.base.common.enums.CommonStatusEnum;
 import net.sunday.cloud.system.controller.admin.role.vo.RolePageReqVO;
 import net.sunday.cloud.system.controller.admin.role.vo.RoleRespVO;
 import net.sunday.cloud.system.controller.admin.role.vo.RoleUpsertReqVO;
-import net.sunday.cloud.system.service.role.ISysRoleService;
+import net.sunday.cloud.system.service.role.IRoleService;
 import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,10 +23,10 @@ import java.util.List;
 @Tag(name = "角色管理")
 @RestController
 @RequestMapping("/system/role")
-public class SysRoleController {
+public class RoleController {
 
     @Resource
-    private ISysRoleService roleService;
+    private IRoleService roleService;
 
     @PostMapping("/add")
     @Operation(summary = "创建角色")

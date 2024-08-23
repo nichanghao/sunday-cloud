@@ -15,12 +15,12 @@ import java.io.Serial;
 @Getter
 @Setter
 @TableName("sys_role")
-public class SysRoleDO extends BaseDO {
+public class RoleDO extends BaseDO {
 
     @Serial
     private static final long serialVersionUID = 1L;
 
-    public SysRoleDO(Long id) {
+    public RoleDO(Long id) {
         this.id = id;
     }
 

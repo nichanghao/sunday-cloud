@@ -8,12 +8,12 @@ import net.sunday.cloud.base.security.util.SecurityFrameworkUtils;
 import net.sunday.cloud.system.controller.admin.menu.vo.MenuRespVO;
 import net.sunday.cloud.system.controller.admin.permission.vo.PermissionRouteRespVO;
 import net.sunday.cloud.system.enums.menu.MenuTypeEnum;
-import net.sunday.cloud.system.model.SysMenuDO;
-import net.sunday.cloud.system.model.SysRoleMenuDO;
-import net.sunday.cloud.system.model.SysUserRoleDO;
-import net.sunday.cloud.system.repository.mapper.SysRoleMenuMapper;
-import net.sunday.cloud.system.repository.mapper.SysUserRoleMapper;
-import net.sunday.cloud.system.service.userrole.ISysUserRoleService;
+import net.sunday.cloud.system.model.MenuDO;
+import net.sunday.cloud.system.model.RoleMenuDO;
+import net.sunday.cloud.system.model.UserRoleDO;
+import net.sunday.cloud.system.repository.mapper.RoleMenuMapper;
+import net.sunday.cloud.system.repository.mapper.UserRoleMapper;
+import net.sunday.cloud.system.service.userrole.IUserRoleService;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -25,13 +25,13 @@ import java.util.stream.Collectors;
  */
 @Service
 @AllArgsConstructor
-public class ISysPermissionServiceImpl implements ISysPermissionService {
+public class PermissionServiceImpl implements IPermissionService {
 
-    private final SysUserRoleMapper userRoleMapper;
+    private final UserRoleMapper userRoleMapper;
 
-    private final SysRoleMenuMapper roleMenuMapper;
+    private final RoleMenuMapper roleMenuMapper;
 
-    private final ISysUserRoleService sysUserRoleService;
+    private final IUserRoleService sysUserRoleService;
 
     @Override
     public PermissionRouteRespVO getPermissionRouteInfo() {
@@ -42,11 +42,11 @@ public class ISysPermissionServiceImpl implements ISysPermissionService {
         }
 
         // 2.连表查询当前用户拥有的所有菜单
-        MPJLambdaWrapper<SysUserRoleDO> wrapper = new MPJLambdaWrapper<SysUserRoleDO>()
-                .selectAll(SysMenuDO.class)
-                .leftJoin(SysRoleMenuDO.class, SysRoleMenuDO::getRoleId, SysUserRoleDO::getRoleId)
-                .leftJoin(SysMenuDO.class, SysMenuDO::getId, SysRoleMenuDO::getMenuId)
-                .eq(SysUserRoleDO::getUserId, authUserId);
+        MPJLambdaWrapper<UserRoleDO> wrapper = new MPJLambdaWrapper<UserRoleDO>()
+                .selectAll(MenuDO.class)
+                .leftJoin(RoleMenuDO.class, RoleMenuDO::getRoleId, UserRoleDO::getRoleId)
+                .leftJoin(MenuDO.class, MenuDO::getId, RoleMenuDO::getMenuId)
+                .eq(UserRoleDO::getUserId, authUserId);
         List<MenuRespVO> menuList = userRoleMapper.selectJoinList(MenuRespVO.class, wrapper);
         if (CollectionUtils.isEmpty(menuList)) {
             return PermissionRouteRespVO.EMPTY;
@@ -68,7 +68,7 @@ public class ISysPermissionServiceImpl implements ISysPermissionService {
     public void assignUserRole(Long userId, Set<Long> roleIds) {
         // 获得角色拥有角色编号
         Set<Long> dbRoleIds = CollectionUtils
-                .convertSet(sysUserRoleService.listByUserIds(Collections.singleton(userId)), SysUserRoleDO::getRoleId);
+                .convertSet(sysUserRoleService.listByUserIds(Collections.singleton(userId)), UserRoleDO::getRoleId);
 
         // 计算新增和删除的角色编号
         Set<Long> roleIdList = CollUtil.emptyIfNull(roleIds);
@@ -77,7 +77,7 @@ public class ISysPermissionServiceImpl implements ISysPermissionService {
         // 执行新增和删除。对于已经授权的角色，不用做任何处理
         if (CollectionUtils.isNotEmpty(createRoleIds)) {
             userRoleMapper.insertBatch(CollectionUtils.convertList(createRoleIds, roleId -> {
-                SysUserRoleDO entity = new SysUserRoleDO();
+                UserRoleDO entity = new UserRoleDO();
                 entity.setUserId(userId);
                 entity.setRoleId(roleId);
                 return entity;
@@ -91,7 +91,7 @@ public class ISysPermissionServiceImpl implements ISysPermissionService {
     @Override
     public Set<Long> listMenuIdsByRoleId(Long roleId) {
 
-        return CollectionUtils.convertSet(roleMenuMapper.selectList(SysRoleMenuDO::getRoleId, roleId), SysRoleMenuDO::getMenuId);
+        return CollectionUtils.convertSet(roleMenuMapper.selectList(RoleMenuDO::getRoleId, roleId), RoleMenuDO::getMenuId);
     }
 
     @Override
@@ -105,7 +105,7 @@ public class ISysPermissionServiceImpl implements ISysPermissionService {
         // 执行新增和删除。对于已经授权的菜单，不用做任何处理
         if (CollUtil.isNotEmpty(createMenuIds)) {
             roleMenuMapper.insertBatch(CollectionUtils.convertList(createMenuIds, menuId -> {
-                SysRoleMenuDO entity = new SysRoleMenuDO();
+                RoleMenuDO entity = new RoleMenuDO();
                 entity.setRoleId(roleId);
                 entity.setMenuId(menuId);
                 return entity;
@@ -126,7 +126,7 @@ public class ISysPermissionServiceImpl implements ISysPermissionService {
             // 特殊处理，前端根据routeName来缓存路由信息
             menu.setName(menu.getRouteName());
 
-            if (Objects.equals(menu.getParentId(), SysMenuDO.ID_ROOT)) {
+            if (Objects.equals(menu.getParentId(), MenuDO.ID_ROOT)) {
                 routes.add(menu);
             } else if (!Objects.equals(menu.getType(), MenuTypeEnum.BUTTON.getType())) {
                 MenuRespVO menuRespVO = menuMap.get(menu.getParentId());

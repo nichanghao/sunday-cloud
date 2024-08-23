@@ -5,14 +5,14 @@ import net.sunday.cloud.base.common.entity.page.PageResult;
 import net.sunday.cloud.system.controller.admin.role.vo.RolePageReqVO;
 import net.sunday.cloud.system.controller.admin.role.vo.RoleRespVO;
 import net.sunday.cloud.system.controller.admin.role.vo.RoleUpsertReqVO;
-import net.sunday.cloud.system.model.SysRoleDO;
+import net.sunday.cloud.system.model.RoleDO;
 
 import java.util.List;
 
 /**
  * 系统角色 服务接口层
  */
-public interface ISysRoleService extends IService<SysRoleDO> {
+public interface IRoleService extends IService<RoleDO> {
 
     /**
      * 创建角色

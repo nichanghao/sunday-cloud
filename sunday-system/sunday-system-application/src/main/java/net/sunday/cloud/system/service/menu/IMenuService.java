@@ -6,14 +6,14 @@ import net.sunday.cloud.system.controller.admin.menu.vo.MenuListReqVO;
 import net.sunday.cloud.system.controller.admin.menu.vo.MenuRespVO;
 import net.sunday.cloud.system.controller.admin.menu.vo.MenuSimpleRespVO;
 import net.sunday.cloud.system.controller.admin.menu.vo.MenuUpsertReqVO;
-import net.sunday.cloud.system.model.SysMenuDO;
+import net.sunday.cloud.system.model.MenuDO;
 
 import java.util.List;
 
 /**
  * 系统菜单 服务接口层
  */
-public interface ISysMenuService extends IService<SysMenuDO> {
+public interface IMenuService extends IService<MenuDO> {
 
     /**
      * 创建菜单

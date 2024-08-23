@@ -12,25 +12,25 @@ import net.sunday.cloud.system.controller.admin.menu.vo.MenuRespVO;
 import net.sunday.cloud.system.controller.admin.menu.vo.MenuSimpleRespVO;
 import net.sunday.cloud.system.controller.admin.menu.vo.MenuUpsertReqVO;
 import net.sunday.cloud.system.enums.menu.MenuTypeEnum;
-import net.sunday.cloud.system.model.SysMenuDO;
-import net.sunday.cloud.system.repository.mapper.SysMenuMapper;
-import net.sunday.cloud.system.service.rolemenu.ISysRoleMenuService;
+import net.sunday.cloud.system.model.MenuDO;
+import net.sunday.cloud.system.repository.mapper.MenuMapper;
+import net.sunday.cloud.system.service.rolemenu.IRoleMenuService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 
 import static net.sunday.cloud.system.enums.SystemRespCodeEnum.*;
-import static net.sunday.cloud.system.model.SysMenuDO.ID_ROOT;
+import static net.sunday.cloud.system.model.MenuDO.ID_ROOT;
 
 /**
  * 系统菜单 服务实现类
  */
 @Service
-public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenuDO> implements ISysMenuService {
+public class MenuServiceImpl extends ServiceImpl<MenuMapper, MenuDO> implements IMenuService {
 
     @Resource
-    private ISysRoleMenuService roleMenuService;
+    private IRoleMenuService roleMenuService;
 
     @Override
     public Long createMenu(MenuUpsertReqVO reqVO) {
@@ -39,7 +39,7 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenuDO> im
         // 2.校验菜单自身
         validateMenu(reqVO.getParentId(), reqVO.getName(), null);
         // 3.插入数据库
-        SysMenuDO menu = BeanUtils.toBean(reqVO, SysMenuDO.class);
+        MenuDO menu = BeanUtils.toBean(reqVO, MenuDO.class);
         baseMapper.insert(menu);
         return menu.getId();
     }
@@ -54,7 +54,7 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenuDO> im
         validateMenu(updateReqVO.getParentId(), updateReqVO.getName(), updateReqVO.getId());
 
         // 4.更新到数据库
-        baseMapper.updateById(BeanUtils.toBean(updateReqVO, SysMenuDO.class));
+        baseMapper.updateById(BeanUtils.toBean(updateReqVO, MenuDO.class));
     }
 
     @Override
@@ -65,7 +65,7 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenuDO> im
         // 2.校验删除的菜单是否存在
         validateMenuExists(id);
         // 3.标记删除
-        baseMapper.deleteById(new SysMenuDO(id));
+        baseMapper.deleteById(new MenuDO(id));
         // 4.级联删除角色菜单关系
         roleMenuService.removeByMenuId(id);
     }
@@ -73,9 +73,9 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenuDO> im
     @Override
     public PageResult<MenuRespVO> listMenuPage(MenuListReqVO reqVO) {
         // 1.查询菜单列表
-        List<SysMenuDO> menuList = baseMapper.selectList(Wrappers.<SysMenuDO>lambdaQuery()
-                .like(reqVO.getName() != null, SysMenuDO::getName, reqVO.getName())
-                .eq(reqVO.getStatus() != null, SysMenuDO::getStatus, reqVO.getStatus())
+        List<MenuDO> menuList = baseMapper.selectList(Wrappers.<MenuDO>lambdaQuery()
+                .like(reqVO.getName() != null, MenuDO::getName, reqVO.getName())
+                .eq(reqVO.getStatus() != null, MenuDO::getStatus, reqVO.getStatus())
         );
 
         // 2.构建菜单树
@@ -86,16 +86,16 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenuDO> im
 
     @Override
     public List<MenuSimpleRespVO> listSimpleMenuTree(MenuListReqVO reqVO) {
-        List<SysMenuDO> menuList = baseMapper.selectList(Wrappers.<SysMenuDO>lambdaQuery()
-                .like(reqVO.getName() != null, SysMenuDO::getName, reqVO.getName())
-                .eq(reqVO.getStatus() != null, SysMenuDO::getStatus, reqVO.getStatus())
-                .select(SysMenuDO::getId, SysMenuDO::getName, SysMenuDO::getType, SysMenuDO::getParentId)
+        List<MenuDO> menuList = baseMapper.selectList(Wrappers.<MenuDO>lambdaQuery()
+                .like(reqVO.getName() != null, MenuDO::getName, reqVO.getName())
+                .eq(reqVO.getStatus() != null, MenuDO::getStatus, reqVO.getStatus())
+                .select(MenuDO::getId, MenuDO::getName, MenuDO::getType, MenuDO::getParentId)
         );
 
         return this.buildMenuTree(menuList, MenuSimpleRespVO.class);
     }
 
-    private <T extends MenuSimpleRespVO> List<T> buildMenuTree(List<SysMenuDO> menuList, Class<T> clazz) {
+    private <T extends MenuSimpleRespVO> List<T> buildMenuTree(List<MenuDO> menuList, Class<T> clazz) {
         if (CollectionUtils.isEmpty(menuList))
             return Collections.emptyList();
 
@@ -127,7 +127,7 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenuDO> im
         if (id == null) {
             return;
         }
-        if (baseMapper.selectCount(Wrappers.<SysMenuDO>lambdaQuery().eq(SysMenuDO::getParentId, id)) > 0) {
+        if (baseMapper.selectCount(Wrappers.<MenuDO>lambdaQuery().eq(MenuDO::getParentId, id)) > 0) {
             throw new BusinessException(MENU_EXISTS_CHILDREN);
         }
     }
@@ -139,7 +139,7 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenuDO> im
         if (id == null) {
             return;
         }
-        if (baseMapper.selectCount(Wrappers.<SysMenuDO>lambdaQuery().eq(SysMenuDO::getId, id)) != 1) {
+        if (baseMapper.selectCount(Wrappers.<MenuDO>lambdaQuery().eq(MenuDO::getId, id)) != 1) {
             throw new BusinessException(MENU_NOT_EXISTS);
         }
     }
@@ -149,8 +149,8 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenuDO> im
      */
     private void validateMenu(Long parentId, String name, Long id) {
         // 1.校验相同父菜单编号下，是否存在相同的菜单名
-        SysMenuDO menu = baseMapper.selectOne(Wrappers.<SysMenuDO>lambdaQuery()
-                .eq(SysMenuDO::getParentId, parentId).eq(SysMenuDO::getName, name).select(SysMenuDO::getId));
+        MenuDO menu = baseMapper.selectOne(Wrappers.<MenuDO>lambdaQuery()
+                .eq(MenuDO::getParentId, parentId).eq(MenuDO::getName, name).select(MenuDO::getId));
         if (menu == null) {
             return;
         }
@@ -168,8 +168,8 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenuDO> im
             throw new BusinessException(MENU_PARENT_NOT_SELF);
         }
 
-        SysMenuDO menu = baseMapper.selectOne(Wrappers
-                .<SysMenuDO>lambdaQuery().eq(SysMenuDO::getId, parentId).select(SysMenuDO::getId, SysMenuDO::getType));
+        MenuDO menu = baseMapper.selectOne(Wrappers
+                .<MenuDO>lambdaQuery().eq(MenuDO::getId, parentId).select(MenuDO::getId, MenuDO::getType));
         // 父菜单不存在
         if (menu == null) {
             throw new BusinessException(MENU_PARENT_NOT_EXISTS);

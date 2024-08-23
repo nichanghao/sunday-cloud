@@ -1,12 +1,12 @@
 package net.sunday.cloud.system.service.rolemenu;
 
-import net.sunday.cloud.system.model.SysRoleMenuDO;
+import net.sunday.cloud.system.model.RoleMenuDO;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 /**
  * 角色菜单关联 服务接口层
  */
-public interface ISysRoleMenuService extends IService<SysRoleMenuDO> {
+public interface IRoleMenuService extends IService<RoleMenuDO> {
 
     /**
      * 删除角色关联的菜单关系

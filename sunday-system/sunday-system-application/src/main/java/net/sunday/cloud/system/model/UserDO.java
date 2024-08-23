@@ -22,12 +22,12 @@ import java.io.Serial;
 @AllArgsConstructor
 @TableName("sys_user")
 @EqualsAndHashCode(callSuper = true)
-public class SysUserDO extends BaseDO {
+public class UserDO extends BaseDO {
 
     @Serial
     private static final long serialVersionUID = 1L;
 
-    public SysUserDO(Long id) {
+    public UserDO(Long id) {
         this.id = id;
     }
 

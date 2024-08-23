@@ -8,12 +8,17 @@ import java.io.Serial;
 import java.io.Serializable;
 
 /**
- * 角色菜单关联
+ * <p>
+ * 
+ * </p>
+ *
+ * @author mybatis-plus-generator
+ * @since 2024-08-09
  */
 @Getter
 @Setter
-@TableName("sys_role_menu")
-public class SysRoleMenuDO implements Serializable {
+@TableName("sys_user_role")
+public class UserRoleDO implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 1L;
@@ -24,7 +29,7 @@ public class SysRoleMenuDO implements Serializable {
     private Long roleId;
 
     /**
-     * 菜单ID
+     * 用户ID
      */
-    private Long menuId;
+    private Long userId;
 }

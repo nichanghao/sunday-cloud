@@ -12,7 +12,7 @@ import net.sunday.cloud.system.controller.admin.menu.vo.MenuListReqVO;
 import net.sunday.cloud.system.controller.admin.menu.vo.MenuRespVO;
 import net.sunday.cloud.system.controller.admin.menu.vo.MenuSimpleRespVO;
 import net.sunday.cloud.system.controller.admin.menu.vo.MenuUpsertReqVO;
-import net.sunday.cloud.system.service.menu.ISysMenuService;
+import net.sunday.cloud.system.service.menu.IMenuService;
 import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,10 +24,10 @@ import java.util.List;
 @Tag(name = "菜单管理")
 @RestController
 @RequestMapping("/system/menu")
-public class SysMenuController {
+public class MenuController {
 
     @Resource
-    private ISysMenuService menuService;
+    private IMenuService menuService;
 
     @PostMapping("/add")
     @Operation(summary = "创建菜单")

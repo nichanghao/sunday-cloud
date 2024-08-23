@@ -40,6 +40,7 @@ public class MyBatisPlusGenerator {
                 .templateEngine(new FreemarkerTemplateEngine())
                 .strategyConfig(builder ->
                         builder
+                                .addTablePrefix("sys_")
                                 .addInclude("sys_role_menu")
                                 .entityBuilder()
                                 .enableFileOverride()

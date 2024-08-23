@@ -8,7 +8,7 @@ import jakarta.validation.Valid;
 import net.sunday.cloud.base.common.entity.page.PageResult;
 import net.sunday.cloud.base.common.entity.result.R;
 import net.sunday.cloud.system.controller.admin.user.vo.*;
-import net.sunday.cloud.system.service.user.ISysUserService;
+import net.sunday.cloud.system.service.user.IUserService;
 import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,10 +19,10 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/system/user")
 @Tag(name = "用户管理")
-public class SysUserController {
+public class UserController {
 
     @Resource
-    private ISysUserService userService;
+    private IUserService userService;
 
     @PostMapping("/add")
     @Operation(summary = "新增用户")

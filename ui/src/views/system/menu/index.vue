@@ -25,14 +25,10 @@ const { columns, columnChecks, data, loading, getData, getDataByPage } = useTabl
   isPagination: false,
   columns: () => [
     {
-      type: 'selection',
-      align: 'center',
-      width: 48
-    },
-    {
       key: 'id',
       title: $t('page.manage.menu.id'),
-      align: 'center'
+      align: 'center',
+      width: 64
     },
     {
       key: 'type',

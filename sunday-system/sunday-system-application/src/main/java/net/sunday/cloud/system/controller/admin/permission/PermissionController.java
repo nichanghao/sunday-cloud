@@ -8,7 +8,7 @@ import net.sunday.cloud.base.common.entity.result.R;
 import net.sunday.cloud.system.controller.admin.permission.vo.PermissionAssignRoleMenuReqVO;
 import net.sunday.cloud.system.controller.admin.permission.vo.PermissionAssignUserRoleReqVO;
 import net.sunday.cloud.system.controller.admin.permission.vo.PermissionRouteRespVO;
-import net.sunday.cloud.system.service.permission.ISysPermissionService;
+import net.sunday.cloud.system.service.permission.IPermissionService;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,9 +21,9 @@ import java.util.Set;
 @RestController
 @RequestMapping("/system/permission")
 @AllArgsConstructor
-public class SysPermissionController {
+public class PermissionController {
 
-    private final ISysPermissionService permissionService;
+    private final IPermissionService permissionService;
 
     @GetMapping("/route/info")
     @Operation(summary = "获得当前登录用户的权限路由信息")

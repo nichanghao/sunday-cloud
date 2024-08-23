@@ -4,13 +4,13 @@ import net.sunday.cloud.base.common.entity.page.PageResult;
 import net.sunday.cloud.system.controller.admin.user.vo.UserPageReqVO;
 import net.sunday.cloud.system.controller.admin.user.vo.UserRespVO;
 import net.sunday.cloud.system.controller.admin.user.vo.UserUpsertReqVO;
-import net.sunday.cloud.system.model.SysUserDO;
+import net.sunday.cloud.system.model.UserDO;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 /**
  * 系统用户 服务接口层
  */
-public interface ISysUserService extends IService<SysUserDO> {
+public interface IUserService extends IService<UserDO> {
 
     /**
      * 创建用户
