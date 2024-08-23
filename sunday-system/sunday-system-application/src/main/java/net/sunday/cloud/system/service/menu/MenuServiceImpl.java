@@ -14,11 +14,14 @@ import net.sunday.cloud.system.controller.admin.menu.vo.MenuUpsertReqVO;
 import net.sunday.cloud.system.enums.menu.MenuTypeEnum;
 import net.sunday.cloud.system.model.MenuDO;
 import net.sunday.cloud.system.repository.mapper.MenuMapper;
+import net.sunday.cloud.system.repository.redis.constant.RedisKeyConstants;
 import net.sunday.cloud.system.service.rolemenu.IRoleMenuService;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static net.sunday.cloud.system.enums.SystemRespCodeEnum.*;
 import static net.sunday.cloud.system.model.MenuDO.ID_ROOT;
@@ -93,6 +96,19 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, MenuDO> implements 
         );
 
         return this.buildMenuTree(menuList, MenuSimpleRespVO.class);
+    }
+
+    @Override
+    @Cacheable(value = RedisKeyConstants.PERMISSION_MENU_ID_LIST, key = "#permission")
+    public List<Long> listMenuIdByPermissionWithCache(String permission) {
+        List<MenuDO> menuList = baseMapper.selectList(Wrappers.<MenuDO>lambdaQuery()
+                .select(MenuDO::getId)
+                .eq(MenuDO::getPermission, permission));
+        if (CollectionUtils.isEmpty(menuList)) {
+            return Collections.emptyList();
+        }
+
+        return menuList.stream().map(MenuDO::getId).collect(Collectors.toList());
     }
 
     private <T extends MenuSimpleRespVO> List<T> buildMenuTree(List<MenuDO> menuList, Class<T> clazz) {

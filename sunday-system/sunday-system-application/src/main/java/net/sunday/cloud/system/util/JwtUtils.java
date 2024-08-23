@@ -2,13 +2,12 @@ package net.sunday.cloud.system.util;
 
 import cn.hutool.core.date.DateUtil;
 import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import lombok.Getter;
 import net.sunday.cloud.base.common.exception.BusinessException;
-import net.sunday.cloud.system.exception.SystemRespCodeEnum;
+import net.sunday.cloud.base.common.exception.GlobalRespCodeEnum;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -83,10 +82,8 @@ public class JwtUtils {
                     .verifyWith(getKey())
                     .build()
                     .parseSignedClaims(token);
-        } catch (ExpiredJwtException e) {
-            throw new BusinessException(SystemRespCodeEnum.TOKEN_EXPIRED);
         } catch (Exception e) {
-            throw new BusinessException(SystemRespCodeEnum.TOKEN_INVALID);
+            throw new BusinessException(GlobalRespCodeEnum.UNAUTHORIZED);
         }
     }
 

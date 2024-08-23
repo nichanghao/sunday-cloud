@@ -3,8 +3,8 @@ package net.sunday.cloud.system.repository.redis;
 import jakarta.annotation.Resource;
 import net.sunday.cloud.base.common.entity.auth.AuthUser;
 import net.sunday.cloud.base.common.exception.BusinessException;
+import net.sunday.cloud.base.common.exception.GlobalRespCodeEnum;
 import net.sunday.cloud.base.common.util.json.JsonUtils;
-import net.sunday.cloud.system.exception.SystemRespCodeEnum;
 import net.sunday.cloud.system.util.JwtUtils;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Repository;
@@ -34,7 +34,7 @@ public class AuthRedisDAO {
 
         AuthUser authUser = JsonUtils.parseObject(stringRedisTemplate.opsForValue().get(AUTH_USER_KEY_PREFIX + key), AuthUser.class);
         if (authUser == null) {
-            throw new BusinessException(SystemRespCodeEnum.TOKEN_EXPIRED);
+            throw new BusinessException(GlobalRespCodeEnum.UNAUTHORIZED);
         }
         return authUser;
     }

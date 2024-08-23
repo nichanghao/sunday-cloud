@@ -34,4 +34,12 @@ public interface IUserRoleService extends IService<UserRoleDO> {
      */
     List<UserRoleDO> listByUserIds(Collection<Long> userIds);
 
+    /**
+     * 获取当前用户拥有的并开启状态的角色id
+     *
+     * @param userId 用户ID
+     * @return 当前用户拥有的并开启状态的角色id
+     */
+    List<Long> listEnableByUserId(Long userId);
+
 }

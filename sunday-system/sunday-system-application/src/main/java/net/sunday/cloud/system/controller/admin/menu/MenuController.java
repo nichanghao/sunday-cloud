@@ -13,6 +13,7 @@ import net.sunday.cloud.system.controller.admin.menu.vo.MenuRespVO;
 import net.sunday.cloud.system.controller.admin.menu.vo.MenuSimpleRespVO;
 import net.sunday.cloud.system.controller.admin.menu.vo.MenuUpsertReqVO;
 import net.sunday.cloud.system.service.menu.IMenuService;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.*;
 
@@ -31,6 +32,7 @@ public class MenuController {
 
     @PostMapping("/add")
     @Operation(summary = "创建菜单")
+    @PreAuthorize("")
     public R<Long> createMenu(@Valid @RequestBody MenuUpsertReqVO reqVO) {
         Long menuId = menuService.createMenu(reqVO);
         return R.ok(menuId);

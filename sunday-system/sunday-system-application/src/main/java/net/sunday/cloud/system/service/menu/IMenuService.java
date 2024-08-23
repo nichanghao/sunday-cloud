@@ -52,4 +52,12 @@ public interface IMenuService extends IService<MenuDO> {
      * @return 精简信息菜单树
      */
     List<MenuSimpleRespVO> listSimpleMenuTree(MenuListReqVO reqVO);
+
+    /**
+     * 根据权限标识获取菜单编号列表
+     *
+     * @param permission 权限标识
+     * @return 菜单编号列表
+     */
+    List<Long> listMenuIdByPermissionWithCache(String permission);
 }

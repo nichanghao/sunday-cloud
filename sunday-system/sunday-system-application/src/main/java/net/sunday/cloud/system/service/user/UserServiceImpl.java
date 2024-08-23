@@ -174,11 +174,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserDO> implements 
         UserRespVO userResp = BeanUtils.toBean(user, UserRespVO.class);
 
         // 2.查询用户角色信息
-        List<UserRoleDO> userRoleList = userRoleService.listByUserIds(Collections.singleton(userId));
-        if (CollectionUtils.isEmpty(userRoleList)) {
+        List<Long> roleIds = userRoleService.listEnableByUserId(userId);
+        if (CollectionUtils.isEmpty(roleIds)) {
             return userResp;
         }
-        List<RoleDO> roleDOS = roleService.listByIds(userRoleList.stream().map(UserRoleDO::getRoleId).toList());
+        List<RoleDO> roleDOS = roleService.listByIds(roleIds);
         List<RoleDO> list = roleDOS.stream().filter(v -> v.getStatus() == CommonStatusEnum.ENABLE.ordinal()).toList();
         userResp.setRoles(CollectionUtils.convertList(list, role -> BeanUtils.toBean(role, RoleRespVO.class)));
 
