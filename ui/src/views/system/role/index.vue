@@ -64,7 +64,7 @@ const {
       minWidth: 120
     },
     {
-      key: 'desc',
+      key: 'remark',
       title: $t('page.manage.role.roleDesc'),
       minWidth: 120
     },
@@ -80,7 +80,7 @@ const {
 
         const tagMap: Record<Api.Common.EnableStatus, NaiveUI.ThemeColor> = {
           1: 'success',
-          2: 'warning'
+          0: 'warning'
         };
 
         const label = $t(enableStatusRecord[row.status]);

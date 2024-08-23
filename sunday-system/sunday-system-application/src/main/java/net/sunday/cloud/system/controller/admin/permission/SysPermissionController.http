@@ -15,3 +15,21 @@ Authorization: Bearer {{token}}
     2
   ]
 }
+
+### 获得角色拥有的菜单编号
+GET {{gateway}}/admin-api/system/permission/list-role-menus?roleId=1
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+### 赋予用户角色
+PUT {{gateway}}/admin-api/system/permission/assign-role-menu
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "roleId": 2,
+  "menuIds": [
+    1,
+    2
+  ]
+}

@@ -43,7 +43,7 @@ const title = computed(() => {
   return titles[props.operateType];
 });
 
-type Model = Pick<Api.SystemManage.Role, 'name' | 'code' | 'desc' | 'status'>;
+type Model = Pick<Api.SystemManage.Role, 'name' | 'code' | 'remark' | 'status'>;
 
 const model: Model = reactive(createDefaultModel());
 
@@ -51,12 +51,12 @@ function createDefaultModel(): Model {
   return {
     name: '',
     code: '',
-    desc: '',
+    remark: '',
     status: null
   };
 }
 
-type RuleKey = Exclude<keyof Model, 'desc'>;
+type RuleKey = Exclude<keyof Model, 'remark'>;
 
 const rules: Record<RuleKey, App.Global.FormRule> = {
   name: defaultRequiredRule,
@@ -125,7 +125,7 @@ watch(visible, () => {
           </NRadioGroup>
         </NFormItem>
         <NFormItem :label="$t('page.manage.role.roleDesc')" path="desc">
-          <NInput v-model:value="model.desc" :placeholder="$t('page.manage.role.form.roleDesc')" />
+          <NInput v-model:value="model.remark" :placeholder="$t('page.manage.role.form.roleDesc')" />
         </NFormItem>
       </NForm>
       <template #footer>

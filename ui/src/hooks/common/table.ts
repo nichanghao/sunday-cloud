@@ -41,15 +41,12 @@ export function useTable<A extends NaiveUI.TableApiFn>(config: NaiveUI.NaiveTabl
       const { records = [], total = 0 } = res.data || {};
 
 
-      let num = 1;
       const recordsWithIndex = records.map((item, index) => {
         return {
           ...item,
-          // eslint-disable-next-line no-plusplus
-          index: num++
+          index
         };
       });
-
 
       return {
         data: recordsWithIndex,

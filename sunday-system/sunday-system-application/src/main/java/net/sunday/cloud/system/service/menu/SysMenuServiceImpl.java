@@ -3,6 +3,7 @@ package net.sunday.cloud.system.service.menu;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import jakarta.annotation.Resource;
+import net.sunday.cloud.base.common.entity.page.PageResult;
 import net.sunday.cloud.base.common.exception.BusinessException;
 import net.sunday.cloud.base.common.util.collection.CollectionUtils;
 import net.sunday.cloud.base.common.util.object.BeanUtils;
@@ -70,7 +71,7 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenuDO> im
     }
 
     @Override
-    public List<MenuRespVO> getMenuList(MenuListReqVO reqVO) {
+    public PageResult<MenuRespVO> listMenuPage(MenuListReqVO reqVO) {
         // 1.查询菜单列表
         List<SysMenuDO> menuList = baseMapper.selectList(Wrappers.<SysMenuDO>lambdaQuery()
                 .like(reqVO.getName() != null, SysMenuDO::getName, reqVO.getName())
@@ -78,35 +79,37 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenuDO> im
         );
 
         // 2.构建菜单树
-        return this.buildMenuTree(menuList);
+        List<MenuRespVO> menuRespVOS = this.buildMenuTree(menuList, MenuRespVO.class);
+        // 3.暂时不进行分页，返回所有数据
+        return new PageResult<>(menuRespVOS, (long) menuRespVOS.size());
     }
 
     @Override
-    public List<MenuSimpleRespVO> getSimpleMenuList(MenuListReqVO reqVO) {
+    public List<MenuSimpleRespVO> listSimpleMenuTree(MenuListReqVO reqVO) {
         List<SysMenuDO> menuList = baseMapper.selectList(Wrappers.<SysMenuDO>lambdaQuery()
                 .like(reqVO.getName() != null, SysMenuDO::getName, reqVO.getName())
                 .eq(reqVO.getStatus() != null, SysMenuDO::getStatus, reqVO.getStatus())
                 .select(SysMenuDO::getId, SysMenuDO::getName, SysMenuDO::getType, SysMenuDO::getParentId)
         );
 
-        return CollectionUtils.convertList(menuList, menu -> BeanUtils.toBean(menu, MenuSimpleRespVO.class));
+        return this.buildMenuTree(menuList, MenuSimpleRespVO.class);
     }
 
-    private List<MenuRespVO> buildMenuTree(List<SysMenuDO> menuList) {
+    private <T extends MenuSimpleRespVO> List<T> buildMenuTree(List<SysMenuDO> menuList, Class<T> clazz) {
         if (CollectionUtils.isEmpty(menuList))
             return Collections.emptyList();
 
-        Map<Long, MenuRespVO> menuMap = new LinkedHashMap<>(menuList.size());
+        Map<Long, T> menuMap = new LinkedHashMap<>(menuList.size());
         menuList.forEach(menu -> {
-            menuMap.put(menu.getId(), BeanUtils.toBean(menu, MenuRespVO.class));
+            menuMap.put(menu.getId(), BeanUtils.toBean(menu, clazz));
         });
 
-        List<MenuRespVO> menuTree = new ArrayList<>();
+        List<T> menuTree = new ArrayList<>();
         menuMap.values().forEach(menu -> {
             if (Objects.equals(menu.getParentId(), ID_ROOT)) {
                 menuTree.add(menu);
             } else {
-                MenuRespVO parent = menuMap.get(menu.getParentId());
+                MenuSimpleRespVO parent = menuMap.get(menu.getParentId());
                 if (parent.getChildren() == null) {
                     parent.setChildren(new ArrayList<>());
                 }

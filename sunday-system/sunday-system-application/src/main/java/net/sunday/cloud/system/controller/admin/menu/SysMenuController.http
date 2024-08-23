@@ -37,13 +37,13 @@ DELETE {{gateway}}/admin-api/system/menu/delete?id=19
 Content-Type: application/json
 Authorization: Bearer {{token}}
 
-### 获取菜单列表
-GET {{gateway}}/admin-api/system/menu/list
+### 获取菜单分页列表
+GET {{gateway}}/admin-api/system/menu/page
 Content-Type: application/json
 Authorization: Bearer {{token}}
 
 
 ### 获取菜单精简信息列表
-GET {{gateway}}/admin-api/system/menu/list-all-simple
+GET {{gateway}}/admin-api/system/menu/list-simple-tree
 Content-Type: application/json
 Authorization: Bearer {{token}}

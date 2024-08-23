@@ -1,11 +1,12 @@
 package net.sunday.cloud.system.service.menu;
 
+import com.baomidou.mybatisplus.extension.service.IService;
+import net.sunday.cloud.base.common.entity.page.PageResult;
 import net.sunday.cloud.system.controller.admin.menu.vo.MenuListReqVO;
 import net.sunday.cloud.system.controller.admin.menu.vo.MenuRespVO;
 import net.sunday.cloud.system.controller.admin.menu.vo.MenuSimpleRespVO;
 import net.sunday.cloud.system.controller.admin.menu.vo.MenuUpsertReqVO;
 import net.sunday.cloud.system.model.SysMenuDO;
-import com.baomidou.mybatisplus.extension.service.IService;
 
 import java.util.List;
 
@@ -37,18 +38,18 @@ public interface ISysMenuService extends IService<SysMenuDO> {
     void deleteMenu(Long id);
 
     /**
-     * 筛选菜单列表
+     * 获取菜单分页列表
      *
      * @param reqVO 筛选条件请求 VO
-     * @return 菜单列表
+     * @return 菜单分页列表
      */
-    List<MenuRespVO> getMenuList(MenuListReqVO reqVO);
+    PageResult<MenuRespVO> listMenuPage(MenuListReqVO reqVO);
 
     /**
-     * 获取菜单精简信息列表
+     * 获取精简信息菜单树
      *
      * @param reqVO 筛选条件请求 VO
-     * @return 菜单精简信息列表
+     * @return 精简信息菜单树
      */
-    List<MenuSimpleRespVO> getSimpleMenuList(MenuListReqVO reqVO);
+    List<MenuSimpleRespVO> listSimpleMenuTree(MenuListReqVO reqVO);
 }

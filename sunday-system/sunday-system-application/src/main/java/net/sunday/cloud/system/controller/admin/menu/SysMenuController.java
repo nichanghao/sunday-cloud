@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Resource;
 import jakarta.validation.Valid;
+import net.sunday.cloud.base.common.entity.page.PageResult;
 import net.sunday.cloud.base.common.entity.result.R;
 import net.sunday.cloud.base.common.enums.CommonStatusEnum;
 import net.sunday.cloud.system.controller.admin.menu.vo.MenuListReqVO;
@@ -51,17 +52,17 @@ public class SysMenuController {
         return R.ok(true);
     }
 
-    @GetMapping("/list")
-    @Operation(summary = "获取菜单列表", description = "用于【菜单管理】界面")
-    public R<List<MenuRespVO>> getMenuList(MenuListReqVO reqVO) {
-        return R.ok(menuService.getMenuList(reqVO));
+    @GetMapping("/page")
+    @Operation(summary = "获取菜单分页列表", description = "用于【菜单管理】界面")
+    public R<PageResult<MenuRespVO>> listMenuPage(MenuListReqVO reqVO) {
+        return R.ok(menuService.listMenuPage(reqVO));
     }
 
-    @GetMapping("/list-all-simple")
-    @Operation(summary = "获取菜单精简信息列表", description = "只包含被开启的菜单，用于【角色分配菜单】功能的选项")
-    public R<List<MenuSimpleRespVO>> getSimpleMenuList() {
+    @GetMapping("/list-simple-tree")
+    @Operation(summary = "获取精简信息菜单树", description = "只包含被开启的菜单，用于【角色分配菜单】功能的选项")
+    public R<List<MenuSimpleRespVO>> listSimpleMenuTree() {
 
-        return R.ok(menuService.getSimpleMenuList(MenuListReqVO.builder()
+        return R.ok(menuService.listSimpleMenuTree(MenuListReqVO.builder()
                 .status(CommonStatusEnum.ENABLE.ordinal())
                 .build()));
     }

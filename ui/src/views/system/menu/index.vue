@@ -20,7 +20,7 @@ const { bool: visible, setTrue: openModal } = useBoolean();
 
 const wrapperRef = ref<HTMLElement | null>(null);
 
-const { columns, columnChecks, data, loading, pagination, getData, getDataByPage } = useTable({
+const { columns, columnChecks, data, loading, getData, getDataByPage } = useTable({
   apiFn: fetchGetMenuList,
   isPagination: false,
   columns: () => [
@@ -106,7 +106,7 @@ const { columns, columnChecks, data, loading, pagination, getData, getDataByPage
 
         const tagMap: Record<Api.Common.EnableStatus, NaiveUI.ThemeColor> = {
           1: 'success',
-          2: 'warning'
+          0: 'warning'
         };
 
         const label = $t(enableStatusRecord[row.status]);
@@ -240,7 +240,6 @@ init();
         :loading="loading"
         :row-key="row => row.id"
         remote
-        :pagination="pagination"
         class="sm:h-full"
       />
       <MenuOperateModal

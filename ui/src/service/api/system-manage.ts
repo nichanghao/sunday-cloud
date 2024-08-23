@@ -21,7 +21,7 @@ export function addRole(data: any) {
 /** edit role */
 export function editRole(data: any) {
   return request<any>({
-    url: '/sys/role/edit',
+    url: '/admin-api/system/role/update',
     method: 'put',
     data
   });
@@ -30,7 +30,7 @@ export function editRole(data: any) {
 /** delete role */
 export function deleteRole(id: number) {
   return request<any>({
-    url: '/sys/role/delete',
+    url: '/admin-api/system/role/delete',
     method: 'delete',
     params: {
       id
@@ -115,7 +115,7 @@ export function resetUserPwd(password: string, id: number) {
 /** get menu list */
 export function fetchGetMenuList() {
   return request<Api.SystemManage.MenuList>({
-    url: '/admin-api/system/menu/list',
+    url: '/admin-api/system/menu/page',
     method: 'get'
   });
 }
@@ -131,7 +131,7 @@ export function fetchGetAllPages() {
 /** get menu tree */
 export function fetchGetMenuTree() {
   return request<Api.SystemManage.MenuTree[]>({
-    url: '/sys/menu/all-simple-menu-tree',
+    url: '/admin-api/system/menu/list-simple-tree',
     method: 'get'
   });
 }
@@ -139,10 +139,10 @@ export function fetchGetMenuTree() {
 /** get menu by role */
 export function fetchGetMenuByRole(id: number) {
   return request<number[]>({
-    url: '/sys/menu/list-by-role',
+    url: '/admin-api/system/permission/list-role-menus',
     method: 'get',
     params: {
-      id
+      roleId: id
     }
   });
 }
@@ -150,7 +150,7 @@ export function fetchGetMenuByRole(id: number) {
 /** assign menu to role */
 export function assignMenuToRole(menuIds: number[], roleId: number) {
   return request<any>({
-    url: '/sys/role/assign-menus',
+    url: '/admin-api/system/permission/assign-role-menu',
     method: 'put',
     data: {
       menuIds,
@@ -162,7 +162,7 @@ export function assignMenuToRole(menuIds: number[], roleId: number) {
 /** add menu data */
 export function addMenu(menu: any) {
   return request<any>({
-    url: '/sys/menu/add',
+    url: '/admin-api/system/menu/add',
     method: 'post',
     data: menu
   });
@@ -171,7 +171,7 @@ export function addMenu(menu: any) {
 /** edit menu data */
 export function editMenu(menu: any) {
   return request<any>({
-    url: '/sys/menu/edit',
+    url: '/admin-api/system/menu/update',
     method: 'put',
     data: menu
   });
@@ -180,7 +180,7 @@ export function editMenu(menu: any) {
 /** delete menu data */
 export function deleteMenu(id: number) {
   return request<any>({
-    url: '/sys/menu/delete',
+    url: '/admin-api/system/menu/delete',
     method: 'delete',
     params: {
       id

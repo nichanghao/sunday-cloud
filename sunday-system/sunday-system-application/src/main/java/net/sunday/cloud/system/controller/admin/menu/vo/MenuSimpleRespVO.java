@@ -3,6 +3,8 @@ package net.sunday.cloud.system.controller.admin.menu.vo;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
+import java.util.List;
+
 @Schema(description = "菜单管理 - 菜单精简信息")
 @Data
 public class MenuSimpleRespVO {
@@ -18,5 +20,8 @@ public class MenuSimpleRespVO {
 
     @Schema(description = "菜单类型(1:目录,2:菜单,3:按钮)", requiredMode = Schema.RequiredMode.REQUIRED, example = "1")
     private Integer type;
+
+    @Schema(description = "子菜单列表")
+    private List<MenuSimpleRespVO> children;
 
 }

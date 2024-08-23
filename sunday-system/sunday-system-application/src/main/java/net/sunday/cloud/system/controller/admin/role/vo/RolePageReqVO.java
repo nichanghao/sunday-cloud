@@ -22,6 +22,6 @@ public class RolePageReqVO extends PageParam {
     @Schema(description = "状态(1:启用 0:禁用)", example = "1")
     @Min(value = 0, message = "状态值必须大于等于0")
     @Max(value = 1, message = "状态值必须小于等于1")
-    private Integer status;
+    private Byte status;
 
 }

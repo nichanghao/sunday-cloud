@@ -11,6 +11,7 @@ import net.sunday.cloud.system.enums.menu.MenuTypeEnum;
 import net.sunday.cloud.system.model.SysMenuDO;
 import net.sunday.cloud.system.model.SysRoleMenuDO;
 import net.sunday.cloud.system.model.SysUserRoleDO;
+import net.sunday.cloud.system.repository.mapper.SysRoleMenuMapper;
 import net.sunday.cloud.system.repository.mapper.SysUserRoleMapper;
 import net.sunday.cloud.system.service.userrole.ISysUserRoleService;
 import org.springframework.stereotype.Service;
@@ -27,6 +28,8 @@ import java.util.stream.Collectors;
 public class ISysPermissionServiceImpl implements ISysPermissionService {
 
     private final SysUserRoleMapper userRoleMapper;
+
+    private final SysRoleMenuMapper roleMenuMapper;
 
     private final ISysUserRoleService sysUserRoleService;
 
@@ -82,6 +85,34 @@ public class ISysPermissionServiceImpl implements ISysPermissionService {
         }
         if (CollectionUtils.isNotEmpty(deleteMenuIds)) {
             userRoleMapper.deleteListByUserIdAndRoleIdIds(userId, deleteMenuIds);
+        }
+    }
+
+    @Override
+    public Set<Long> listMenuIdsByRoleId(Long roleId) {
+
+        return CollectionUtils.convertSet(roleMenuMapper.selectList(SysRoleMenuDO::getRoleId, roleId), SysRoleMenuDO::getMenuId);
+    }
+
+    @Override
+    public void assignRoleMenu(Long roleId, Set<Long> menuIds) {
+        // 1。获得角色拥有菜单编号
+        Set<Long> existMenuIds = listMenuIdsByRoleId(roleId);
+        // 2。计算新增和删除的菜单编号
+        Set<Long> menuIdList = CollUtil.emptyIfNull(menuIds);
+        Collection<Long> createMenuIds = CollUtil.subtract(menuIdList, existMenuIds);
+        Collection<Long> deleteMenuIds = CollUtil.subtract(existMenuIds, menuIdList);
+        // 执行新增和删除。对于已经授权的菜单，不用做任何处理
+        if (CollUtil.isNotEmpty(createMenuIds)) {
+            roleMenuMapper.insertBatch(CollectionUtils.convertList(createMenuIds, menuId -> {
+                SysRoleMenuDO entity = new SysRoleMenuDO();
+                entity.setRoleId(roleId);
+                entity.setMenuId(menuId);
+                return entity;
+            }));
+        }
+        if (CollUtil.isNotEmpty(deleteMenuIds)) {
+            roleMenuMapper.deleteListByRoleIdAndMenuIds(roleId, deleteMenuIds);
         }
     }
 
