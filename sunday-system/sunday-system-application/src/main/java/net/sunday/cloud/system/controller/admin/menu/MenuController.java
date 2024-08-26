@@ -32,7 +32,7 @@ public class MenuController {
 
     @PostMapping("/add")
     @Operation(summary = "创建菜单")
-    @PreAuthorize("")
+    @PreAuthorize("@sf.hasPermission('sys:menu:add')")
     public R<Long> createMenu(@Valid @RequestBody MenuUpsertReqVO reqVO) {
         Long menuId = menuService.createMenu(reqVO);
         return R.ok(menuId);
@@ -40,6 +40,7 @@ public class MenuController {
 
     @PutMapping("/update")
     @Operation(summary = "修改菜单")
+    @PreAuthorize("@sf.hasPermission('sys:menu:edit')")
     public R<Boolean> updateMenu(@Valid @RequestBody MenuUpsertReqVO updateReqVO) {
         Assert.notNull(updateReqVO.getId(), () -> "ID不能为空");
         menuService.updateMenu(updateReqVO);
@@ -48,6 +49,7 @@ public class MenuController {
 
     @DeleteMapping("/delete")
     @Operation(summary = "删除菜单")
+    @PreAuthorize("@sf.hasPermission('sys:menu:delete')")
     @Parameter(name = "id", description = "菜单编号", required = true, example = "1")
     public R<Boolean> deleteMenu(@RequestParam Long id) {
         menuService.deleteMenu(id);
@@ -56,6 +58,7 @@ public class MenuController {
 
     @GetMapping("/page")
     @Operation(summary = "获取菜单分页列表", description = "用于【菜单管理】界面")
+    @PreAuthorize("@sf.hasPermission('sys:menu')")
     public R<PageResult<MenuRespVO>> listMenuPage(MenuListReqVO reqVO) {
         return R.ok(menuService.listMenuPage(reqVO));
     }

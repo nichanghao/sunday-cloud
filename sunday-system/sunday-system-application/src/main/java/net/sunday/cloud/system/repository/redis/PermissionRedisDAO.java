@@ -1,7 +1,6 @@
 package net.sunday.cloud.system.repository.redis;
 
 import lombok.AllArgsConstructor;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -12,7 +11,7 @@ import org.springframework.stereotype.Repository;
 @AllArgsConstructor
 public class PermissionRedisDAO {
 
-    private final RedisTemplate<String,Object> redisTemplate;
+//    private final RedisTemplate<String, Object> redisTemplate;
 
 
 

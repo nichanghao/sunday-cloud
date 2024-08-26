@@ -5,9 +5,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.redisson.spring.starter.RedissonAutoConfigurationV2;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnSingleCandidate;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
+import org.springframework.data.redis.core.RedisOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.RedisSerializer;
 
@@ -16,13 +17,13 @@ import org.springframework.data.redis.serializer.RedisSerializer;
  */
 
 @AutoConfiguration(before = RedissonAutoConfigurationV2.class) // 保证redisson使用自定义的RedisTemplate
+@ConditionalOnClass(RedisOperations.class)
 public class RedisAutoConfiguration {
 
     /**
      * @see org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration#redisTemplate
      */
     @Bean
-    @ConditionalOnSingleCandidate(RedisConnectionFactory.class)
     public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory factory) {
         RedisTemplate<String, Object> template = new RedisTemplate<>();
         template.setConnectionFactory(factory);

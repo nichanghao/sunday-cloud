@@ -9,6 +9,7 @@ import net.sunday.cloud.system.controller.admin.permission.vo.PermissionAssignRo
 import net.sunday.cloud.system.controller.admin.permission.vo.PermissionAssignUserRoleReqVO;
 import net.sunday.cloud.system.controller.admin.permission.vo.PermissionRouteRespVO;
 import net.sunday.cloud.system.service.permission.IPermissionService;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -34,6 +35,7 @@ public class PermissionController {
 
     @Operation(summary = "赋予用户角色")
     @PutMapping("/assign-user-role")
+    @PreAuthorize("@sf.hasPermission('sys:user:assignRoles')")
     public R<Boolean> assignUserRole(@Validated @RequestBody PermissionAssignUserRoleReqVO reqVO) {
         permissionService.assignUserRole(reqVO.getUserId(), reqVO.getRoleIds());
         return R.ok(true);
@@ -48,6 +50,7 @@ public class PermissionController {
 
     @PutMapping("/assign-role-menu")
     @Operation(summary = "赋予角色菜单")
+    @PreAuthorize("@sf.hasPermission('sys:role:assignMenus')")
     public R<Boolean> assignRoleMenu(@Validated @RequestBody PermissionAssignRoleMenuReqVO reqVO) {
         permissionService.assignRoleMenu(reqVO.getRoleId(), reqVO.getMenuIds());
         return R.ok(true);

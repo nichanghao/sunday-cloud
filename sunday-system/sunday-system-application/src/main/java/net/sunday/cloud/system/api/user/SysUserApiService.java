@@ -7,14 +7,13 @@ import net.sunday.cloud.system.api.user.dto.SysUserRespDTO;
 import net.sunday.cloud.system.model.UserDO;
 import net.sunday.cloud.system.service.user.IUserService;
 import org.apache.dubbo.config.annotation.DubboService;
-import org.springframework.context.annotation.Primary;
 
 /**
  * 系统用户服务接口实现类
  *
  * @see net.sunday.cloud.base.security.WebSecurityAutoConfiguration#sysUserApiReferenceBean()
  */
-@Primary // 如果本地有服务实现则直接走本地，不需要dubbo远程调用
+
 @DubboService
 public class SysUserApiService implements SysUserApi {
 

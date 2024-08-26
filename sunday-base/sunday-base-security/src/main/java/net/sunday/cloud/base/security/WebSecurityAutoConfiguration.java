@@ -5,9 +5,11 @@ import net.sunday.cloud.base.security.config.WebSecurityProperties;
 import net.sunday.cloud.base.security.filter.TokenAuthenticationFilter;
 import net.sunday.cloud.base.security.handler.CustomAccessDeniedHandler;
 import net.sunday.cloud.base.security.handler.CustomAuthenticationEntryPoint;
+import net.sunday.cloud.base.security.permission.SecurityFrameworkPermissionEvaluator;
 import net.sunday.cloud.base.security.service.UserDetailsServiceImpl;
 import net.sunday.cloud.base.web.rest.RestWebProperties;
 import net.sunday.cloud.system.api.auth.AuthApi;
+import net.sunday.cloud.system.api.permission.PermissionApi;
 import net.sunday.cloud.system.api.user.SysUserApi;
 import org.apache.dubbo.config.spring.ReferenceBean;
 import org.apache.dubbo.config.spring.reference.ReferenceBeanBuilder;
@@ -18,6 +20,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
+import org.springframework.context.annotation.Primary;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -41,6 +44,7 @@ public class WebSecurityAutoConfiguration {
      * 注入 dubbo sysUser 远程服务
      */
     @Bean
+    @Primary // 如果本地有服务实现则直接走本地，不需要dubbo远程调用
     @ConditionalOnClass(ReferenceBean.class)
     @ConditionalOnMissingBean(SysUserApi.class)
     public ReferenceBean<SysUserApi> sysUserApiReferenceBean() {
@@ -59,6 +63,7 @@ public class WebSecurityAutoConfiguration {
      * 注入 dubbo auth 远程服务
      */
     @Bean
+    @Primary
     @ConditionalOnClass(ReferenceBean.class)
     @ConditionalOnMissingBean(AuthApi.class)
     public ReferenceBean<AuthApi> authApiReferenceBean() {
@@ -71,6 +76,25 @@ public class WebSecurityAutoConfiguration {
     @Bean
     public TokenAuthenticationFilter authenticationTokenFilter(AuthApi authApi) {
         return new TokenAuthenticationFilter(authApi);
+    }
+
+    /**
+     * 注入 dubbo permission 远程服务
+     */
+    @Bean
+    @Primary
+    @ConditionalOnClass(ReferenceBean.class)
+    @ConditionalOnMissingBean(PermissionApi.class)
+    public ReferenceBean<PermissionApi> permissionApiReferenceBean() {
+        return new ReferenceBeanBuilder().setInterface(PermissionApi.class).build();
+    }
+
+    /**
+     * security框架权限验证器 Bean
+     */
+    @Bean("sf")
+    public SecurityFrameworkPermissionEvaluator securityFrameworkPermissionEvaluator(PermissionApi permissionApi) {
+        return new SecurityFrameworkPermissionEvaluator(permissionApi);
     }
 
 
