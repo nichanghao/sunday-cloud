@@ -24,13 +24,6 @@ public interface IPermissionService {
      */
     void assignUserRole(Long userId, Set<Long> roleIds);
 
-    /**
-     * 获得角色拥有的菜单编号集合
-     *
-     * @param roleId 角色编号
-     * @return 菜单编号集合
-     */
-    Set<Long> listMenuIdsByRoleId(Long roleId);
 
     /**
      * 赋予角色菜单

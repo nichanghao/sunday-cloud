@@ -6,7 +6,7 @@ import net.sunday.cloud.base.common.entity.auth.AuthUser;
 import net.sunday.cloud.base.common.exception.BusinessException;
 import net.sunday.cloud.system.controller.auth.vo.AuthLoginReqVO;
 import net.sunday.cloud.system.controller.auth.vo.AuthLoginRespVO;
-import net.sunday.cloud.system.repository.redis.AuthRedisDAO;
+import net.sunday.cloud.system.repository.cache.redis.AuthRedisDAO;
 import net.sunday.cloud.system.util.JwtUtils;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

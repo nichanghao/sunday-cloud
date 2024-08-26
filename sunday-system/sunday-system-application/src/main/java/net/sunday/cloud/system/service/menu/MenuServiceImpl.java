@@ -14,8 +14,9 @@ import net.sunday.cloud.system.controller.admin.menu.vo.MenuUpsertReqVO;
 import net.sunday.cloud.system.enums.menu.MenuTypeEnum;
 import net.sunday.cloud.system.model.MenuDO;
 import net.sunday.cloud.system.repository.mapper.MenuMapper;
-import net.sunday.cloud.system.repository.redis.constant.RedisKeyConstants;
+import net.sunday.cloud.system.repository.cache.redis.constant.RedisKeyConstants;
 import net.sunday.cloud.system.service.rolemenu.IRoleMenuService;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -36,6 +37,8 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, MenuDO> implements 
     private IRoleMenuService roleMenuService;
 
     @Override
+    @CacheEvict(value = RedisKeyConstants.PERMISSION_MENU_ID_LIST,
+            key = "#reqVO.permission", condition = "#reqVO.permission != null")
     public Long createMenu(MenuUpsertReqVO reqVO) {
         // 1.校验父菜单存在
         validateParentMenu(reqVO.getParentId(), null);
@@ -48,6 +51,7 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, MenuDO> implements 
     }
 
     @Override
+    @CacheEvict(value = RedisKeyConstants.PERMISSION_MENU_ID_LIST, allEntries = true)
     public void updateMenu(MenuUpsertReqVO updateReqVO) {
         // 1.校验菜单存在
         validateMenuExists(updateReqVO.getId());
@@ -62,6 +66,7 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, MenuDO> implements 
 
     @Override
     @Transactional(rollbackFor = Exception.class)
+    @CacheEvict(value = RedisKeyConstants.PERMISSION_MENU_ID_LIST, allEntries = true)
     public void deleteMenu(Long id) {
         // 1.校验是否还有子菜单
         validateMenuExistsChildren(id);
@@ -100,7 +105,7 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, MenuDO> implements 
 
     @Override
     @Cacheable(value = RedisKeyConstants.PERMISSION_MENU_ID_LIST, key = "#permission")
-    public List<Long> listMenuIdByPermissionWithCache(String permission) {
+    public List<Long> listMenuIdByPermission(String permission) {
         List<MenuDO> menuList = baseMapper.selectList(Wrappers.<MenuDO>lambdaQuery()
                 .select(MenuDO::getId)
                 .eq(MenuDO::getPermission, permission));

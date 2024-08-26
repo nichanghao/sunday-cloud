@@ -59,5 +59,5 @@ public interface IMenuService extends IService<MenuDO> {
      * @param permission 权限标识
      * @return 菜单编号列表
      */
-    List<Long> listMenuIdByPermissionWithCache(String permission);
+    List<Long> listMenuIdByPermission(String permission);
 }

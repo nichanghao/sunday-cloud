@@ -1,4 +1,4 @@
-package net.sunday.cloud.system.repository.redis.constant;
+package net.sunday.cloud.system.repository.cache.redis.constant;
 
 
 /**

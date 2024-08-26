@@ -31,12 +31,12 @@ public class RedisAutoConfiguration {
         template.setKeySerializer(RedisSerializer.string());
         template.setHashKeySerializer(RedisSerializer.string());
         // 使用 JSON 序列化方式（库是 Jackson ），序列化 VALUE 。
-        template.setValueSerializer(buildRedisSerializer());
-        template.setHashValueSerializer(buildRedisSerializer());
+        template.setValueSerializer(buildRedisJsonSerializer());
+        template.setHashValueSerializer(buildRedisJsonSerializer());
         return template;
     }
 
-    private static RedisSerializer<?> buildRedisSerializer() {
+    static RedisSerializer<?> buildRedisJsonSerializer() {
         RedisSerializer<Object> json = RedisSerializer.json();
         // 解决 LocalDateTime 的序列化
         ObjectMapper objectMapper = (ObjectMapper) ReflectUtil.getFieldValue(json, "mapper");

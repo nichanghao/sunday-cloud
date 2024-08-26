@@ -127,7 +127,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserDO> implements 
             userIds.add(record.getId());
             records.add(BeanUtils.toBean(record, UserRespVO.class));
         }
-        List<UserRoleDO> userRoleList = userRoleService.listByUserIds(userIds);
+        List<UserRoleDO> userRoleList = userRoleService.listEnableByUserIds(userIds);
         if (CollectionUtils.isEmpty(userRoleList)) {
             return PageResult.<UserRespVO>builder()
                     .records(records)

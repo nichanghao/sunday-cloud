@@ -9,6 +9,7 @@ import net.sunday.cloud.system.controller.admin.permission.vo.PermissionAssignRo
 import net.sunday.cloud.system.controller.admin.permission.vo.PermissionAssignUserRoleReqVO;
 import net.sunday.cloud.system.controller.admin.permission.vo.PermissionRouteRespVO;
 import net.sunday.cloud.system.service.permission.IPermissionService;
+import net.sunday.cloud.system.service.rolemenu.IRoleMenuService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -25,6 +26,8 @@ import java.util.Set;
 public class PermissionController {
 
     private final IPermissionService permissionService;
+
+    private final IRoleMenuService roleMenuService;
 
     @GetMapping("/route/info")
     @Operation(summary = "获得当前登录用户的权限路由信息")
@@ -45,7 +48,7 @@ public class PermissionController {
     @Parameter(name = "roleId", description = "角色编号", required = true)
     @GetMapping("/list-role-menus")
     public R<Set<Long>> listMenuIdsByRoleId(@RequestParam Long roleId) {
-        return R.ok(permissionService.listMenuIdsByRoleId(roleId));
+        return R.ok(roleMenuService.listMenuIdsByRoleId(roleId));
     }
 
     @PutMapping("/assign-role-menu")

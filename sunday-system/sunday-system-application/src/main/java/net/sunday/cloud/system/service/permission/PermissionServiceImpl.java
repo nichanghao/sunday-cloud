@@ -1,25 +1,18 @@
 package net.sunday.cloud.system.service.permission;
 
 import cn.hutool.core.collection.CollUtil;
-import cn.hutool.extra.spring.SpringUtil;
-import com.github.yulichang.wrapper.MPJLambdaWrapper;
 import lombok.AllArgsConstructor;
-import net.sunday.cloud.base.common.enums.CommonStatusEnum;
 import net.sunday.cloud.base.common.util.collection.CollectionUtils;
 import net.sunday.cloud.base.security.util.SecurityFrameworkUtils;
 import net.sunday.cloud.system.controller.admin.menu.vo.MenuRespVO;
 import net.sunday.cloud.system.controller.admin.permission.vo.PermissionRouteRespVO;
 import net.sunday.cloud.system.enums.menu.MenuTypeEnum;
 import net.sunday.cloud.system.model.MenuDO;
-import net.sunday.cloud.system.model.RoleDO;
 import net.sunday.cloud.system.model.RoleMenuDO;
 import net.sunday.cloud.system.model.UserRoleDO;
-import net.sunday.cloud.system.repository.mapper.RoleMenuMapper;
-import net.sunday.cloud.system.repository.mapper.UserRoleMapper;
-import net.sunday.cloud.system.repository.redis.constant.RedisKeyConstants;
 import net.sunday.cloud.system.service.menu.IMenuService;
+import net.sunday.cloud.system.service.rolemenu.IRoleMenuService;
 import net.sunday.cloud.system.service.userrole.IUserRoleService;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -33,11 +26,10 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class PermissionServiceImpl implements IPermissionService {
 
-    private final UserRoleMapper userRoleMapper;
-
-    private final RoleMenuMapper roleMenuMapper;
 
     private final IUserRoleService userRoleService;
+
+    private final IRoleMenuService roleMenuService;
 
     private final IMenuService menuService;
 
@@ -51,15 +43,7 @@ public class PermissionServiceImpl implements IPermissionService {
         }
 
         // 2.连表查询当前用户拥有的所有菜单
-        MPJLambdaWrapper<UserRoleDO> wrapper = new MPJLambdaWrapper<UserRoleDO>()
-                .selectAll(MenuDO.class)
-                .leftJoin(RoleMenuDO.class, RoleMenuDO::getRoleId, UserRoleDO::getRoleId)
-                .leftJoin(RoleDO.class, RoleDO::getId, UserRoleDO::getRoleId)
-                .leftJoin(MenuDO.class, MenuDO::getId, RoleMenuDO::getMenuId)
-                .eq(UserRoleDO::getUserId, authUserId)
-                .eq(RoleDO::getStatus, CommonStatusEnum.ENABLE.ordinal())
-                .eq(MenuDO::getStatus, CommonStatusEnum.ENABLE.ordinal());
-        List<MenuRespVO> menuList = userRoleMapper.selectJoinList(MenuRespVO.class, wrapper);
+        List<MenuRespVO> menuList = userRoleService.joinMenuByUserId(authUserId);
         if (CollectionUtils.isEmpty(menuList)) {
             return PermissionRouteRespVO.EMPTY;
         }
@@ -87,7 +71,7 @@ public class PermissionServiceImpl implements IPermissionService {
         Collection<Long> deleteMenuIds = CollUtil.subtract(dbRoleIds, roleIdList);
         // 执行新增和删除。对于已经授权的角色，不用做任何处理
         if (CollectionUtils.isNotEmpty(createRoleIds)) {
-            userRoleMapper.insertBatch(CollectionUtils.convertList(createRoleIds, roleId -> {
+            userRoleService.saveBatch(CollectionUtils.convertList(createRoleIds, roleId -> {
                 UserRoleDO entity = new UserRoleDO();
                 entity.setUserId(userId);
                 entity.setRoleId(roleId);
@@ -95,27 +79,21 @@ public class PermissionServiceImpl implements IPermissionService {
             }));
         }
         if (CollectionUtils.isNotEmpty(deleteMenuIds)) {
-            userRoleMapper.deleteListByUserIdAndRoleIdIds(userId, deleteMenuIds);
+            userRoleService.deleteByUserIdAndRoleIdIds(userId, deleteMenuIds);
         }
-    }
-
-    @Override
-    public Set<Long> listMenuIdsByRoleId(Long roleId) {
-
-        return CollectionUtils.convertSet(roleMenuMapper.selectList(RoleMenuDO::getRoleId, roleId), RoleMenuDO::getMenuId);
     }
 
     @Override
     public void assignRoleMenu(Long roleId, Set<Long> menuIds) {
         // 1。获得角色拥有菜单编号
-        Set<Long> existMenuIds = listMenuIdsByRoleId(roleId);
+        Set<Long> existMenuIds = roleMenuService.listMenuIdsByRoleId(roleId);
         // 2。计算新增和删除的菜单编号
         Set<Long> menuIdList = CollUtil.emptyIfNull(menuIds);
         Collection<Long> createMenuIds = CollUtil.subtract(menuIdList, existMenuIds);
         Collection<Long> deleteMenuIds = CollUtil.subtract(existMenuIds, menuIdList);
         // 执行新增和删除。对于已经授权的菜单，不用做任何处理
         if (CollUtil.isNotEmpty(createMenuIds)) {
-            roleMenuMapper.insertBatch(CollectionUtils.convertList(createMenuIds, menuId -> {
+            roleMenuService.saveBatch(CollectionUtils.convertList(createMenuIds, menuId -> {
                 RoleMenuDO entity = new RoleMenuDO();
                 entity.setRoleId(roleId);
                 entity.setMenuId(menuId);
@@ -123,7 +101,7 @@ public class PermissionServiceImpl implements IPermissionService {
             }));
         }
         if (CollUtil.isNotEmpty(deleteMenuIds)) {
-            roleMenuMapper.deleteListByRoleIdAndMenuIds(roleId, deleteMenuIds);
+            roleMenuService.deleteByRoleIdAndMenuIds(roleId, deleteMenuIds);
         }
     }
 
@@ -148,22 +126,16 @@ public class PermissionServiceImpl implements IPermissionService {
         return false;
     }
 
-    @Cacheable(value = RedisKeyConstants.MENU_ROLE_ID_LIST, key = "#menuId")
-    public Set<Long> listRoleIdByMenuIdWithCache(Long menuId) {
-
-        return CollectionUtils.convertSet(roleMenuMapper.selectList(RoleMenuDO::getMenuId, menuId), RoleMenuDO::getRoleId);
-    }
-
     private boolean hasAnyPermission(List<Long> roleIds, String permission) {
         // 获取权限拥有的菜单编号
-        List<Long> menuIds = menuService.listMenuIdByPermissionWithCache(permission);
+        List<Long> menuIds = menuService.listMenuIdByPermission(permission);
         if (CollectionUtils.isEmpty(menuIds)) {
             return false;
         }
 
         for (Long menuId : menuIds) {
             // 获得拥有该菜单的角色编号集合
-            Set<Long> menuRoleIds = getSelf().listRoleIdByMenuIdWithCache(menuId);
+            Set<Long> menuRoleIds = roleMenuService.listRoleIdByMenuId(menuId);
             // 如果有交集，说明有权限
             if (CollUtil.containsAny(menuRoleIds, roleIds)) {
                 return true;
@@ -195,10 +167,4 @@ public class PermissionServiceImpl implements IPermissionService {
         });
     }
 
-    /**
-     * 获得自身的代理对象，解决 AOP 不生效问题
-     */
-    private PermissionServiceImpl getSelf() {
-        return SpringUtil.getBean(getClass());
-    }
 }

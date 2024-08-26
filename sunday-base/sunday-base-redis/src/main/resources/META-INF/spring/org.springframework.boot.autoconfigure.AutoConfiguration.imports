@@ -1,1 +1,2 @@
 net.sunday.cloud.base.redis.RedisAutoConfiguration
+net.sunday.cloud.base.redis.RedisCacheAutoConfiguration

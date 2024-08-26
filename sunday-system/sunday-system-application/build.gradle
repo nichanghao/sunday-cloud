@@ -10,6 +10,7 @@ dependencies {
     implementation('org.hibernate.validator:hibernate-validator')
     implementation('io.jsonwebtoken:jjwt')
     implementation("cn.hutool:hutool-extra")
+    implementation('com.github.ben-manes.caffeine:caffeine')
 
     implementation(project(":sunday-system:sunday-system-api"))
     implementation(project(":sunday-base:sunday-base-web"))

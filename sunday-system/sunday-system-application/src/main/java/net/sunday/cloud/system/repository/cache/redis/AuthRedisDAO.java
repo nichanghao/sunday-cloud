@@ -1,4 +1,4 @@
-package net.sunday.cloud.system.repository.redis;
+package net.sunday.cloud.system.repository.cache.redis;
 
 import jakarta.annotation.Resource;
 import net.sunday.cloud.base.common.entity.auth.AuthUser;
