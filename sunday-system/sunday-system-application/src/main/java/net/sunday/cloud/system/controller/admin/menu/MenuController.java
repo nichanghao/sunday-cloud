@@ -7,6 +7,7 @@ import jakarta.annotation.Resource;
 import jakarta.validation.Valid;
 import net.sunday.cloud.base.common.entity.page.PageResult;
 import net.sunday.cloud.base.common.entity.result.R;
+import net.sunday.cloud.base.common.entity.vo.UpdateStatusReqVO;
 import net.sunday.cloud.base.common.enums.CommonStatusEnum;
 import net.sunday.cloud.system.controller.admin.menu.vo.MenuListReqVO;
 import net.sunday.cloud.system.controller.admin.menu.vo.MenuRespVO;
@@ -44,6 +45,13 @@ public class MenuController {
     public R<Boolean> updateMenu(@Valid @RequestBody MenuUpsertReqVO updateReqVO) {
         Assert.notNull(updateReqVO.getId(), () -> "ID不能为空");
         menuService.updateMenu(updateReqVO);
+        return R.ok(true);
+    }
+
+    @PutMapping("/update-status")
+    @Operation(summary = "修改菜单状态")
+    public R<Boolean> updateMenuStatus(@Valid @RequestBody UpdateStatusReqVO reqVO) {
+        menuService.updateMenuStatus(reqVO.getId(), reqVO.getStatus());
         return R.ok(true);
     }
 

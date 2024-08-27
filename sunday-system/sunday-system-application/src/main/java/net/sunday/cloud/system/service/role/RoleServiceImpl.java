@@ -11,10 +11,13 @@ import net.sunday.cloud.base.common.util.object.BeanUtils;
 import net.sunday.cloud.system.controller.admin.role.vo.RolePageReqVO;
 import net.sunday.cloud.system.controller.admin.role.vo.RoleRespVO;
 import net.sunday.cloud.system.controller.admin.role.vo.RoleUpsertReqVO;
+import net.sunday.cloud.system.event.role.source.RoleDeletedEvent;
+import net.sunday.cloud.system.event.role.source.RoleStatusChangedEvent;
 import net.sunday.cloud.system.model.RoleDO;
 import net.sunday.cloud.system.repository.mapper.RoleMapper;
 import net.sunday.cloud.system.service.rolemenu.IRoleMenuService;
 import net.sunday.cloud.system.service.userrole.IUserRoleService;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
@@ -34,6 +37,9 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, RoleDO> implements 
     private IUserRoleService userRoleService;
     @Resource
     private IRoleMenuService roleMenuService;
+
+    @Resource
+    private ApplicationEventPublisher applicationEventPublisher;
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -61,16 +67,37 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, RoleDO> implements 
     }
 
     @Override
+    public void updateRoleStatus(Long id, Integer status) {
+        // 1. 校验角色是否存在
+        RoleDO roleDO = validateRoleExists(id);
+        // 2. 内置角色不能被修改状态
+        validateBuiltInRole(roleDO);
+        // 3. 更新角色状态
+        baseMapper.updateById(RoleDO.builder()
+                .id(id)
+                .status(status)
+                .build());
+
+        // 4. 发布角色更新状态事件
+        applicationEventPublisher.publishEvent(new RoleStatusChangedEvent(this, id, status));
+
+    }
+
+    @Override
     @Transactional(rollbackFor = Exception.class)
     public void deleteRole(Long id) {
         // 1. 校验角色是否存在
-        validateRoleExists(id);
-        // 2. 校验角色是否被用户使用
+        RoleDO roleDO = validateRoleExists(id);
+        // 2. 内置角色不能被删除
+        validateBuiltInRole(roleDO);
+        // 3. 校验角色是否被用户使用
         validateRoleBeUsedByUser(id);
-        // 3. 删除角色
+        // 4. 删除角色
         baseMapper.deleteById(new RoleDO(id));
-        // 4. 删除角色关联的菜单数据
+        // 5. 删除角色关联的菜单数据
         roleMenuService.removeByRoleId(id);
+        // 6. 发布角色删除事件
+        applicationEventPublisher.publishEvent(new RoleDeletedEvent(this, id));
     }
 
     @Override
@@ -116,13 +143,16 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, RoleDO> implements 
         validateRoleCodeUnique(id, code);
     }
 
-    private void validateRoleExists(Long id) {
+    private RoleDO validateRoleExists(Long id) {
         if (id == null) {
-            return;
+            return null;
         }
-        if (baseMapper.selectCount(Wrappers.<RoleDO>lambdaQuery().eq(RoleDO::getId, id)) != 1) {
+        RoleDO roleDO = baseMapper.selectById(id);
+        if (roleDO == null) {
             throw new BusinessException(ROLE_NOT_EXISTS);
         }
+
+        return roleDO;
     }
 
     @SuppressWarnings("Duplicates")
@@ -154,6 +184,17 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, RoleDO> implements 
 
         if (!Objects.equals(role.getId(), id)) {
             throw new BusinessException(ROLE_CODE_EXISTS);
+        }
+    }
+
+    private void validateBuiltInRole(RoleDO roleDO) {
+        if (roleDO == null) {
+            return;
+        }
+
+        // 内置用户不允许此操作
+        if (Objects.equals(RoleDO.BUILT_IN_ROLE_ID, roleDO.getId())) {
+            throw new BusinessException(ROLE_BUILT_IN_NOT_OPERATE);
         }
     }
 }

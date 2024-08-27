@@ -7,7 +7,11 @@ import jakarta.annotation.Resource;
 import jakarta.validation.Valid;
 import net.sunday.cloud.base.common.entity.page.PageResult;
 import net.sunday.cloud.base.common.entity.result.R;
-import net.sunday.cloud.system.controller.admin.user.vo.*;
+import net.sunday.cloud.base.common.entity.vo.UpdateStatusReqVO;
+import net.sunday.cloud.system.controller.admin.user.vo.UserPageReqVO;
+import net.sunday.cloud.system.controller.admin.user.vo.UserResetPasswordReqVO;
+import net.sunday.cloud.system.controller.admin.user.vo.UserRespVO;
+import net.sunday.cloud.system.controller.admin.user.vo.UserUpsertReqVO;
 import net.sunday.cloud.system.service.user.IUserService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.util.Assert;
@@ -62,7 +66,7 @@ public class UserController {
 
     @PutMapping("/update-status")
     @Operation(summary = "修改用户状态")
-    public R<Boolean> updateUserStatus(@Valid @RequestBody UserUpdateStatusReqVO reqVO) {
+    public R<Boolean> updateUserStatus(@Valid @RequestBody UpdateStatusReqVO reqVO) {
         userService.updateUserStatus(reqVO.getId(), reqVO.getStatus());
         return R.ok(true);
     }

@@ -22,6 +22,8 @@ public enum SystemRespCodeEnum implements ErrorEnum {
 
     USER_EMAIL_EXISTS(100_001_004, "邮箱已经存在"),
 
+    USER_BUILT_IN_NOT_OPERATE(100_001_005, "内置用户不允许此操作"),
+
 
     /* 角色相关 100_002_000 */
     ROLE_CODE_EXISTS(100_002_001, "角色编码已存在"),
@@ -31,6 +33,8 @@ public enum SystemRespCodeEnum implements ErrorEnum {
     ROLE_NOT_EXISTS(100_002_003, "角色不存在"),
 
     ROLE_BE_USED_BY_USER(100_002_004, "角色已被用户使用"),
+
+    ROLE_BUILT_IN_NOT_OPERATE(100_002_005, "内置角色不允许此操作"),
 
 
     /* 菜单相关 100_003_000 */

@@ -6,8 +6,7 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler;
 import com.fasterxml.jackson.databind.JsonNode;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import net.sunday.cloud.base.mybatis.entity.BaseDO;
 import net.sunday.cloud.system.enums.menu.MenuTypeEnum;
 
@@ -23,6 +22,9 @@ import java.io.Serial;
  */
 @Getter
 @Setter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @TableName(value = "sys_menu", autoResultMap = true)
 public class MenuDO extends BaseDO {
 
@@ -83,7 +85,7 @@ public class MenuDO extends BaseDO {
     /**
      * 菜单状态(0:禁用,1:启用)
      */
-    private Boolean status;
+    private Integer status;
 
     /**
      * 路由元数据

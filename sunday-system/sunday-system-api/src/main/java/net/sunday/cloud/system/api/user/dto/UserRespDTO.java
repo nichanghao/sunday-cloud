@@ -9,7 +9,7 @@ import java.io.Serializable;
  * 系统用户响应 DTO
  */
 @Data
-public class SysUserRespDTO implements Serializable {
+public class UserRespDTO implements Serializable {
 
     @Serial
     private static final long serialVersionUID = -1L;

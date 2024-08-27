@@ -1,11 +1,11 @@
 package net.sunday.cloud.system.service.auth;
 
-import cn.hutool.core.util.IdUtil;
 import jakarta.annotation.Resource;
 import net.sunday.cloud.base.common.entity.auth.AuthUser;
 import net.sunday.cloud.base.common.exception.BusinessException;
 import net.sunday.cloud.system.controller.auth.vo.AuthLoginReqVO;
 import net.sunday.cloud.system.controller.auth.vo.AuthLoginRespVO;
+import net.sunday.cloud.system.enums.auth.AuthClientEnum;
 import net.sunday.cloud.system.repository.cache.redis.AuthRedisDAO;
 import net.sunday.cloud.system.util.JwtUtils;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -37,15 +37,14 @@ public class AuthServiceImpl implements AuthService {
             throw new BusinessException(e.getMessage());
         }
 
-        AuthUser authUser =(AuthUser) authentication.getPrincipal();
-        String uuid = IdUtil.fastSimpleUUID();
-        String accessToken = jwtUtils.generateToken(uuid, null);
+        AuthUser authUser = (AuthUser) authentication.getPrincipal();
+        String accessToken = jwtUtils.generateToken(authUser.getId().toString(), null);
         // 设置token过期时间
         long expiresTime = System.currentTimeMillis() + jwtUtils.getExpiration() * 3600000;
 
         // 保存用户信息到redis
         authUser.setExpireTime(expiresTime);
-        authRedisDAO.setAuthUser(uuid, authUser);
+        authRedisDAO.setAuthUser(authUser.getId(), AuthClientEnum.ADMIN.client(), authUser);
 
         return AuthLoginRespVO.builder()
                 .userId(authUser.getId())
@@ -56,7 +55,7 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public AuthUser checkToken(String accessToken) {
-        String uuid = jwtUtils.extractSubject(accessToken);
-        return authRedisDAO.getAuthUser(uuid);
+        String uid = jwtUtils.extractSubject(accessToken);
+        return authRedisDAO.getAuthUser(uid, AuthClientEnum.ADMIN.client());
     }
 }

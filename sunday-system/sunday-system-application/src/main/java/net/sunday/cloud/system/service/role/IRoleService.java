@@ -30,6 +30,14 @@ public interface IRoleService extends IService<RoleDO> {
     void updateRole(RoleUpsertReqVO updateReqVO);
 
     /**
+     * 更新角色状态
+     *
+     * @param id     角色编号
+     * @param status 角色状态
+     */
+    void updateRoleStatus(Long id, Integer status);
+
+    /**
      * 删除角色
      *
      * @param id 角色编号

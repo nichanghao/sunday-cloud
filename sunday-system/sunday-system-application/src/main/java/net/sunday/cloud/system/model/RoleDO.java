@@ -3,8 +3,7 @@ package net.sunday.cloud.system.model;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import net.sunday.cloud.base.mybatis.entity.BaseDO;
 
 import java.io.Serial;
@@ -14,11 +13,19 @@ import java.io.Serial;
  */
 @Getter
 @Setter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @TableName("sys_role")
 public class RoleDO extends BaseDO {
 
     @Serial
     private static final long serialVersionUID = 1L;
+
+    /**
+     * 系统内置角色ID
+     */
+    public static final Long BUILT_IN_ROLE_ID = 1L;
 
     public RoleDO(Long id) {
         this.id = id;

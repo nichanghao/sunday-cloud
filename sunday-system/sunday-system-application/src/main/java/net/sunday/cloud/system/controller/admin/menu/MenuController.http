@@ -32,6 +32,16 @@ Authorization: Bearer {{token}}
   "componentName": "Menu"
 }
 
+### 修改菜单状态
+PUT {{gateway}}/admin-api/system/menu/update-status
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "id": 3,
+  "status": 1
+}
+
 ### 删除菜单
 DELETE {{gateway}}/admin-api/system/menu/delete?id=19
 Content-Type: application/json

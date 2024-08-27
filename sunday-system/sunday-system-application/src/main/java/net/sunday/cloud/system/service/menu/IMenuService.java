@@ -31,6 +31,14 @@ public interface IMenuService extends IService<MenuDO> {
     void updateMenu(MenuUpsertReqVO updateReqVO);
 
     /**
+     * 更新菜单状态
+     *
+     * @param id     菜单编号
+     * @param status 状态
+     */
+    void updateMenuStatus(Long id, Integer status);
+
+    /**
      * 删除菜单
      *
      * @param id 菜单编号

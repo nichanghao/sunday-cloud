@@ -14,12 +14,15 @@ import net.sunday.cloud.system.controller.admin.role.vo.RoleRespVO;
 import net.sunday.cloud.system.controller.admin.user.vo.UserPageReqVO;
 import net.sunday.cloud.system.controller.admin.user.vo.UserRespVO;
 import net.sunday.cloud.system.controller.admin.user.vo.UserUpsertReqVO;
+import net.sunday.cloud.system.event.user.source.UserDeletedEvent;
+import net.sunday.cloud.system.event.user.source.UserStatusChangedEvent;
 import net.sunday.cloud.system.model.RoleDO;
 import net.sunday.cloud.system.model.UserDO;
 import net.sunday.cloud.system.model.UserRoleDO;
 import net.sunday.cloud.system.repository.mapper.UserMapper;
 import net.sunday.cloud.system.service.role.IRoleService;
 import net.sunday.cloud.system.service.userrole.IUserRoleService;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -42,6 +45,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserDO> implements 
 
     private final IRoleService roleService;
 
+    private ApplicationEventPublisher applicationEventPublisher;
+
     @Override
     @Transactional(rollbackFor = Exception.class)
     public Long addUser(UserUpsertReqVO upsertVO) {
@@ -59,6 +64,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserDO> implements 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void updateUser(UserUpsertReqVO upsertVO) {
+        // 密码通过单独接口更新，不在编辑时修改
         upsertVO.setPassword(null);
         // 校验用户信息是否存在
         validateUserForUpsert(upsertVO.getId(), upsertVO.getUsername(), upsertVO.getPhone(), upsertVO.getEmail());
@@ -73,13 +79,19 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserDO> implements 
     @Transactional(rollbackFor = Exception.class)
     public void deleteUser(Long id) {
         // 1. 校验用户存在
-        validateUserExists(id);
+        UserDO userDO = validateUserExists(id);
 
-        // 2. 删除用户，注意逻辑删除需要传 entity 才会自动填充 ：net.sunday.cloud.base.mybatis.handler.DefaultFillFieldHandler
+        // 2. 内置用户不允许被删除
+        validateBuiltInUser(userDO);
+
+        // 3. 删除用户，注意逻辑删除需要传 entity 才会自动填充
         baseMapper.deleteById(new UserDO(id));
 
-        // 3. 删除用户角色关系
+        // 4. 删除用户角色关系
         userRoleService.removeByUserId(id);
+
+        // 5. 发布用户删除事件
+        applicationEventPublisher.publishEvent(new UserDeletedEvent(this, id));
     }
 
     @Override
@@ -97,13 +109,22 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserDO> implements 
     @Override
     public void updateUserStatus(Long id, Integer status) {
         // 1. 校验用户存在
-        validateUserExists(id);
+        UserDO existUser = validateUserExists(id);
+        if (Objects.equals(existUser.getStatus(), status)) {
+            return;
+        }
 
-        // 2. 更新用户状态
+        // 2. 内置用户不能被修改状态
+        validateBuiltInUser(existUser);
+
+        // 3. 更新用户状态
         baseMapper.updateById(UserDO.builder()
                 .id(id)
                 .status(status)
                 .build());
+
+        // 4. 发布用户更新状态事件
+        applicationEventPublisher.publishEvent(new UserStatusChangedEvent(this, id, status));
     }
 
     @Override
@@ -174,7 +195,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserDO> implements 
         UserRespVO userResp = BeanUtils.toBean(user, UserRespVO.class);
 
         // 2.查询用户角色信息
-        List<Long> roleIds = userRoleService.listEnableByUserId(userId);
+        List<Long> roleIds = userRoleService.listByUserId(userId);
         if (CollectionUtils.isEmpty(roleIds)) {
             return userResp;
         }
@@ -195,16 +216,28 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserDO> implements 
         validatePhoneUnique(id, phone);
         // 校验邮箱唯一
         validateEmailUnique(id, email);
-
     }
 
-    private void validateUserExists(Long id) {
+    private UserDO validateUserExists(Long id) {
         if (id == null) {
-            return;
+            return null;
         }
         UserDO user = baseMapper.selectById(id);
         if (user == null) {
             throw new BusinessException(USER_NOT_EXISTS);
+        }
+
+        return user;
+    }
+
+    private void validateBuiltInUser(UserDO userDO) {
+        if (userDO == null) {
+            return;
+        }
+
+        // 内置用户不允许此操作
+        if (Objects.equals(UserDO.BUILT_IN_USER_ID, userDO.getId())) {
+            throw new BusinessException(USER_BUILT_IN_NOT_OPERATE);
         }
     }
 

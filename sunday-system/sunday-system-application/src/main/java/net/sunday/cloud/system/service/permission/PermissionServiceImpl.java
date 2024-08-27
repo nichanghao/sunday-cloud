@@ -1,7 +1,7 @@
 package net.sunday.cloud.system.service.permission;
 
 import cn.hutool.core.collection.CollUtil;
-import lombok.AllArgsConstructor;
+import jakarta.annotation.Resource;
 import net.sunday.cloud.base.common.util.collection.CollectionUtils;
 import net.sunday.cloud.base.security.util.SecurityFrameworkUtils;
 import net.sunday.cloud.system.controller.admin.menu.vo.MenuRespVO;
@@ -10,6 +10,8 @@ import net.sunday.cloud.system.enums.menu.MenuTypeEnum;
 import net.sunday.cloud.system.model.MenuDO;
 import net.sunday.cloud.system.model.RoleMenuDO;
 import net.sunday.cloud.system.model.UserRoleDO;
+import net.sunday.cloud.system.repository.cache.caffeine.MenuStatusCaffeineDAO;
+import net.sunday.cloud.system.repository.cache.caffeine.RoleStatusCaffeineDAO;
 import net.sunday.cloud.system.service.menu.IMenuService;
 import net.sunday.cloud.system.service.rolemenu.IRoleMenuService;
 import net.sunday.cloud.system.service.userrole.IUserRoleService;
@@ -23,15 +25,19 @@ import java.util.stream.Collectors;
  * 权限管理 服务实现层
  */
 @Service
-@AllArgsConstructor
 public class PermissionServiceImpl implements IPermissionService {
 
+    @Resource
+    private IUserRoleService userRoleService;
+    @Resource
+    private IRoleMenuService roleMenuService;
+    @Resource
+    private IMenuService menuService;
+    @Resource
+    private RoleStatusCaffeineDAO roleStatusCaffeineDAO;
 
-    private final IUserRoleService userRoleService;
-
-    private final IRoleMenuService roleMenuService;
-
-    private final IMenuService menuService;
+    @Resource
+    private MenuStatusCaffeineDAO menuStatusCaffeineDAO;
 
 
     @Override
@@ -63,7 +69,7 @@ public class PermissionServiceImpl implements IPermissionService {
     @Override
     public void assignUserRole(Long userId, Set<Long> roleIds) {
         // 获得角色拥有角色编号
-        List<Long> dbRoleIds = userRoleService.listEnableByUserId(userId);
+        List<Long> dbRoleIds = userRoleService.listByUserId(userId);
 
         // 计算新增和删除的角色编号
         Set<Long> roleIdList = CollUtil.emptyIfNull(roleIds);
@@ -112,7 +118,9 @@ public class PermissionServiceImpl implements IPermissionService {
         }
 
         // 获取用户拥有的角色编号
-        List<Long> roleIds = userRoleService.listEnableByUserId(userId);
+        List<Long> roleIds = userRoleService.listByUserId(userId);
+        // 移除不可用的角色
+        roleIds.removeIf(roleId -> !roleStatusCaffeineDAO.get(roleId));
         if (CollectionUtils.isEmpty(roleIds)) {
             return false;
         }
@@ -129,6 +137,7 @@ public class PermissionServiceImpl implements IPermissionService {
     private boolean hasAnyPermission(List<Long> roleIds, String permission) {
         // 获取权限拥有的菜单编号
         List<Long> menuIds = menuService.listMenuIdByPermission(permission);
+        menuIds.removeIf(menuId -> !menuStatusCaffeineDAO.get(menuId));
         if (CollectionUtils.isEmpty(menuIds)) {
             return false;
         }

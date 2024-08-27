@@ -27,6 +27,11 @@ public class UserDO extends BaseDO {
     @Serial
     private static final long serialVersionUID = 1L;
 
+    /**
+     * 系统内置用户ID
+     */
+    public static final Long BUILT_IN_USER_ID = 1L;
+
     public UserDO(Long id) {
         this.id = id;
     }

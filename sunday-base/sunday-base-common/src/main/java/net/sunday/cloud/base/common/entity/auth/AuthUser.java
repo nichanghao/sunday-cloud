@@ -1,45 +1,50 @@
 package net.sunday.cloud.base.common.entity.auth;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.security.core.CredentialsContainer;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.io.Serial;
 import java.util.Collection;
-import java.util.Set;
+import java.util.Collections;
 
 /**
  * 自定义 security 用户实体类
  */
 @Data
 @NoArgsConstructor
+@JsonDeserialize(as = AuthUser.class)
 public class AuthUser implements UserDetails, CredentialsContainer {
+
+    @Serial
+    private static final long serialVersionUID = 1L;
 
     private Long id;
 
-    @JsonIgnore
-    private String password;
-
     private String username;
-
-    private Set<GrantedAuthority> authorities;
-
-    private boolean enabled;
 
     /**
      * 过期时间戳
      */
     private Long expireTime;
 
+    /**
+     * 是否启用
+     */
+    private boolean enabled;
 
-    public AuthUser(Long id, String username, String password, boolean enabled, Set<GrantedAuthority> authorities) {
+    @JsonIgnore
+    private String password;
+
+    public AuthUser(Long id, String username, String password, boolean enabled) {
         this.id = id;
         this.username = username;
         this.password = password;
         this.enabled = enabled;
-        this.authorities = authorities;
     }
 
     @Override
@@ -49,8 +54,9 @@ public class AuthUser implements UserDetails, CredentialsContainer {
     }
 
     @Override
+    @JsonIgnore
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return this.authorities;
+        return Collections.emptyList();
     }
 
     @Override

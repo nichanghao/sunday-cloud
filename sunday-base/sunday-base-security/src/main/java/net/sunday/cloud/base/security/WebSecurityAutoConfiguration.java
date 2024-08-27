@@ -10,7 +10,7 @@ import net.sunday.cloud.base.security.service.UserDetailsServiceImpl;
 import net.sunday.cloud.base.web.rest.RestWebProperties;
 import net.sunday.cloud.system.api.auth.AuthApi;
 import net.sunday.cloud.system.api.permission.PermissionApi;
-import net.sunday.cloud.system.api.user.SysUserApi;
+import net.sunday.cloud.system.api.user.UserApi;
 import org.apache.dubbo.config.spring.ReferenceBean;
 import org.apache.dubbo.config.spring.reference.ReferenceBeanBuilder;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
@@ -46,17 +46,17 @@ public class WebSecurityAutoConfiguration {
     @Bean
     @Primary // 如果本地有服务实现则直接走本地，不需要dubbo远程调用
     @ConditionalOnClass(ReferenceBean.class)
-    @ConditionalOnMissingBean(SysUserApi.class)
-    public ReferenceBean<SysUserApi> sysUserApiReferenceBean() {
-        return new ReferenceBeanBuilder().setInterface(SysUserApi.class).build();
+    @ConditionalOnMissingBean(UserApi.class)
+    public ReferenceBean<UserApi> userApiReferenceBean() {
+        return new ReferenceBeanBuilder().setInterface(UserApi.class).build();
     }
 
     /**
      * 加载用户信息服务
      */
     @Bean
-    public UserDetailsServiceImpl userDetailsService(SysUserApi sysUserApi) {
-        return new UserDetailsServiceImpl(sysUserApi);
+    public UserDetailsServiceImpl userDetailsService(UserApi userApi) {
+        return new UserDetailsServiceImpl(userApi);
     }
 
     /**

@@ -1,5 +1,6 @@
 package net.sunday.cloud.system.repository.cache.redis;
 
+import cn.hutool.core.text.StrPool;
 import jakarta.annotation.Resource;
 import net.sunday.cloud.base.common.entity.auth.AuthUser;
 import net.sunday.cloud.base.common.exception.BusinessException;
@@ -9,6 +10,7 @@ import net.sunday.cloud.system.util.JwtUtils;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Repository;
 
+import java.io.Serializable;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -25,17 +27,25 @@ public class AuthRedisDAO {
 
     private static final String AUTH_USER_KEY_PREFIX = "system:auth:user:";
 
-    public void setAuthUser(String key, AuthUser authUser) {
+    public void setAuthUser(Serializable uid, String client, AuthUser authUser) {
         stringRedisTemplate.opsForValue().set(
-                AUTH_USER_KEY_PREFIX + key, JsonUtils.toJsonString(authUser), jwtUtils.getExpiration(), TimeUnit.HOURS);
+                formatKey(uid, client), JsonUtils.toJsonString(authUser), jwtUtils.getExpiration(), TimeUnit.HOURS);
     }
 
-    public AuthUser getAuthUser(String key) {
+    public AuthUser getAuthUser(Serializable uid, String client) {
 
-        AuthUser authUser = JsonUtils.parseObject(stringRedisTemplate.opsForValue().get(AUTH_USER_KEY_PREFIX + key), AuthUser.class);
+        AuthUser authUser = JsonUtils.parseObject(stringRedisTemplate.opsForValue().get(formatKey(uid, client)), AuthUser.class);
         if (authUser == null) {
             throw new BusinessException(GlobalRespCodeEnum.UNAUTHORIZED);
         }
         return authUser;
+    }
+
+    public void removeAuthUser(Serializable uid, String client) {
+        stringRedisTemplate.delete(formatKey(uid, client));
+    }
+
+    private static String formatKey(Serializable uid, String client) {
+        return AUTH_USER_KEY_PREFIX + client + StrPool.COLON + uid;
     }
 }

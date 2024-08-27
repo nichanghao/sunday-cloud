@@ -7,6 +7,7 @@ import jakarta.annotation.Resource;
 import jakarta.validation.Valid;
 import net.sunday.cloud.base.common.entity.page.PageResult;
 import net.sunday.cloud.base.common.entity.result.R;
+import net.sunday.cloud.base.common.entity.vo.UpdateStatusReqVO;
 import net.sunday.cloud.base.common.enums.CommonStatusEnum;
 import net.sunday.cloud.system.controller.admin.role.vo.RolePageReqVO;
 import net.sunday.cloud.system.controller.admin.role.vo.RoleRespVO;
@@ -42,6 +43,13 @@ public class RoleController {
     public R<Boolean> updateRole(@Valid @RequestBody RoleUpsertReqVO updateReqVO) {
         Assert.notNull(updateReqVO.getId(), () -> "ID不能为空");
         roleService.updateRole(updateReqVO);
+        return R.ok(true);
+    }
+
+    @PutMapping("/update-status")
+    @Operation(summary = "修改角色状态")
+    public R<Boolean> updateRoleStatus(@Valid @RequestBody UpdateStatusReqVO reqVO) {
+        roleService.updateRoleStatus(reqVO.getId(), reqVO.getStatus());
         return R.ok(true);
     }
 

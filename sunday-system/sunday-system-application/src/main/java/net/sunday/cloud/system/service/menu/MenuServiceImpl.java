@@ -12,12 +12,15 @@ import net.sunday.cloud.system.controller.admin.menu.vo.MenuRespVO;
 import net.sunday.cloud.system.controller.admin.menu.vo.MenuSimpleRespVO;
 import net.sunday.cloud.system.controller.admin.menu.vo.MenuUpsertReqVO;
 import net.sunday.cloud.system.enums.menu.MenuTypeEnum;
+import net.sunday.cloud.system.event.menu.source.MenuDeletedEvent;
+import net.sunday.cloud.system.event.menu.source.MenuStatusChangedEvent;
 import net.sunday.cloud.system.model.MenuDO;
-import net.sunday.cloud.system.repository.mapper.MenuMapper;
 import net.sunday.cloud.system.repository.cache.redis.constant.RedisKeyConstants;
+import net.sunday.cloud.system.repository.mapper.MenuMapper;
 import net.sunday.cloud.system.service.rolemenu.IRoleMenuService;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -35,6 +38,9 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, MenuDO> implements 
 
     @Resource
     private IRoleMenuService roleMenuService;
+
+    @Resource
+    private ApplicationEventPublisher applicationEventPublisher;
 
     @Override
     @CacheEvict(value = RedisKeyConstants.PERMISSION_MENU_ID_LIST,
@@ -65,6 +71,20 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, MenuDO> implements 
     }
 
     @Override
+    public void updateMenuStatus(Long id, Integer status) {
+        // 1.校验菜单存在
+        validateMenuExists(id);
+        // 2.更新菜单状态
+        baseMapper.updateById(MenuDO.builder()
+                .id(id)
+                .status(status)
+                .build());
+
+        // 3.发布菜单更新状态事件
+        applicationEventPublisher.publishEvent(new MenuStatusChangedEvent(this, id, status));
+    }
+
+    @Override
     @Transactional(rollbackFor = Exception.class)
     @CacheEvict(value = RedisKeyConstants.PERMISSION_MENU_ID_LIST, allEntries = true)
     public void deleteMenu(Long id) {
@@ -76,6 +96,8 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, MenuDO> implements 
         baseMapper.deleteById(new MenuDO(id));
         // 4.级联删除角色菜单关系
         roleMenuService.removeByMenuId(id);
+        // 5.发布菜单删除事件
+        applicationEventPublisher.publishEvent(new MenuDeletedEvent(this, id));
     }
 
     @Override

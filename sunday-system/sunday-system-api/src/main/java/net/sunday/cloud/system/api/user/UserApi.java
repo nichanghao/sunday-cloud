@@ -1,11 +1,11 @@
 package net.sunday.cloud.system.api.user;
 
-import net.sunday.cloud.system.api.user.dto.SysUserRespDTO;
+import net.sunday.cloud.system.api.user.dto.UserRespDTO;
 
 /**
  * 系统用户API接口
  */
-public interface SysUserApi {
+public interface UserApi {
 
     /**
      * 根据用户名查询用户信息
@@ -13,5 +13,5 @@ public interface SysUserApi {
      * @param username 用户名
      * @return 用户信息
      */
-    SysUserRespDTO loadUserByUsername(String username);
+    UserRespDTO loadUserByUsername(String username);
 }

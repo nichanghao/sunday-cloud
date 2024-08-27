@@ -55,14 +55,6 @@ public class UserRoleServiceImpl extends ServiceImpl<UserRoleMapper, UserRoleDO>
     }
 
     @Override
-    public List<Long> listEnableByUserId(Long userId) {
-        List<Long> roleIds = getSelf().listByUserId(userId);
-        // 移除不可用的角色
-        roleIds.removeIf(roleId -> !roleStatusCaffeineDAO.get(roleId));
-        return roleIds;
-    }
-
-    @Override
     public List<MenuRespVO> joinMenuByUserId(Long userId) {
         MPJLambdaWrapper<UserRoleDO> wrapper = new MPJLambdaWrapper<UserRoleDO>()
                 .selectAll(MenuDO.class)

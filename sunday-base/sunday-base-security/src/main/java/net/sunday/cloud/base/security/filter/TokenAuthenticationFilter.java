@@ -1,5 +1,6 @@
 package net.sunday.cloud.base.security.filter;
 
+import cn.hutool.core.text.AntPathMatcher;
 import cn.hutool.core.util.StrUtil;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -14,6 +15,7 @@ import org.springframework.lang.NonNull;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.List;
 
 import static net.sunday.cloud.base.common.constant.SecurityConstants.AUTH_USER_HEADER;
 
@@ -24,6 +26,21 @@ import static net.sunday.cloud.base.common.constant.SecurityConstants.AUTH_USER_
 public class TokenAuthenticationFilter extends OncePerRequestFilter {
 
     private final AuthApi authApi;
+
+    private static final AntPathMatcher PATH_MATCHER = new AntPathMatcher("/");
+
+    private static final List<String> IGNORE_PATHS = List.of("/auth/**", "/actuator/**");
+
+    @Override
+    protected boolean shouldNotFilter(@NonNull HttpServletRequest request) throws ServletException {
+        String uri = request.getRequestURI();
+        for (String ignorePath : IGNORE_PATHS) {
+            if (PATH_MATCHER.match(ignorePath, uri)) {
+                return true;
+            }
+        }
+        return super.shouldNotFilter(request);
+    }
 
     @Override
     protected void doFilterInternal(@NonNull HttpServletRequest request,
