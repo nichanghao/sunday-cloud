@@ -8,7 +8,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import net.sunday.cloud.system.controller.admin.menu.vo.MenuRespVO;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
@@ -20,13 +19,6 @@ import java.util.Set;
 public class PermissionRouteRespVO {
 
     public static final String HOME = "home";
-
-    public static final PermissionRouteRespVO EMPTY = PermissionRouteRespVO.builder()
-            .permissions(Collections.emptySet())
-            .routes(Collections.emptyList())
-            .home(HOME)
-            .build();
-
 
     @Schema(description = "权限列表")
     private Set<String> permissions;

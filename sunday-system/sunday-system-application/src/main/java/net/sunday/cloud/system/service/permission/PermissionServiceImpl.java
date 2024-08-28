@@ -2,6 +2,8 @@ package net.sunday.cloud.system.service.permission;
 
 import cn.hutool.core.collection.CollUtil;
 import jakarta.annotation.Resource;
+import net.sunday.cloud.base.common.exception.BusinessException;
+import net.sunday.cloud.base.common.exception.GlobalRespCodeEnum;
 import net.sunday.cloud.base.common.util.collection.CollectionUtils;
 import net.sunday.cloud.base.security.util.SecurityFrameworkUtils;
 import net.sunday.cloud.system.controller.admin.menu.vo.MenuRespVO;
@@ -20,6 +22,8 @@ import org.springframework.util.StringUtils;
 
 import java.util.*;
 import java.util.stream.Collectors;
+
+import static net.sunday.cloud.system.enums.SystemRespCodeEnum.PERMISSION_UNASSIGNED_MENU;
 
 /**
  * 权限管理 服务实现层
@@ -45,13 +49,13 @@ public class PermissionServiceImpl implements IPermissionService {
         // 1.获取当前登录用户ID
         Long authUserId = SecurityFrameworkUtils.getAuthUserId();
         if (authUserId == null) {
-            return PermissionRouteRespVO.EMPTY;
+            throw new BusinessException(GlobalRespCodeEnum.UNAUTHORIZED);
         }
 
         // 2.连表查询当前用户拥有的所有菜单
         List<MenuRespVO> menuList = userRoleService.joinMenuByUserId(authUserId);
         if (CollectionUtils.isEmpty(menuList)) {
-            return PermissionRouteRespVO.EMPTY;
+            throw new BusinessException(PERMISSION_UNASSIGNED_MENU);
         }
 
         // 3.构建路由信息

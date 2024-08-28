@@ -3,7 +3,7 @@ import type { Ref } from 'vue';
 import { ref } from 'vue';
 import { NButton, NPopconfirm, NTag } from 'naive-ui';
 import { useBoolean } from '@sa/hooks';
-import { fetchGetMenuList, deleteMenu } from '@/service/api';
+import {fetchGetMenuList, deleteMenu, updateRoleStatus, updateMenuStatus} from '@/service/api';
 import { useAppStore } from '@/store/modules/app';
 import { useTable, useTableOperate } from '@/hooks/common/table';
 import { $t } from '@/locales';
@@ -107,7 +107,18 @@ const { columns, columnChecks, data, loading, getData, getDataByPage } = useTabl
 
         const label = $t(enableStatusRecord[row.status]);
 
-        return <NTag type={tagMap[row.status]}>{label}</NTag>;
+        return (
+          <NPopconfirm onPositiveClick={() => handleUpdateStatus(row)}>
+            {{
+              default: () => '确认此操作吗？',
+              trigger: () => (
+                <NButton type={tagMap[row.status]} ghost size="small">
+                  {label}
+                </NButton>
+              )
+            }}
+          </NPopconfirm>
+        );
       }
     },
     {
@@ -188,6 +199,15 @@ function handleEdit(item: Api.SystemManage.Menu) {
   editingData.value = { ...item };
   console.log(editingData.value);
   openModal();
+}
+
+async function handleUpdateStatus(row: Api.SystemManage.Menu) {
+  const status = row.status === 1 ? 0 : 1
+  const { error } = await updateMenuStatus(row.id, status);
+  if (error) {
+    return;
+  }
+  row.status = status;
 }
 
 function handleAddChildMenu(item: Api.SystemManage.Menu) {

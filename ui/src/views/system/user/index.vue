@@ -1,7 +1,7 @@
 <script setup lang="tsx">
 import { NButton, NPopconfirm, NTag } from 'naive-ui';
 import { ref } from 'vue';
-import { deleteUser, fetchGetUserList } from '@/service/api';
+import { deleteUser, fetchGetUserList, updateUserStatus } from '@/service/api';
 import { $t } from '@/locales';
 import { useAppStore } from '@/store/modules/app';
 import { enableStatusRecord, userGenderRecord } from '@/constants/business';
@@ -113,7 +113,18 @@ const {
 
         const label = $t(enableStatusRecord[row.status]);
 
-        return <NTag type={tagMap[row.status]}>{label}</NTag>;
+        return (
+          <NPopconfirm onPositiveClick={() => handleUpdateStatus(row)}>
+            {{
+              default: () => '确认此操作吗？',
+              trigger: () => (
+                <NButton type={tagMap[row.status]} ghost size="small">
+                  {label}
+                </NButton>
+              )
+            }}
+          </NPopconfirm>
+        );
       }
     },
     {
@@ -183,6 +194,15 @@ async function handleDelete(id: number) {
   }
 
   await onDeleted();
+}
+
+async function handleUpdateStatus(row: Api.SystemManage.User) {
+  const status = row.status === 1 ? 0 : 1
+  const { error } = await updateUserStatus(row.id, status);
+  if (error) {
+    return;
+  }
+  row.status = status;
 }
 
 function edit(id: number) {

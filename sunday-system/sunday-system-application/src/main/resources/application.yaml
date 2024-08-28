@@ -10,7 +10,10 @@ spring:
     import:
       - optional:classpath:application-${spring.profiles.active}.yaml
       - optional:nacos:${spring.application.name}-${spring.profiles.active}.yaml
-
+  # org.springframework.boot.autoconfigure.task.TaskExecutorConfigurations
+  threads:
+    virtual:
+      enabled: true
 
 # dubbo 配置
 dubbo:

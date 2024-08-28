@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.sunday.cloud.base.common.util.json.JsonUtils;
+import org.springframework.lang.NonNull;
 import org.springframework.web.servlet.HandlerInterceptor;
 
 
@@ -25,16 +26,20 @@ public class ExecuteTimeInterceptor implements HandlerInterceptor {
 
 
     @Override
-    @SuppressWarnings("NullableProblems")
-    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
+    public boolean preHandle(HttpServletRequest request,
+                             @NonNull HttpServletResponse response,
+                             @NonNull Object handler) {
+
         request.setAttribute(SHOW_LOG_KEY, System.currentTimeMillis());
         return true;
     }
 
 
     @Override
-    @SuppressWarnings("NullableProblems")
-    public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
+    public void afterCompletion(HttpServletRequest request,
+                                @NonNull HttpServletResponse response,
+                                @NonNull Object handler, Exception ex) throws Exception {
+
         Long start = (Long) request.getAttribute(SHOW_LOG_KEY);
         long responseTime = System.currentTimeMillis() - start;
         if (enable) {

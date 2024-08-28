@@ -14,13 +14,12 @@ import net.sunday.cloud.system.api.user.UserApi;
 import org.apache.dubbo.config.spring.ReferenceBean;
 import org.apache.dubbo.config.spring.reference.ReferenceBeanBuilder;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
-import org.springframework.boot.autoconfigure.AutoConfigureOrder;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
-import org.springframework.context.annotation.Primary;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -34,8 +33,7 @@ import org.springframework.security.web.access.AccessDeniedHandler;
  * @see org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration
  */
 
-@AutoConfiguration()
-@AutoConfigureOrder(-1)
+@AutoConfiguration(before = SecurityAutoConfiguration.class)
 @EnableConfigurationProperties({WebSecurityProperties.class, RestWebProperties.class})
 @Import({WebSecurityConfiguration.class})
 public class WebSecurityAutoConfiguration {
@@ -44,7 +42,6 @@ public class WebSecurityAutoConfiguration {
      * 注入 dubbo sysUser 远程服务
      */
     @Bean
-    @Primary // 如果本地有服务实现则直接走本地，不需要dubbo远程调用
     @ConditionalOnClass(ReferenceBean.class)
     @ConditionalOnMissingBean(UserApi.class)
     public ReferenceBean<UserApi> userApiReferenceBean() {
@@ -63,7 +60,6 @@ public class WebSecurityAutoConfiguration {
      * 注入 dubbo auth 远程服务
      */
     @Bean
-    @Primary
     @ConditionalOnClass(ReferenceBean.class)
     @ConditionalOnMissingBean(AuthApi.class)
     public ReferenceBean<AuthApi> authApiReferenceBean() {
@@ -82,7 +78,6 @@ public class WebSecurityAutoConfiguration {
      * 注入 dubbo permission 远程服务
      */
     @Bean
-    @Primary
     @ConditionalOnClass(ReferenceBean.class)
     @ConditionalOnMissingBean(PermissionApi.class)
     public ReferenceBean<PermissionApi> permissionApiReferenceBean() {

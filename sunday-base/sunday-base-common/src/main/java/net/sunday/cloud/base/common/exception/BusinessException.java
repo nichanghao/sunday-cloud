@@ -1,7 +1,6 @@
 package net.sunday.cloud.base.common.exception;
 
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 import java.io.Serial;
 
@@ -9,14 +8,13 @@ import java.io.Serial;
  * 业务异常
  */
 
-@NoArgsConstructor
+@Getter
 public class BusinessException extends RuntimeException implements ErrorEnum {
 
     @Serial
     private static final long serialVersionUID = 1L;
 
-    @Getter
-    private Integer code;
+    private final Integer code;
 
     public BusinessException(Integer code, String message, Object... formats) {
         super(formatMessage(message, formats));
@@ -30,18 +28,22 @@ public class BusinessException extends RuntimeException implements ErrorEnum {
 
     public BusinessException(String message, Object... formats) {
         super(formatMessage(message, formats));
+        this.code = GlobalRespCodeEnum.FAIL.getCode();
     }
 
     public BusinessException(Throwable cause) {
         super(cause);
+        this.code = GlobalRespCodeEnum.FAIL.getCode();
     }
 
     public BusinessException(String message, Throwable cause) {
         super(message, cause);
+        this.code = GlobalRespCodeEnum.FAIL.getCode();
     }
 
     public BusinessException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
         super(message, cause, enableSuppression, writableStackTrace);
+        this.code = GlobalRespCodeEnum.FAIL.getCode();
     }
 
     private static String formatMessage(String message, Object... formats) {

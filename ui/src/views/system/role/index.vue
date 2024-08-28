@@ -1,6 +1,6 @@
 <script setup lang="tsx">
 import { NButton, NPopconfirm, NTag } from 'naive-ui';
-import { fetchGetRoleList } from '@/service/api';
+import {fetchGetRoleList, updateRoleStatus} from '@/service/api';
 import { useAppStore } from '@/store/modules/app';
 import { useTable, useTableOperate } from '@/hooks/common/table';
 import { $t } from '@/locales';
@@ -85,7 +85,18 @@ const {
 
         const label = $t(enableStatusRecord[row.status]);
 
-        return <NTag type={tagMap[row.status]}>{label}</NTag>;
+        return (
+          <NPopconfirm onPositiveClick={() => handleUpdateStatus(row)}>
+            {{
+              default: () => '确认此操作吗？',
+              trigger: () => (
+                <NButton type={tagMap[row.status]} ghost size="small">
+                  {label}
+                </NButton>
+              )
+            }}
+          </NPopconfirm>
+        );
       }
     },
     {
@@ -153,6 +164,15 @@ async function handleDelete(id: number) {
 
 function edit(id: number) {
   handleEdit(id);
+}
+
+async function handleUpdateStatus(row: Api.SystemManage.Role) {
+  const status = row.status === 1 ? 0 : 1
+  const { error } = await updateRoleStatus(row.id, status);
+  if (error) {
+    return;
+  }
+  row.status = status;
 }
 
 function handleMenuAuth(id: number) {

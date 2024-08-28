@@ -27,6 +27,17 @@ export function editRole(data: any) {
   });
 }
 
+/** update role status */
+export function updateRoleStatus(id: number, status: number) {
+  return request<any>({
+    url: '/admin-api/system/role/update-status',
+    method: 'put',
+    data: {
+      id, status
+    }
+  });
+}
+
 /** delete role */
 export function deleteRole(id: number) {
   return request<any>({
@@ -74,6 +85,17 @@ export function editUser(data: any) {
     url: '/admin-api/system/user/update',
     method: 'put',
     data
+  });
+}
+
+/** update user status */
+export function updateUserStatus(id: number, status: number) {
+  return request<any>({
+    url: '/admin-api/system/user/update-status',
+    method: 'put',
+    data: {
+      id, status
+    }
   });
 }
 
@@ -174,6 +196,17 @@ export function editMenu(menu: any) {
     url: '/admin-api/system/menu/update',
     method: 'put',
     data: menu
+  });
+}
+
+/** update menu status */
+export function updateMenuStatus(id: number, status: number) {
+  return request<any>({
+    url: '/admin-api/system/menu/update-status',
+    method: 'put',
+    data: {
+      id, status
+    }
   });
 }
 

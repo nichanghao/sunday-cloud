@@ -50,6 +50,9 @@ public enum SystemRespCodeEnum implements ErrorEnum {
 
     MENU_EXISTS_CHILDREN(100_003_006, "存在子菜单，无法操作"),
 
+
+    /* 权限相关 100_004_000 */
+    PERMISSION_UNASSIGNED_MENU(100_004_001, "请联系管理员分配权限"),
     ;
 
 
