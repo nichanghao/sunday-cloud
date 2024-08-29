@@ -1,7 +1,6 @@
 package net.sunday.cloud.base.common.entity.auth;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.security.core.CredentialsContainer;
@@ -17,7 +16,6 @@ import java.util.Collections;
  */
 @Data
 @NoArgsConstructor
-@JsonDeserialize(as = AuthUser.class)
 public class AuthUser implements UserDetails, CredentialsContainer {
 
     @Serial
@@ -37,6 +35,8 @@ public class AuthUser implements UserDetails, CredentialsContainer {
      */
     private boolean enabled;
 
+    private Collection<? extends GrantedAuthority> authorities;
+
     @JsonIgnore
     private String password;
 
@@ -45,6 +45,7 @@ public class AuthUser implements UserDetails, CredentialsContainer {
         this.username = username;
         this.password = password;
         this.enabled = enabled;
+        this.authorities = Collections.emptyList();
     }
 
     @Override
@@ -54,9 +55,8 @@ public class AuthUser implements UserDetails, CredentialsContainer {
     }
 
     @Override
-    @JsonIgnore
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Collections.emptyList();
+        return this.authorities;
     }
 
     @Override

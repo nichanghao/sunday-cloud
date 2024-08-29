@@ -1,6 +1,6 @@
 dependencies {
     api(project(":sunday-base:sunday-base-common"))
-
     api("org.apache.dubbo:dubbo")
+    compileOnly("org.springframework.security:spring-security-core")
 
 }
