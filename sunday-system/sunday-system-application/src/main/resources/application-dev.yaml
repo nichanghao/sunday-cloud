@@ -14,9 +14,9 @@ dubbo:
   registry:
     address: nacos://localhost:8848
 
-logging:
-  level:
-    org.springframework.security: trace
+#logging:
+#  level:
+#    org.springframework.security: trace
 
 mybatis-plus:
   configuration:

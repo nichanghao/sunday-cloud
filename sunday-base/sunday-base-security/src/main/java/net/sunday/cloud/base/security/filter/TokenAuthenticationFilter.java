@@ -21,6 +21,9 @@ import static net.sunday.cloud.base.common.constant.SecurityConstants.AUTH_USER_
 
 /**
  * spring security token 认证过滤器
+ * 过滤链结束后，spring security 会自动清理上下文信息，防止内存泄漏
+ *
+ * @see org.springframework.security.web.context.SecurityContextHolderFilter
  */
 @AllArgsConstructor
 public class TokenAuthenticationFilter extends OncePerRequestFilter {

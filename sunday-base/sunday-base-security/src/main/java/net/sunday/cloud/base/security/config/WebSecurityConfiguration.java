@@ -93,6 +93,8 @@ public class WebSecurityConfiguration implements ApplicationContextAware {
                         .requestMatchers(HttpMethod.PATCH, permitAllUrls.get(HttpMethod.PATCH).toArray(new String[0])).permitAll()
                         // 设置 APP API 无需认证
                         .requestMatchers(buildAppApi()).permitAll()
+                        // 设置 actuator health 无需认证
+                        .requestMatchers("/actuator/health").permitAll()
                 )
                 // 项目自定义配置
                 .authorizeHttpRequests(c -> applicationContext

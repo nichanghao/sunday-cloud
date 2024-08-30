@@ -21,3 +21,12 @@ spring:
           uri: lb://sunday-cloud-system
           predicates:
             - Path=/app-api/system/**
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health
+  endpoint:
+    health:
+      show-details: never

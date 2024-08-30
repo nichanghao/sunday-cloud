@@ -41,7 +41,7 @@ public class TokenAuthenticationFilter implements WebFilter {
 
 
     @Override
-    public Mono<Void> filter(@NonNull ServerWebExchange exchange, @NonNull WebFilterChain chain) {
+    public @NonNull Mono<Void> filter(@NonNull ServerWebExchange exchange, @NonNull WebFilterChain chain) {
         // 移除登录用户请求头，防止伪造用户
         removeAuthUser(exchange);
 
