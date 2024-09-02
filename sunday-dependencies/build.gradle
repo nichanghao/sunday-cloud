@@ -26,5 +26,6 @@ dependencies {
         api(libs.mybatis.plus.join.boot.starter)
         api(libs.redisson.spring.boot.starter)
         api(libs.knife4j.openapi3.jakarta.spring.boot.starter)
+        api(libs.skywalking.apm.toolkit.logback)
     }
 }

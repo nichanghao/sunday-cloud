@@ -1,30 +1,28 @@
-package net.sunday.cloud.base.security.entity;
+package net.sunday.cloud.base.monitor;
 
-import io.swagger.v3.oas.models.OpenAPI;
 import net.sunday.cloud.base.common.entity.security.AuthorizeRequestsCustomizer;
+import net.sunday.cloud.base.security.WebSecurityAutoConfiguration;
+import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AuthorizeHttpRequestsConfigurer;
+import org.springframework.security.web.SecurityFilterChain;
 
-@Configuration
-@ConditionalOnClass(OpenAPI.class)
-public class SwaggerAuthorizeRequestsCustomizer {
+@ConditionalOnClass(SecurityFilterChain.class)
+@AutoConfiguration(before = WebSecurityAutoConfiguration.class)
+public class ActuatorSecurityAutoConfiguration {
 
-    @Bean("swaggerAuthorizeRequestsCustomizer")
+    @Bean("actuatorAuthorizeRequestsCustomizer")
     public AuthorizeRequestsCustomizer authorizeRequestsCustomizer() {
         return new AuthorizeRequestsCustomizer() {
 
             @Override
             public void customize(AuthorizeHttpRequestsConfigurer<HttpSecurity>.AuthorizationManagerRequestMatcherRegistry registry) {
-                // Swagger 接口文档
-                registry.requestMatchers("/v3/api-docs/**").permitAll()
-                        .requestMatchers("/webjars/**").permitAll()
-                        .requestMatchers("/swagger-ui/**").permitAll();
+                registry.requestMatchers("/actuator/health").permitAll()
+                ;
             }
 
         };
     }
-
 }

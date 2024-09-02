@@ -4,6 +4,10 @@ server:
 spring:
   application:
     name: sunday-cloud-gateway
+  config:
+    import:
+      - optional:classpath:application-${spring.profiles.active}.yaml
+      - optional:nacos:${spring.application.name}-${spring.profiles.active}.yaml
   profiles:
     active: dev
   cloud:

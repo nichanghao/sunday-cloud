@@ -5,7 +5,7 @@ import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import jakarta.annotation.Resource;
 import jakarta.annotation.security.PermitAll;
-import net.sunday.cloud.base.security.entity.AuthorizeRequestsCustomizer;
+import net.sunday.cloud.base.common.entity.security.AuthorizeRequestsCustomizer;
 import net.sunday.cloud.base.security.entity.SwaggerAuthorizeRequestsCustomizer;
 import net.sunday.cloud.base.security.filter.TokenAuthenticationFilter;
 import net.sunday.cloud.base.web.rest.RestWebProperties;

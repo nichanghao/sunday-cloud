@@ -18,6 +18,7 @@ dependencies {
     implementation(project(":sunday-base:sunday-base-dubbo"))
     implementation(project(":sunday-base:sunday-base-security"))
     implementation(project(":sunday-base:sunday-base-mybatis"))
+    implementation(project(":sunday-base:sunday-base-monitor"))
 
     testImplementation(libs.mybatis.plus.generator)
     testImplementation('org.freemarker:freemarker')

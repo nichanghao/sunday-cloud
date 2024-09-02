@@ -1,4 +1,4 @@
-package net.sunday.cloud.base.web.logback;
+package net.sunday.cloud.base.common.logback;
 
 
 import ch.qos.logback.classic.pattern.MessageConverter;

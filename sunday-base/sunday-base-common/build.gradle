@@ -6,8 +6,11 @@ dependencies {
     implementation("cn.hutool:hutool-json")
 
     compileOnlyApi("org.slf4j:slf4j-api")
-    compileOnly("org.springframework.security:spring-security-core")
+    compileOnlyApi("org.springframework.security:spring-security-core")
+    compileOnlyApi("org.springframework.security:spring-security-config")
     compileOnly("jakarta.validation:jakarta.validation-api")
     compileOnly("com.github.xiaoymin:knife4j-openapi3-jakarta-spring-boot-starter")
+    compileOnly("ch.qos.logback:logback-classic")
+
 
 }
