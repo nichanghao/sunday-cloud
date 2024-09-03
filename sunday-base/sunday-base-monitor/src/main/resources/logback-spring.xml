@@ -9,12 +9,12 @@
     <!-- 转化规则 -->
     <conversionRule conversionWord="m" converterClass="net.sunday.cloud.base.common.logback.LogJsonConverter"/>
 
-    <property name="SKYWALKING_PATTERN" value="%d{${LOG_DATEFORMAT_PATTERN:-yyyy-MM-dd HH:mm:ss.SSSXXX}} [%X{tid}] ${LOG_LEVEL_PATTERN:-%5p} ${PID:- } --- %applicationName[%t] ${LOG_CORRELATION_PATTERN:-}%-40.40logger{39} : %m%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}"/>
+    <property name="FILE_LOG_PATTERN" value="%d{${LOG_DATEFORMAT_PATTERN:-yyyy-MM-dd HH:mm:ss.SSSXXX}} [%X{traceId}] ${LOG_LEVEL_PATTERN:-%5p} ${PID:- } --- %applicationName[%t] ${LOG_CORRELATION_PATTERN:-}%-40.40logger{39} : %m%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}"/>
 
     <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <encoder class="ch.qos.logback.core.encoder.LayoutWrappingEncoder">
-            <layout class="org.apache.skywalking.apm.toolkit.log.logback.v1.x.mdc.TraceIdMDCPatternLogbackLayout">
-                <pattern>${SKYWALKING_PATTERN}</pattern>
+            <layout class="ch.qos.logback.classic.PatternLayout">
+                <pattern>${FILE_LOG_PATTERN}</pattern>
             </layout>
             <charset>${FILE_LOG_CHARSET}</charset>
         </encoder>
@@ -39,21 +39,11 @@
         <appender-ref ref="FILE"/>
     </appender>
 
-    <!-- skywalking logback appender :https://skywalking.apache.org/docs/skywalking-java/v9.3.0/en/setup/service-agent/java-agent/application-toolkit-logback-1.x/ -->
-    <appender name="SKYWALKING" class="org.apache.skywalking.apm.toolkit.log.logback.v1.x.log.GRPCLogClientAppender">
-        <encoder class="ch.qos.logback.core.encoder.LayoutWrappingEncoder">
-            <layout class="org.apache.skywalking.apm.toolkit.log.logback.v1.x.mdc.TraceIdMDCPatternLogbackLayout">
-                <pattern>${SKYWALKING_PATTERN}</pattern>
-            </layout>
-        </encoder>
-    </appender>
-
 
     <!-- 日志输出级别 -->
     <root level="INFO">
         <appender-ref ref="CONSOLE"/>
         <appender-ref ref="ASYNC-FILE"/>
-        <appender-ref ref="SKYWALKING"/>
     </root>
 
 </configuration>

@@ -6,7 +6,7 @@ import org.springframework.lang.NonNull;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 
-import static net.sunday.cloud.base.common.constant.MonitorConstants.TRACE_ID;
+import java.util.Map;
 
 /**
  * 自定义 TaskDecorator，用于在线程切换时传递上下文
@@ -22,14 +22,14 @@ public class TransmitTaskDecorator implements TaskDecorator {
         SecurityContext securityContext = SecurityContextHolder.getContext();
 
         // 获取MDC 上下文
-        String traceId = MDC.get(TRACE_ID);
+        Map<String, String> mdcContext = MDC.getCopyOfContextMap();
 
         return () -> {
             try {
                 // 设置新线程的请求上下文
                 SecurityContextHolder.setContext(securityContext);
                 // 设置MDC 上下文
-                MDC.put(TRACE_ID, traceId);
+                MDC.setContextMap(mdcContext);
 
                 runnable.run();
             } finally {

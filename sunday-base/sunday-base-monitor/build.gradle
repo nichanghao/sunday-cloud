@@ -1,8 +1,13 @@
 dependencies {
-    implementation(project(":sunday-base:sunday-base-common"))
-
-    compileOnly(project(":sunday-base:sunday-base-security"))
-
     api('org.springframework.boot:spring-boot-starter-actuator')
+
+    implementation(project(":sunday-base:sunday-base-common"))
     implementation('org.apache.skywalking:apm-toolkit-logback-1.x')
+
+    compileOnly("jakarta.servlet:jakarta.servlet-api")
+    compileOnly(project(":sunday-base:sunday-base-security"))
+    compileOnly('org.springframework:spring-webmvc')
+    compileOnly('org.springframework:spring-webflux')
+
+
 }
