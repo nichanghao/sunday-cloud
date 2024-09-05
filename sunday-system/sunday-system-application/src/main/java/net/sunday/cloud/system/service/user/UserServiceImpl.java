@@ -14,6 +14,8 @@ import net.sunday.cloud.system.controller.admin.role.vo.RoleRespVO;
 import net.sunday.cloud.system.controller.admin.user.vo.UserPageReqVO;
 import net.sunday.cloud.system.controller.admin.user.vo.UserRespVO;
 import net.sunday.cloud.system.controller.admin.user.vo.UserUpsertReqVO;
+import net.sunday.cloud.system.converter.RoleConverter;
+import net.sunday.cloud.system.converter.UserConverter;
 import net.sunday.cloud.system.event.user.source.UserDeletedEvent;
 import net.sunday.cloud.system.event.user.source.UserStatusChangedEvent;
 import net.sunday.cloud.system.model.RoleDO;
@@ -54,7 +56,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserDO> implements 
         validateUserForUpsert(null, upsertVO.getUsername(), upsertVO.getPhone(), upsertVO.getEmail());
 
         // 插入用户数据
-        UserDO user = BeanUtils.toBean(upsertVO, UserDO.class);
+        UserDO user = UserConverter.INSTANCE.vo2do(upsertVO);
         user.setPassword(passwordEncoder.encode(upsertVO.getPassword()));
         baseMapper.insert(user);
 
@@ -70,7 +72,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserDO> implements 
         validateUserForUpsert(upsertVO.getId(), upsertVO.getUsername(), upsertVO.getPhone(), upsertVO.getEmail());
 
         // 更新用户
-        UserDO updateObj = BeanUtils.toBean(upsertVO, UserDO.class);
+        UserDO updateObj = UserConverter.INSTANCE.vo2do(upsertVO);
         baseMapper.updateById(updateObj);
 
     }
@@ -146,7 +148,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserDO> implements 
         List<Long> userIds = new ArrayList<>(pageResult.getRecords().size());
         for (UserDO record : pageResult.getRecords()) {
             userIds.add(record.getId());
-            records.add(BeanUtils.toBean(record, UserRespVO.class));
+            records.add(UserConverter.INSTANCE.do2vo(record));
         }
         List<UserRoleDO> userRoleList = userRoleService.listEnableByUserIds(userIds);
         if (CollectionUtils.isEmpty(userRoleList)) {
@@ -192,7 +194,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserDO> implements 
         if (user == null) {
             return null;
         }
-        UserRespVO userResp = BeanUtils.toBean(user, UserRespVO.class);
+        UserRespVO userResp = UserConverter.INSTANCE.do2vo(user);
 
         // 2.查询用户角色信息
         List<Long> roleIds = userRoleService.listByUserId(userId);
@@ -201,7 +203,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserDO> implements 
         }
         List<RoleDO> roleDOS = roleService.listByIds(roleIds);
         List<RoleDO> list = roleDOS.stream().filter(v -> v.getStatus() == CommonStatusEnum.ENABLE.ordinal()).toList();
-        userResp.setRoles(CollectionUtils.convertList(list, role -> BeanUtils.toBean(role, RoleRespVO.class)));
+        userResp.setRoles(CollectionUtils.convertList(list, RoleConverter.INSTANCE::do2vo));
 
         return userResp;
     }

@@ -1,7 +1,9 @@
 apply plugin: JavaLibraryPlugin
 
 dependencies {
-    implementation platform(project(':sunday-dependencies'))
+    implementation(platform(project(':sunday-dependencies')))
+    annotationProcessor(platform(project(':sunday-dependencies')))
+
     compileOnly(libs.lombok)
     testCompileOnly(libs.lombok)
     annotationProcessor(libs.lombok)

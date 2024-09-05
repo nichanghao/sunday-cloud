@@ -24,8 +24,11 @@ dependencies {
         api(libs.jsonwebtoken.jjwt)
         api(libs.mybatis.plus.boot3.starter)
         api(libs.mybatis.plus.join.boot.starter)
+        api(libs.mybatis.plus.generator)
         api(libs.redisson.spring.boot.starter)
         api(libs.knife4j.openapi3.jakarta.spring.boot.starter)
         api(libs.skywalking.apm.toolkit.logback)
+        api(libs.mapstruct)
+        api(libs.mapstruct.processor)
     }
 }

@@ -54,7 +54,9 @@ public class TokenAuthenticationFilter implements WebFilter {
         return checkAccessToken(token).defaultIfEmpty(EMPTY_AUTH_USER).flatMap(user -> {
             // 无用户信息，直接放行让下游服务处理
             if (user == EMPTY_AUTH_USER || user.getExpireTime() == null || user.getExpireTime() <= System.currentTimeMillis()) {
-                return chain.filter(exchange);
+                return chain.filter(exchange.mutate().request(builder ->
+                        // 移除 认证 token, 避免下游服务再次认证
+                        builder.headers(httpHeaders -> httpHeaders.remove(AUTHORIZATION_HEADER))).build());
             }
 
             // 设置登录用户请求头

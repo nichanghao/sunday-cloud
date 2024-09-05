@@ -20,6 +20,10 @@ dependencies {
     implementation(project(":sunday-base:sunday-base-mybatis"))
     implementation(project(":sunday-base:sunday-base-monitor"))
 
-    testImplementation(libs.mybatis.plus.generator)
+    implementation('org.mapstruct:mapstruct')
+    annotationProcessor('org.mapstruct:mapstruct-processor')
+
+    testImplementation('com.baomidou:mybatis-plus-generator')
     testImplementation('org.freemarker:freemarker')
+
 }

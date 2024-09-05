@@ -14,6 +14,7 @@ guava = '33.2.1-jre'
 jwt = '0.12.5'
 knife4j-openapi3 = '4.5.0'
 skywalking-agent = '9.3.0'
+mapstruct = '1.6.0'
 
 [libraries]
 lombok = { module = 'org.projectlombok:lombok', version.ref = 'lombok' }
@@ -29,6 +30,8 @@ google-guava = { module = 'com.google.guava:guava', version.ref = 'guava' }
 jsonwebtoken-jjwt = { module = 'io.jsonwebtoken:jjwt', version.ref = 'jwt' }
 knife4j-openapi3-jakarta-spring-boot-starter = { module = 'com.github.xiaoymin:knife4j-openapi3-jakarta-spring-boot-starter', version.ref = 'knife4j-openapi3' }
 skywalking-apm-toolkit-logback = { module = 'org.apache.skywalking:apm-toolkit-logback-1.x', version.ref ='skywalking-agent' }
+mapstruct = { module = 'org.mapstruct:mapstruct', version.ref ='mapstruct' }
+mapstruct-processor = { module = 'org.mapstruct:mapstruct-processor', version.ref ='mapstruct' }
 
 [plugins]
 spring-boot = { id = 'org.springframework.boot', version.ref = 'spring-boot' }

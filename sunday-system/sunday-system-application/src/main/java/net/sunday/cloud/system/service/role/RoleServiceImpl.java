@@ -7,10 +7,10 @@ import net.sunday.cloud.base.common.entity.page.PageResult;
 import net.sunday.cloud.base.common.enums.CommonStatusEnum;
 import net.sunday.cloud.base.common.exception.BusinessException;
 import net.sunday.cloud.base.common.util.collection.CollectionUtils;
-import net.sunday.cloud.base.common.util.object.BeanUtils;
 import net.sunday.cloud.system.controller.admin.role.vo.RolePageReqVO;
 import net.sunday.cloud.system.controller.admin.role.vo.RoleRespVO;
 import net.sunday.cloud.system.controller.admin.role.vo.RoleUpsertReqVO;
+import net.sunday.cloud.system.converter.RoleConverter;
 import net.sunday.cloud.system.event.role.source.RoleDeletedEvent;
 import net.sunday.cloud.system.event.role.source.RoleStatusChangedEvent;
 import net.sunday.cloud.system.model.RoleDO;
@@ -49,7 +49,7 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, RoleDO> implements 
         validateRoleForUpsert(reqVO.getName(), reqVO.getCode(), null);
 
         // 2. 插入到数据库
-        RoleDO role = BeanUtils.toBean(reqVO, RoleDO.class);
+        RoleDO role = RoleConverter.INSTANCE.vo2do(reqVO);
         role.setStatus(CommonStatusEnum.ENABLE.ordinal());
         baseMapper.insert(role);
         return role.getId();
@@ -62,7 +62,7 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, RoleDO> implements 
         validateRoleForUpsert(reqVO.getName(), reqVO.getCode(), reqVO.getId());
 
         // 2. 更新到数据库
-        RoleDO updateObj = BeanUtils.toBean(reqVO, RoleDO.class);
+        RoleDO updateObj = RoleConverter.INSTANCE.vo2do(reqVO);
         baseMapper.updateById(updateObj);
     }
 
@@ -114,7 +114,7 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, RoleDO> implements 
         }
 
         return new PageResult<>(CollectionUtils
-                .convertList(pageResult.getRecords(), role -> BeanUtils.toBean(role, RoleRespVO.class)), pageResult.getTotal());
+                .convertList(pageResult.getRecords(), RoleConverter.INSTANCE::do2vo), pageResult.getTotal());
     }
 
     @Override
@@ -123,7 +123,7 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, RoleDO> implements 
                 .eq(RoleDO::getStatus, status)
                 .select(RoleDO::getId, RoleDO::getName, RoleDO::getCode));
 
-        return CollectionUtils.convertList(roleList, role -> BeanUtils.toBean(role, RoleRespVO.class));
+        return CollectionUtils.convertList(roleList, RoleConverter.INSTANCE::do2vo);
     }
 
     private void validateRoleBeUsedByUser(Long roleId) {

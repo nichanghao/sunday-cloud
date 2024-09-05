@@ -11,6 +11,7 @@ import net.sunday.cloud.system.controller.admin.menu.vo.MenuListReqVO;
 import net.sunday.cloud.system.controller.admin.menu.vo.MenuRespVO;
 import net.sunday.cloud.system.controller.admin.menu.vo.MenuSimpleRespVO;
 import net.sunday.cloud.system.controller.admin.menu.vo.MenuUpsertReqVO;
+import net.sunday.cloud.system.converter.MenuConverter;
 import net.sunday.cloud.system.enums.menu.MenuTypeEnum;
 import net.sunday.cloud.system.event.menu.source.MenuDeletedEvent;
 import net.sunday.cloud.system.event.menu.source.MenuStatusChangedEvent;
@@ -51,7 +52,7 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, MenuDO> implements 
         // 2.校验菜单自身
         validateMenu(reqVO.getParentId(), reqVO.getName(), null);
         // 3.插入数据库
-        MenuDO menu = BeanUtils.toBean(reqVO, MenuDO.class);
+        MenuDO menu = MenuConverter.INSTANCE.vo2do(reqVO);
         baseMapper.insert(menu);
         return menu.getId();
     }
@@ -67,7 +68,7 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, MenuDO> implements 
         validateMenu(updateReqVO.getParentId(), updateReqVO.getName(), updateReqVO.getId());
 
         // 4.更新到数据库
-        baseMapper.updateById(BeanUtils.toBean(updateReqVO, MenuDO.class));
+        baseMapper.updateById(MenuConverter.INSTANCE.vo2do(updateReqVO));
     }
 
     @Override

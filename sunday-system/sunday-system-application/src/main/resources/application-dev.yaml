@@ -6,9 +6,15 @@ spring:
       port: 6379
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://127.0.0.1:3306/sunday?useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true&nullCatalogMeansCurrent=true
+    url: jdbc:mysql://127.0.0.1:3306/sunday?useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true&nullCatalogMeansCurrent=true&connectTimeout=3000&socketTimeout=60000
     username: root
     password: root
+    hikari:
+      maximum-pool-size: 16 # 最大连接数
+      minimum-idle: 2 # 保持空闲连接的最小数量，当低于此值时会创建新的连接
+      idle-timeout: 600000 # 空闲连接存活最大时间，600000（10分钟）
+      validation-timeout: 5000 # 验证连接可用性时的超时时间。如果连接在指定的时间内没有通过验证，将被关闭，5s
+
 
 dubbo:
   registry:

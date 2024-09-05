@@ -10,11 +10,11 @@ import lombok.Data;
 @Data
 public class UpdateStatusReqVO {
 
-    @Schema(description = "编号", requiredMode = Schema.RequiredMode.REQUIRED, example = "1")
+    @Schema(description = "编号", example = "1")
     @NotNull(message = "编号不能为空")
     private Long id;
 
-    @Schema(description = "状态(1:启用,0:停用)", requiredMode = Schema.RequiredMode.REQUIRED)
+    @Schema(description = "状态(1:启用,0:停用)")
     @NotNull(message = "状态不能为空")
     @Min(value = 0, message = "状态必须为0或1")
     @Max(value = 1, message = "状态必须为0或1")

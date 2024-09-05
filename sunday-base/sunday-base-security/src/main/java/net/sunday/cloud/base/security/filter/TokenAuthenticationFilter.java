@@ -7,6 +7,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import net.sunday.cloud.base.common.entity.auth.AuthUser;
 import net.sunday.cloud.base.common.util.json.JsonUtils;
 import net.sunday.cloud.base.security.util.SecurityFrameworkUtils;
@@ -25,6 +26,7 @@ import static net.sunday.cloud.base.common.constant.SecurityConstants.AUTH_USER_
  *
  * @see org.springframework.security.web.context.SecurityContextHolderFilter
  */
+@Slf4j
 @AllArgsConstructor
 public class TokenAuthenticationFilter extends OncePerRequestFilter {
 
@@ -58,9 +60,13 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
             // 从请求头的token中解析，主要用于不走网关时直接访问后台服务的情况
             String token = SecurityFrameworkUtils.resolveAuthorizationToken(request);
             if (StrUtil.isNotEmpty(token)) {
-                authUser = authApi.checkToken(token);
-                if (authUser != null) {
-                    SecurityFrameworkUtils.setAuthUser(authUser, request);
+                try {
+                    authUser = authApi.checkToken(token);
+                    if (authUser != null) {
+                        SecurityFrameworkUtils.setAuthUser(authUser, request);
+                    }
+                } catch (Exception ex) {
+                    log.warn("[check token]: {}", ex.getMessage());
                 }
             }
         }

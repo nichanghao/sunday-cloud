@@ -17,10 +17,10 @@ import java.util.List;
 @AllArgsConstructor
 public final class PageResult<T> implements Serializable {
 
-    @Schema(description = "数据", requiredMode = Schema.RequiredMode.REQUIRED)
+    @Schema(description = "数据")
     private List<T> records;
 
-    @Schema(description = "总量", requiredMode = Schema.RequiredMode.REQUIRED)
+    @Schema(description = "总量")
     private Long total;
 
     public PageResult(Long total) {

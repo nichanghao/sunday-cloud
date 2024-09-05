@@ -1,10 +1,10 @@
 <p align="center">
  <img src="https://img.shields.io/badge/Gradle-8.8-green" alt="Downloads">
  <img src="https://img.shields.io/badge/Java-21-green" alt="Downloads">
- <img src="https://img.shields.io/badge/Spring%20Cloud-2023.0.1-blue" alt="Downloads">
+ <img src="https://img.shields.io/badge/Spring%20Cloud-2023.0.3-blue" alt="Downloads">
  <img src="https://img.shields.io/badge/Spring%20Cloud%20Alibana-2023.0.1-blue" alt="Downloads">
- <img src="https://img.shields.io/badge/Spring%20Boot-3.2.4-blue" alt="Downloads">
- <img src="https://img.shields.io/badge/Dubbo-3.3.0-blue" alt="Downloads">
+ <img src="https://img.shields.io/badge/Spring%20Boot-3.3.3-blue" alt="Downloads">
+ <img src="https://img.shields.io/badge/Dubbo-3.2.15-blue" alt="Downloads">
 </p>
 
 
@@ -52,7 +52,7 @@ CREATE DATABASE sunday;
 1. 后端
 ```shell
 # 编译后端服务（win系统使用gradlew.bat，linux/mac系统使用gradlew）
-./gradlew clean build
+./gradlew clean build --console=plain
 
 # 启动 sunday-system-application
 cd sunday-system/sunday-system-application/build/libs
