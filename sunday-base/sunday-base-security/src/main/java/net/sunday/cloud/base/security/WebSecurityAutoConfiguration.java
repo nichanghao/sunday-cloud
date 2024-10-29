@@ -1,5 +1,6 @@
 package net.sunday.cloud.base.security;
 
+import net.sunday.cloud.base.common.properties.RestWebProperties;
 import net.sunday.cloud.base.security.config.WebSecurityConfiguration;
 import net.sunday.cloud.base.security.config.WebSecurityProperties;
 import net.sunday.cloud.base.security.filter.TokenAuthenticationFilter;
@@ -7,7 +8,6 @@ import net.sunday.cloud.base.security.handler.CustomAccessDeniedHandler;
 import net.sunday.cloud.base.security.handler.CustomAuthenticationEntryPoint;
 import net.sunday.cloud.base.security.permission.SecurityFrameworkPermissionEvaluator;
 import net.sunday.cloud.base.security.service.UserDetailsServiceImpl;
-import net.sunday.cloud.base.web.rest.RestWebProperties;
 import net.sunday.cloud.system.api.auth.AuthApi;
 import net.sunday.cloud.system.api.permission.PermissionApi;
 import net.sunday.cloud.system.api.user.UserApi;

@@ -134,7 +134,7 @@ const { columns, columnChecks, data, loading, getData, getDataByPage } = useTabl
       key: 'operate',
       title: $t('common.operate'),
       align: 'center',
-      width: 230,
+      width: 260,
       render: row => (
         <div class="flex-center justify-end gap-8px">
           {hasAuth('sys:menu:add') && row.type !== 3 && (

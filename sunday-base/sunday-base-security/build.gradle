@@ -1,6 +1,5 @@
 dependencies {
     implementation(project(":sunday-base:sunday-base-common"))
-    implementation(project(":sunday-base:sunday-base-web"))
     implementation(project(":sunday-system:sunday-system-api"))
     implementation("cn.hutool:hutool-extra")
     implementation('com.github.ben-manes.caffeine:caffeine')

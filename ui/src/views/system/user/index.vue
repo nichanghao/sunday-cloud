@@ -131,7 +131,7 @@ const {
       key: 'operate',
       title: $t('common.operate'),
       align: 'center',
-      width: 300,
+      width: 350,
       render: row => (
         <div class="flex-center gap-8px">
           {hasAuth('sys:user:edit') && (

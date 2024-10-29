@@ -2,12 +2,12 @@ package net.sunday.cloud.base.web;
 
 
 import jakarta.annotation.Resource;
+import net.sunday.cloud.base.common.properties.RestWebProperties;
 import net.sunday.cloud.base.web.advice.GlobalExceptionAdvice;
 import net.sunday.cloud.base.web.advice.RequestBodyLogAdvice;
 import net.sunday.cloud.base.web.advice.ResponseLogAdvice;
 import net.sunday.cloud.base.web.interceptor.ExecuteTimeInterceptor;
 import net.sunday.cloud.base.web.jackson.JacksonBeanPostProcessor;
-import net.sunday.cloud.base.web.rest.RestWebProperties;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;

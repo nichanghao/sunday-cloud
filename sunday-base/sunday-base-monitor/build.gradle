@@ -5,9 +5,8 @@ dependencies {
     implementation('org.apache.skywalking:apm-toolkit-logback-1.x')
 
     compileOnly("jakarta.servlet:jakarta.servlet-api")
-    compileOnly(project(":sunday-base:sunday-base-security"))
     compileOnly('org.springframework:spring-webmvc')
     compileOnly('org.springframework:spring-webflux')
-
+    compileOnly("org.springframework.security:spring-security-web")
 
 }

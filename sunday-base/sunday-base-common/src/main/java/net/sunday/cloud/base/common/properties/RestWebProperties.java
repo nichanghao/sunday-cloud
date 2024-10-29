@@ -1,4 +1,4 @@
-package net.sunday.cloud.base.web.rest;
+package net.sunday.cloud.base.common.properties;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotEmpty;
@@ -8,7 +8,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.servlet.config.annotation.PathMatchConfigurer;
 
 /**
  * 为 admin/app controller 提供 RESTFUL API 的统一前缀和包路径规则
@@ -30,9 +29,7 @@ public class RestWebProperties {
     public static class Controller {
 
         /**
-         * 现所有 Controller 提供的 RESTFul API 的统一前缀
-         *
-         * @see net.sunday.cloud.base.web.WebAutoConfiguration#configurePathMatch(PathMatchConfigurer)
+         * Controller 提供的 RESTFul API 的统一前缀
          */
         @NotEmpty(message = "API 前缀不能为空")
         private String prefix;

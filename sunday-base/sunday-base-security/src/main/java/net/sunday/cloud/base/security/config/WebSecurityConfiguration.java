@@ -6,16 +6,14 @@ import com.google.common.collect.Multimap;
 import jakarta.annotation.Resource;
 import jakarta.annotation.security.PermitAll;
 import net.sunday.cloud.base.common.entity.security.AuthorizeRequestsCustomizer;
-import net.sunday.cloud.base.security.entity.SwaggerAuthorizeRequestsCustomizer;
+import net.sunday.cloud.base.common.properties.RestWebProperties;
 import net.sunday.cloud.base.security.filter.TokenAuthenticationFilter;
-import net.sunday.cloud.base.web.rest.RestWebProperties;
 import org.springframework.beans.BeansException;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpMethod;
 import org.springframework.lang.NonNull;
 import org.springframework.security.config.Customizer;
@@ -40,7 +38,6 @@ import java.util.Set;
 @Configuration
 @EnableMethodSecurity // 开启方法级别的安全控制，注解 @PreAuthorize
 @ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.SERVLET)
-@Import({SwaggerAuthorizeRequestsCustomizer.class})
 public class WebSecurityConfiguration implements ApplicationContextAware {
 
     private ApplicationContext applicationContext;

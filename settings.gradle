@@ -42,4 +42,6 @@ include 'sunday-base:sunday-base-security'
 findProject(':sunday-base:sunday-base-security')?.name = 'sunday-base-security'
 include 'sunday-base:sunday-base-monitor'
 findProject(':sunday-base:sunday-base-monitor')?.name = 'sunday-base-monitor'
+include 'sunday-base:sunday-base-mq'
+findProject(':sunday-base:sunday-base-mq')?.name = 'sunday-base-mq'
 

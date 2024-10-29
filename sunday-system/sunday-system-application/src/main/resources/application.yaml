@@ -10,7 +10,7 @@ spring:
     import:
       - optional:classpath:application-${spring.profiles.active}.yaml
       - optional:nacos:${spring.application.name}-${spring.profiles.active}.yaml
-  # org.springframework.boot.autoconfigure.task.TaskExecutorConfigurations
+  # 开启虚拟线程池，查看类：org.springframework.boot.autoconfigure.task.TaskExecutorConfigurations
   threads:
     virtual:
       enabled: true
@@ -21,8 +21,11 @@ dubbo:
     register-mode: instance
     # dubbo 和 spring cloud 使用同一组时报错：https://github.com/apache/dubbo/issues/12145
     group: dubbo
+    # dubbo 应用级注册需要开启元数据，或者服务消费时指定消费的服务名（@DubboReference(providedBy = "sunday-cloud-system")）
+    use-as-metadata-center: false
   application:
     qos-enable: false
+    metadata-type: local
   consumer:
     check: false
     timeout: 6000
