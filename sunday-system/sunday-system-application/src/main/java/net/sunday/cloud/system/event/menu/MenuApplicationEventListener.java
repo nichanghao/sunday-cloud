@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class MenuApplicationEventListener {
 
-    @DubboReference(cluster = ClusterRules.BROADCAST)
+    @DubboReference(cluster = ClusterRules.BROADCAST, providedBy = "sunday-cloud-system")
     private MenuApi menuApi;
 
     /**

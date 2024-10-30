@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class RoleApplicationEventListener {
 
-    @DubboReference(cluster = ClusterRules.BROADCAST)
+    @DubboReference(cluster = ClusterRules.BROADCAST, providedBy = "sunday-cloud-system")
     private RoleApi roleApi;
 
     /**

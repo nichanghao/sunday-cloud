@@ -3,19 +3,19 @@ package net.sunday.cloud.base.security.permission;
 import cn.hutool.core.util.ArrayUtil;
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
-import lombok.AllArgsConstructor;
 import net.sunday.cloud.base.security.util.SecurityFrameworkUtils;
 import net.sunday.cloud.system.api.permission.PermissionApi;
+import org.apache.dubbo.config.annotation.DubboReference;
 
 import java.time.Duration;
 
 /**
  * security框架权限验证器
  */
-@AllArgsConstructor
 public class SecurityFrameworkPermissionEvaluator {
 
-    private final PermissionApi permissionApi;
+    @DubboReference(check = true, providedBy = "sunday-cloud-system")
+    private PermissionApi permissionApi;
 
     private static final Cache<String, Boolean> permissionCache = Caffeine.newBuilder()
             .maximumSize(100_000)
