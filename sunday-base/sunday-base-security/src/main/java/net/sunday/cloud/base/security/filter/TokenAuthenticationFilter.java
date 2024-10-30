@@ -6,12 +6,12 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.sunday.cloud.base.common.entity.auth.AuthUser;
 import net.sunday.cloud.base.common.util.json.JsonUtils;
 import net.sunday.cloud.base.security.util.SecurityFrameworkUtils;
 import net.sunday.cloud.system.api.auth.AuthApi;
+import org.apache.dubbo.config.annotation.DubboReference;
 import org.springframework.lang.NonNull;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -27,10 +27,10 @@ import static net.sunday.cloud.base.common.constant.SecurityConstants.AUTH_USER_
  * @see org.springframework.security.web.context.SecurityContextHolderFilter
  */
 @Slf4j
-@AllArgsConstructor
 public class TokenAuthenticationFilter extends OncePerRequestFilter {
 
-    private final AuthApi authApi;
+    @DubboReference(check = true, providedBy = "sunday-cloud-system")
+    private AuthApi authApi;
 
     private static final AntPathMatcher PATH_MATCHER = new AntPathMatcher("/");
 
