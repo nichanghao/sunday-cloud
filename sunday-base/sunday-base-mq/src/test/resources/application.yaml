@@ -1,7 +1,0 @@
-spring:
-  kafka:
-    bootstrap-servers: localhost:9094
-    consumer:
-      group-id: test_group
-      # 单测只需从最后一个offset开始消费即可
-      auto-offset-reset: latest
