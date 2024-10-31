@@ -1,4 +1,4 @@
-package net.sunday.cloud.base.mq.kafka.test;
+package net.sunday.cloud.base.test.mq.kafka;
 
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
@@ -13,13 +13,17 @@ import org.springframework.test.context.junit.jupiter.EnabledIf;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * test kafka template send and receive message
+ */
+
 @Slf4j
 @SpringBootTest(classes = {KafkaAutoConfiguration.class})
 @EnabledIf(expression = "#{environment['spring.profiles.active'] == 'local'}",
         // 控制执行 表达式前预加载上下文
         loadContext = true)
-@Import(KafkaApplicationTest.KafkaMessageListener.class)
-public class KafkaApplicationTest {
+@Import(KafkaTemplateTest.KafkaMessageListener.class)
+public class KafkaTemplateTest {
 
     @Autowired
     private KafkaTemplate<Object, Object> kafkaTemplate;
