@@ -1,20 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration debug="false">
 
-    <include resource="org/springframework/boot/logging/logback/defaults.xml" />
-    <include resource="org/springframework/boot/logging/logback/console-appender.xml" />
+    <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
+    <!--    <include resource="org/springframework/boot/logging/logback/console-appender.xml" />-->
 
     <springProperty scope="context" name="LOG_PATH" source="spring.application.name" defaultValue="service"/>
 
     <!-- 转化规则 -->
     <conversionRule conversionWord="m" converterClass="net.sunday.cloud.base.common.logback.LogJsonConverter"/>
 
-    <property name="FILE_LOG_PATTERN" value="%d{${LOG_DATEFORMAT_PATTERN:-yyyy-MM-dd HH:mm:ss.SSSXXX}} [%X{traceId}] ${LOG_LEVEL_PATTERN:-%5p} ${PID:- } --- %applicationName[%t] ${LOG_CORRELATION_PATTERN:-}%-40.40logger{39} : %m%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}"/>
+    <property name="SKYWALKING_PATTERN"
+              value="%d{${LOG_DATEFORMAT_PATTERN:-yyyy-MM-dd HH:mm:ss.SSSXXX}} [%X{tid}] ${LOG_LEVEL_PATTERN:-%5p} ${PID:- } --- %applicationName[%t] ${LOG_CORRELATION_PATTERN:-}%-40.40logger{39} : %m%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}"/>
+    <property name="CONSOLE_LOG_PATTERN"
+              value="%clr(%d{${LOG_DATEFORMAT_PATTERN:-yyyy-MM-dd'T'HH:mm:ss.SSSXXX}}){faint} %clr([%X{tid:--}]){yellow} %clr(${LOG_LEVEL_PATTERN:-%5p}) %clr(${PID:- }){magenta} %clr(---){faint} %clr(%applicationName[%15.15t]){faint} %clr(${LOG_CORRELATION_PATTERN:-}){faint}%clr(%-40.40logger{39}){cyan} %clr(:){faint} %m%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}"/>
+
 
     <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <encoder class="ch.qos.logback.core.encoder.LayoutWrappingEncoder">
-            <layout class="ch.qos.logback.classic.PatternLayout">
-                <pattern>${FILE_LOG_PATTERN}</pattern>
+            <!-- skywalking 启动参数设置：
+            -javaagent:path/skywalking-agent/skywalking-agent.jar
+            -Dskywalking.agent.service_name=xx
+            -Dskywalking.collector.backend_service=127.0.0.1:11800
+            -->
+            <layout class="org.apache.skywalking.apm.toolkit.log.logback.v1.x.mdc.TraceIdMDCPatternLogbackLayout">
+                <pattern>${SKYWALKING_PATTERN}</pattern>
             </layout>
             <charset>${FILE_LOG_CHARSET}</charset>
         </encoder>
@@ -39,11 +48,33 @@
         <appender-ref ref="FILE"/>
     </appender>
 
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>${CONSOLE_LOG_THRESHOLD}</level>
+        </filter>
+        <encoder class="ch.qos.logback.core.encoder.LayoutWrappingEncoder">
+            <layout class="org.apache.skywalking.apm.toolkit.log.logback.v1.x.mdc.TraceIdMDCPatternLogbackLayout">
+                <pattern>${CONSOLE_LOG_PATTERN}</pattern>
+            </layout>
+            <charset>${CONSOLE_LOG_CHARSET}</charset>
+        </encoder>
+    </appender>
+
+    <!-- skywalking logback appender :https://skywalking.apache.org/docs/skywalking-java/v9.3.0/en/setup/service-agent/java-agent/application-toolkit-logback-1.x/ -->
+    <appender name="SKYWALKING" class="org.apache.skywalking.apm.toolkit.log.logback.v1.x.log.GRPCLogClientAppender">
+        <encoder class="ch.qos.logback.core.encoder.LayoutWrappingEncoder">
+            <layout class="org.apache.skywalking.apm.toolkit.log.logback.v1.x.mdc.TraceIdMDCPatternLogbackLayout">
+                <pattern>${SKYWALKING_PATTERN}</pattern>
+            </layout>
+        </encoder>
+    </appender>
+
 
     <!-- 日志输出级别 -->
     <root level="INFO">
         <appender-ref ref="CONSOLE"/>
         <appender-ref ref="ASYNC-FILE"/>
+        <appender-ref ref="SKYWALKING"/>
     </root>
 
 </configuration>

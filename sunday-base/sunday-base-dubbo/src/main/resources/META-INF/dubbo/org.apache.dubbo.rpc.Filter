@@ -1,5 +1,3 @@
 StatisticalLogFilter=net.sunday.cloud.base.dubbo.filter.logger.StatisticalLogFilter
-ConsumerContextFilter=net.sunday.cloud.base.dubbo.filter.context.ConsumerContextFilter
-ProviderContextFilter=net.sunday.cloud.base.dubbo.filter.context.ProviderContextFilter
 BusinessExceptionResolverFilter=net.sunday.cloud.base.dubbo.filter.exception.BusinessExceptionResolverFilter
 BusinessExceptionTranslatorFilter=net.sunday.cloud.base.dubbo.filter.exception.BusinessExceptionTranslatorFilter
