@@ -21,6 +21,6 @@ public class SystemApplication {
 
     public static void main(String[] args) {
         ConfigurableApplicationContext context = SpringApplication.run(SystemApplication.class, args);
-        log.info(context.getId() + " started...");
+        log.info("{} started...", context.getId());
     }
 }

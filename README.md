@@ -65,6 +65,7 @@ java -jar sunday-gateway-1.0-SNAPSHOT.jar
 2. 前端
 ```shell
 cd ui
+npm install -g pnpm
 pnpm i
 pnpm dev
 ```
