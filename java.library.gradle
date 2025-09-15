@@ -14,5 +14,6 @@ java {
     withSourcesJar()
     toolchain {
         languageVersion.set(JavaLanguageVersion.of(libs.versions.java.get().toInteger()))
+        vendor =JvmVendorSpec.AMAZON
     }
 }
