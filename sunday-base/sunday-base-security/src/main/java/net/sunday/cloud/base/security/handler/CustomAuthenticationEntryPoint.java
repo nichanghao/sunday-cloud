@@ -22,7 +22,7 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
 
-        JakartaServletUtil.write(response, JsonUtils.toJsonString(R.failed(UNAUTHORIZED)), MediaType.APPLICATION_JSON_UTF8_VALUE);
+        JakartaServletUtil.write(response, JsonUtils.toJsonString(R.failed(UNAUTHORIZED)), MediaType.APPLICATION_JSON_VALUE);
 
     }
 }

@@ -1,12 +1,17 @@
 allprojects {
-    group('net.sunday.cloud')
-    version('1.0-SNAPSHOT')
+    group = 'net.sunday.cloud'
+    version = '1.0-SNAPSHOT'
 }
 
 subprojects {
 
     tasks.withType(JavaCompile).configureEach {
         options.encoding = "UTF-8"
+    }
+
+    tasks.withType(JavaExec).configureEach {
+        systemProperties['sun.stdout.encoding'] = 'utf8'
+        systemProperties['sun.stderr.encoding'] = 'utf8'
     }
 
 }

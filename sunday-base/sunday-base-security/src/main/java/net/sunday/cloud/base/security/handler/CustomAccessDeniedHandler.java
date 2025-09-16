@@ -21,6 +21,6 @@ public class CustomAccessDeniedHandler implements AccessDeniedHandler {
     @Override
     public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException accessDeniedException) {
 
-        JakartaServletUtil.write(response, JsonUtils.toJsonString(R.failed(ACCESS_DENIED)), MediaType.APPLICATION_JSON_UTF8_VALUE);
+        JakartaServletUtil.write(response, JsonUtils.toJsonString(R.failed(ACCESS_DENIED)), MediaType.APPLICATION_JSON_VALUE);
     }
 }
