@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.data.redis.connection.StringRedisConnection;
+import org.springframework.data.redis.core.RedisCallback;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.script.DefaultRedisScript;
 
@@ -24,14 +26,15 @@ public class RedisTemplateTest {
 
     @Test
     @SneakyThrows
-    void test() {
+    void testLua() {
 
         ClassPathResource resource = new ClassPathResource("lua/check_repeat.lua");
         String script = Files.readString(resource.getFile().toPath(), StandardCharsets.UTF_8);
 
         DefaultRedisScript<String> redisScript = new DefaultRedisScript<>();
         redisScript.setScriptText(script);
-        redisScript.setResultType(String.class); // 根据你的脚本返回类型设置
+        // 根据脚本返回类型设置
+        redisScript.setResultType(String.class);
 
         String key = "roomId:68911e30d3400ffa7f639f83";
         String member = "123456";
@@ -50,9 +53,26 @@ public class RedisTemplateTest {
 
         Thread.sleep(Duration.ofSeconds(4));
         score = String.valueOf(System.currentTimeMillis());
+        // ensure that the parameter is of string type
         result = callScript(redisScript, key, member, score, window, ttl);
         Assertions.assertNull(result);
 
+    }
+
+    @Test
+    void testPipeline() {
+        stringRedisTemplate.opsForValue().set("key1", "value1", Duration.ofSeconds(5));
+        stringRedisTemplate.opsForValue().set("key2", "value2", Duration.ofSeconds(5));
+
+        List<Object> results = stringRedisTemplate.executePipelined((RedisCallback<Object>) connection -> {
+            StringRedisConnection stringConn = (StringRedisConnection) connection;
+            stringConn.get("key1");
+            stringConn.get("key2");
+            // 注意：回调返回 null
+            return null;
+        });
+
+        Assertions.assertEquals(2, results.size());
     }
 
     String callScript(DefaultRedisScript<String> redisScript,

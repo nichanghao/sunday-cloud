@@ -3,6 +3,7 @@ package net.sunday.cloud.system.controller.admin.permission;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import net.sunday.cloud.base.common.entity.result.R;
 import net.sunday.cloud.system.controller.admin.permission.vo.PermissionAssignRoleMenuReqVO;
@@ -11,7 +12,6 @@ import net.sunday.cloud.system.controller.admin.permission.vo.PermissionRouteRes
 import net.sunday.cloud.system.service.permission.IPermissionService;
 import net.sunday.cloud.system.service.rolemenu.IRoleMenuService;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Set;
@@ -39,7 +39,7 @@ public class PermissionController {
     @Operation(summary = "赋予用户角色")
     @PutMapping("/assign-user-role")
     @PreAuthorize("@sf.hasPermission('sys:user:assignRoles')")
-    public R<Boolean> assignUserRole(@Validated @RequestBody PermissionAssignUserRoleReqVO reqVO) {
+    public R<Boolean> assignUserRole(@Valid @RequestBody PermissionAssignUserRoleReqVO reqVO) {
         permissionService.assignUserRole(reqVO.getUserId(), reqVO.getRoleIds());
         return R.ok(true);
     }
@@ -54,7 +54,7 @@ public class PermissionController {
     @PutMapping("/assign-role-menu")
     @Operation(summary = "赋予角色菜单")
     @PreAuthorize("@sf.hasPermission('sys:role:assignMenus')")
-    public R<Boolean> assignRoleMenu(@Validated @RequestBody PermissionAssignRoleMenuReqVO reqVO) {
+    public R<Boolean> assignRoleMenu(@Valid @RequestBody PermissionAssignRoleMenuReqVO reqVO) {
         permissionService.assignRoleMenu(reqVO.getRoleId(), reqVO.getMenuIds());
         return R.ok(true);
     }
