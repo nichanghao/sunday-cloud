@@ -1,0 +1,11 @@
+spring:
+  data:
+    redis:
+      # 地址
+      host: 47.96.130.181
+      # 端口，默认为6379
+      port: 6615
+      # 密码
+      password: redis!!123.
+      # 连接超时时间
+      timeout: 10s

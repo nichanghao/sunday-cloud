@@ -3,14 +3,15 @@ dependencies {
     api('com.google.guava:guava')
     api("com.fasterxml.jackson.datatype:jackson-datatype-jsr310")
 
+    api("org.slf4j:slf4j-api")
+    api("ch.qos.logback:logback-classic")
+
     implementation("cn.hutool:hutool-json")
 
-    compileOnlyApi("org.slf4j:slf4j-api")
     compileOnlyApi("org.springframework.security:spring-security-core")
     compileOnlyApi("org.springframework.security:spring-security-config")
     compileOnly("jakarta.validation:jakarta.validation-api")
     compileOnly("com.github.xiaoymin:knife4j-openapi3-jakarta-spring-boot-starter")
-    compileOnly("ch.qos.logback:logback-classic")
 
 
 }
